@@ -1,0 +1,2349 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>AI Assistant - TOMITECH</title>
+    <link rel="icon" href="../../assets/icons/ai.png">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://generativelanguage.googleapis.com https://esm.run https://apis.google.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com https://*.gstatic.com https://*.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net data: blob: https:; img-src 'self' data: https: blob:; connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://generativelanguage.googleapis.com https://content-firebaseappcheck.googleapis.com https://www.gstatic.com https://apis.google.com https://esm.run https://cdn.jsdelivr.net https://cdnjs.cloudflare.com http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; frame-src 'self' https://accounts.google.com https://*.firebaseapp.com; worker-src 'self' blob:; manifest-src 'self';">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- TOMITECH Design System -->
+    <link rel="stylesheet" href="../../assets/css/tomitech-design-system.css">
+    
+    <style>
+        /* Full Screen Layout - Fix untuk tampilan full */
+        html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        body {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: var(--tomitech-green-bg);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+        
+        #app-container {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .nav-button.active { 
+            color: var(--tomitech-green-accent); 
+        }
+        
+        /* Header Fixed */
+        .tomitech-header {
+            flex-shrink: 0;
+            position: relative;
+            z-index: 100;
+        }
+        
+        /* Chat Container - Full Height */
+        .chat-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+            position: relative;
+        }
+        
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: var(--spacing-md) 0;
+            padding-bottom: 200px; /* Space for large input + quick actions + nav */
+            min-height: 0;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+        }
+        
+        /* Chat Input - Large Input Field Design (like Copilot) */
+        .chat-input-container {
+            position: fixed;
+            bottom: 70px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(76, 175, 80, 0.1);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Large Input Wrapper - Like Copilot */
+        .chat-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        /* Main Input Field - Large and Prominent */
+        .chat-input-main-wrapper {
+            position: relative;
+            display: flex;
+            align-items: stretch;
+            background: rgba(76, 175, 80, 0.08);
+            border: 2px solid rgba(76, 175, 80, 0.2);
+            border-radius: 16px;
+            padding: 4px;
+            transition: all 0.3s ease;
+            min-height: 64px;
+        }
+        
+        .chat-input-main-wrapper:focus-within {
+            border-color: var(--tomitech-green-accent);
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.2);
+            background: rgba(76, 175, 80, 0.12);
+        }
+        
+        /* Input Field Container - Inner area */
+        .chat-input-inner {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 8px 12px;
+            gap: 8px;
+            min-height: 56px;
+        }
+        
+        /* Textarea Field - Large Input */
+        .chat-input-field {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            color: #1a1a1a;
+            resize: none;
+            outline: none;
+            min-height: 24px;
+            max-height: 200px;
+            font-family: inherit;
+            line-height: 1.5;
+            overflow-y: auto;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+        
+        .chat-input-field::placeholder {
+            color: #6b7280;
+            opacity: 0.7;
+        }
+        
+        /* Input Actions - Right Side Icons */
+        .chat-input-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 8px 8px 0;
+            flex-shrink: 0;
+        }
+        
+        .chat-input-icon-btn {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+        
+        .chat-input-icon-btn:hover {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--tomitech-green-accent);
+        }
+        
+        .chat-input-icon-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Send Button - Green Gradient */
+        .chat-send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: #ffffff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(76, 175, 80, 0.3);
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+        
+        .chat-send-btn:hover {
+            background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        .chat-send-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Quick Action Buttons - Below Input */
+        .quick-action-buttons {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .quick-action-buttons::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .quick-action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 16px;
+            background: rgba(76, 175, 80, 0.08);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #2d5016;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            text-align: center;
+        }
+        
+        .quick-action-btn:hover {
+            background: rgba(76, 175, 80, 0.15);
+            border-color: var(--tomitech-green-accent);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+        }
+        
+        .quick-action-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* Bottom Nav - Fixed */
+        .tomitech-bottom-nav {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 1000 !important;
+        }
+        
+        /* Loading animation */
+        .dot-flashing { 
+            position: relative; 
+            width: 5px; 
+            height: 5px; 
+            border-radius: 5px; 
+            background-color: var(--tomitech-green-accent); 
+            animation: dotFlashing 1s infinite linear alternate; 
+            animation-delay: .5s; 
+            display: inline-block; 
+            margin-left: 5px; 
+        }
+        .dot-flashing::before, .dot-flashing::after { 
+            content: ''; 
+            display: inline-block; 
+            position: absolute; 
+            top: 0; 
+        }
+        .dot-flashing::before { 
+            left: -10px; 
+            width: 5px; 
+            height: 5px; 
+            border-radius: 5px; 
+            background-color: var(--tomitech-green-accent); 
+            animation: dotFlashing 1s infinite alternate; 
+            animation-delay: 0s; 
+        }
+        .dot-flashing::after { 
+            left: 10px; 
+            width: 5px; 
+            height: 5px; 
+            border-radius: 5px; 
+            background-color: var(--tomitech-green-accent); 
+            animation: dotFlashing 1s infinite alternate; 
+            animation-delay: 1s; 
+        }
+        @keyframes dotFlashing { 
+            0% { background-color: var(--tomitech-green-dark); } 
+            50%, 100% { background-color: var(--tomitech-green-light); } 
+        }
+        
+        /* Quick notification animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .quick-notification {
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        
+        /* Toast notification animations */
+        @keyframes slideIn {
+            from { 
+                transform: translateX(100%); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateX(0); 
+                opacity: 1; 
+            }
+        }
+        
+        @keyframes slideOut {
+            from { 
+                transform: translateX(0); 
+                opacity: 1; 
+            }
+            to { 
+                transform: translateX(100%); 
+                opacity: 0; 
+            }
+        }
+        
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .animate-slide-out {
+            animation: slideOut 0.3s ease-in;
+        }
+
+
+        /* Chat Message Styles - Professional Consultant Design */
+        .chat-message {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+            padding: 0;
+            animation: messageSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            width: 100%;
+        }
+        
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .chat-message .message-bubble {
+            flex: 1;
+            width: 100%;
+            max-width: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-message.user .message-bubble,
+        .chat-message:not(.user) .message-bubble {
+            align-self: stretch;
+        }
+        
+        /* Avatar Styles - Clean and Simple */
+        .chat-message .avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
+            border-radius: 50%;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+            border: 2px solid #ffffff;
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .chat-message.user .avatar {
+            background: #2d8659 !important;
+            background-image: none !important;
+            box-shadow: 0 2px 8px rgba(45, 134, 89, 0.25);
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .chat-message .avatar i {
+            font-size: 1.1rem !important;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            color: #ffffff !important;
+            line-height: 1;
+            text-align: center;
+            width: 100% !important;
+            height: 100% !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Ensure icon is always visible on mobile - Force display */
+        @media (max-width: 768px) {
+            .chat-message .avatar {
+                background: linear-gradient(135deg, #10b981 0%, #34d399 100%) !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                width: 36px !important;
+                height: 36px !important;
+                min-width: 36px !important;
+                min-height: 36px !important;
+            }
+            
+            .chat-message .avatar i,
+            .chat-message .avatar i.fas,
+            .chat-message .avatar i.fa-robot {
+                font-size: 1.2rem !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                color: #ffffff !important;
+                width: 100% !important;
+                height: 100% !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-family: "Font Awesome 6 Free" !important;
+                font-weight: 900 !important;
+            }
+            
+            .chat-message.user .avatar {
+                background: #2d8659 !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+        
+        /* Extra small mobile - Ensure icon visible */
+        @media (max-width: 480px) {
+            .chat-message .avatar i,
+            .chat-message .avatar i.fas,
+            .chat-message .avatar i.fa-robot {
+                font-size: 1rem !important;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+        
+        /* Avatar Icon - Multiple Fallbacks for Android */
+        .chat-message .avatar img.avatar-icon-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 3;
+        }
+        
+        .chat-message .avatar i.avatar-icon-fa {
+            display: flex !important;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .chat-message .avatar span.avatar-icon-emoji {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            z-index: 1;
+        }
+        
+        /* Show emoji if Font Awesome fails (Android fallback) */
+        .chat-message .avatar:not(:has(i.fas.fa-robot:before)) span.avatar-icon-emoji,
+        .chat-message .avatar i.avatar-icon-fa:not(:before) ~ span.avatar-icon-emoji {
+            display: block;
+        }
+        
+        /* Android/Mobile Fallback: Prioritize emoji for better compatibility */
+        @media (max-width: 768px) {
+            .chat-message .avatar {
+                position: relative;
+            }
+            
+            .chat-message .avatar span.avatar-icon-emoji {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                z-index: 3;
+                width: 100%;
+                height: 100%;
+                font-size: 1.2rem;
+            }
+            
+            .chat-message .avatar i.avatar-icon-fa {
+                display: none !important;
+            }
+            
+            .chat-message .avatar img.avatar-icon-img {
+                display: none !important;
+            }
+        }
+        
+        /* Android-specific styling */
+        .android-device .chat-message .avatar span.avatar-icon-emoji {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 3 !important;
+            width: 100% !important;
+            height: 100% !important;
+            font-size: 1.2rem !important;
+        }
+        
+        .android-device .chat-message .avatar i.avatar-icon-fa {
+            display: none !important;
+        }
+        
+        .android-device .chat-message .avatar img.avatar-icon-img {
+            display: none !important;
+        }
+        
+        /* Desktop: Show Font Awesome icon, hide emoji */
+        @media (min-width: 769px) {
+            .chat-message .avatar span.avatar-icon-emoji {
+                display: none !important;
+            }
+            
+            .chat-message .avatar i.avatar-icon-fa {
+                display: flex !important;
+            }
+            
+            .chat-message .avatar img.avatar-icon-img {
+                display: none !important;
+            }
+        }
+
+        /* Removed conflicting message-content styles - using message-bubble instead */
+
+        .chat-message .timestamp {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .chat-message.user .timestamp {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .chat-message .message-bubble:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            transform: translateY(-1px);
+        }
+        
+        /* AI Consultant Message Bubble - Professional & Trustworthy */
+        .chat-message:not(.user) .message-bubble {
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            color: #1f2937;
+            border: 1.5px solid #e5e7eb;
+            border-bottom-left-radius: 6px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+        
+        .chat-message:not(.user) .message-bubble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            border-radius: 20px 20px 0 0;
+        }
+        
+        /* User Message Bubble - Elegant Green (TOMITECH Theme) */
+        .chat-message.user .message-bubble {
+            background: #2d8659 !important;
+            background-image: none !important;
+            color: #ffffff;
+            border: none;
+            border-bottom-right-radius: 6px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            border-bottom-left-radius: 20px;
+            box-shadow: 0 4px 16px rgba(45, 134, 89, 0.3),
+                        0 2px 4px rgba(45, 134, 89, 0.2);
+            position: relative;
+        }
+        
+        .chat-message.user .message-bubble:hover {
+            background: #26704d !important;
+            box-shadow: 0 6px 20px rgba(45, 134, 89, 0.35),
+                        0 3px 6px rgba(45, 134, 89, 0.25);
+        }
+        
+        .chat-message.user .message-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: -8px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 14px 10px;
+            border-color: transparent transparent #2d8659 transparent;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
+        }
+        
+        .chat-message:not(.user) .message-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 14px 10px 0 0;
+            border-color: #ffffff transparent transparent transparent;
+            filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.08));
+        }
+        
+        /* Message Content - Professional Typography */
+        .message-content {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            letter-spacing: 0.01em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .chat-message.user .message-content {
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chat-message:not(.user) .message-content {
+            color: #1f2937;
+        }
+
+        /* Timestamp - Professional & Subtle */
+        .timestamp {
+            font-size: 0.6875rem;
+            opacity: 0.75;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+        
+        .chat-message.user .timestamp {
+            color: rgba(255, 255, 255, 0.9);
+            justify-content: flex-end;
+        }
+        
+        .chat-message:not(.user) .timestamp {
+            color: #6b7280;
+            justify-content: flex-start;
+        }
+        
+        /* Read indicator for user messages */
+        .chat-message.user .timestamp::after {
+            content: '✓✓';
+            font-size: 0.75rem;
+            margin-left: 4px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Message Content Styling - Enhanced */
+        .message-content strong { 
+            font-weight: 700;
+            color: inherit;
+            letter-spacing: -0.01em;
+        }
+        
+        .message-content em { 
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .message-content code {
+            background: rgba(0, 0, 0, 0.08);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875em;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .chat-message.user .message-content code {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .message-content h1,
+        .message-content h2,
+        .message-content h3 {
+            margin-top: 12px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .message-content h1 { font-size: 1.25rem; }
+        .message-content h2 { font-size: 1.125rem; }
+        .message-content h3 { font-size: 1rem; }
+        
+        .message-content ul,
+        .message-content ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        
+        .message-content li {
+            margin: 4px 0;
+        }
+        
+        .message-content blockquote {
+            border-left: 3px solid #10b981;
+            padding-left: 12px;
+            margin: 12px 0;
+            opacity: 0.9;
+            font-style: italic;
+        }
+        
+        .chat-message.user .message-content blockquote {
+            border-left-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Message grouping - reduce spacing for consecutive messages */
+        .chat-message + .chat-message:not(.user-group-start) {
+            margin-top: 4px;
+        }
+        
+        .chat-message.user + .chat-message.user {
+            margin-top: 4px;
+        }
+        
+        /* Loading indicator styling */
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            animation: typingPulse 1.4s infinite ease-in-out;
+        }
+        
+        .chat-message.user .typing-dot {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dot:nth-child(3) { animation-delay: 0s; }
+
+        
+        /* Progress bar animation */
+        .progress-bar-transition {
+            transition: width 0.5s ease-in-out;
+        }
+        
+        /* Better scrollbar for chat */
+        .chat-scroll::-webkit-scrollbar { 
+            width: 6px; 
+        }
+        .chat-scroll::-webkit-scrollbar-track { 
+            background: var(--tomitech-green-bg); 
+            border-radius: 3px; 
+        }
+        .chat-scroll::-webkit-scrollbar-thumb { 
+            background: var(--tomitech-green-accent); 
+            border-radius: 3px; 
+        }
+        .chat-scroll::-webkit-scrollbar-thumb:hover { 
+            background: var(--tomitech-green-dark); 
+        }
+        
+        /* Firefox scrollbar */
+        .chat-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: var(--tomitech-green-accent) var(--tomitech-green-bg);
+        }
+        
+        /* Scrollable message content */
+        .message-content {
+            scrollbar-width: thin;
+            scrollbar-color: var(--tomitech-green-muted) var(--tomitech-green-bg);
+            scroll-behavior: smooth;
+        }
+        
+        .message-content::-webkit-scrollbar { 
+            width: 4px; 
+        }
+        .message-content::-webkit-scrollbar-track { 
+            background: var(--tomitech-green-bg); 
+            border-radius: 2px; 
+        }
+        .message-content::-webkit-scrollbar-thumb { 
+            background: var(--tomitech-green-muted); 
+            border-radius: 2px; 
+        }
+        .message-content::-webkit-scrollbar-thumb:hover { 
+            background: var(--tomitech-green-accent); 
+        }
+        
+        /* Enhanced message animations for consultant feel */
+        .chat-message.user {
+            animation: slideInFromRight 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .chat-message:not(.user) {
+            animation: slideInFromLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+        
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+        
+        /* Smooth scrolling for chat container */
+        .chat-scroll {
+            scroll-behavior: smooth;
+        }
+        
+        /* Loading animation improvements */
+        .dot-flashing {
+            animation: dotFlashing 1.2s infinite linear alternate;
+        }
+        
+        @keyframes dotFlashing {
+            0% { 
+                background-color: var(--tomitech-green-accent); 
+                transform: scale(1);
+            }
+            50%, 100% { 
+                background-color: var(--tomitech-green-light); 
+                transform: scale(1.1);
+            }
+        }
+        
+        @keyframes typingPulse {
+            0%, 80%, 100% {
+                transform: scale(0.85);
+                opacity: 0.6;
+            }
+            40% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+        
+        /* Smooth content reveal animation */
+        .content-reveal {
+            animation: contentReveal 0.6s ease-out;
+        }
+        
+        @keyframes contentReveal {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Activity Summary Bubble */
+        /* User Data Summary Card - Professional Styling */
+        #user-data-summary {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15),
+                        0 2px 4px rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.25);
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        #user-data-summary:hover {
+            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.2),
+                        0 3px 6px rgba(76, 175, 80, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        #user-data-summary.hidden {
+            display: none !important;
+        }
+        
+        #user-data-summary .summary-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(76, 175, 80, 0.2);
+        }
+        
+        #user-data-summary .summary-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+        
+        #user-data-summary .summary-close-btn {
+            background: transparent;
+            border: none;
+            color: #4caf50;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        #user-data-summary .summary-close-btn:hover {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+        }
+        
+        #user-data-summary .summary-close-btn:active {
+            transform: scale(0.95);
+        }
+        
+        #data-summary-content {
+            font-size: 0.875rem;
+            color: #1b5e20;
+            line-height: 1.6;
+        }
+        
+        #data-summary-content .summary-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed rgba(76, 175, 80, 0.3);
+        }
+        
+        #data-summary-content .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        #data-summary-content .summary-label {
+            font-weight: 600;
+            color: #2e7d32;
+            min-width: 120px;
+            margin-right: 8px;
+        }
+        
+        #data-summary-content .summary-value {
+            flex: 1;
+            color: #1b5e20;
+        }
+        
+        .activity-summary {
+            background: #e8f5e9;
+            border-radius: 18px;
+            padding: 16px;
+            margin: 12px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            position: relative;
+            width: 100%;
+            max-width: none;
+            margin-left: 0;
+            margin-right: 0;
+        }
+        
+        .activity-summary:before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 8px 0 8px 8px;
+            border-color: transparent transparent transparent #e8f5e9;
+            transform: rotate(0);
+        }
+        
+        .activity-summary h3 {
+            color: #2e7d32;
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .activity-summary h3 i {
+            font-size: 1.1em;
+        }
+        
+        .activity-summary p {
+            margin: 8px 0;
+            font-size: 0.9rem;
+            color: #1b5e20;
+            line-height: 1.5;
+        }
+        
+        .activity-summary .summary-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed rgba(76, 175, 80, 0.3);
+        }
+        
+        .activity-summary .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .activity-summary .summary-icon {
+            background: #4caf50;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+            font-size: 0.8em;
+        }
+        
+        .activity-summary .summary-content {
+            flex: 1;
+        }
+        
+        /* ============================================
+           RESPONSIVE DESIGN - Mobile, Tablet, Desktop
+           ============================================ */
+        
+        /* Tablet (max-width: 1024px) */
+        @media (max-width: 1024px) {
+            #chat-messages {
+                padding: 12px 0;
+                padding-bottom: 220px;
+            }
+            
+            .chat-message {
+                padding: 0;
+                margin-bottom: 16px;
+            }
+            
+            .chat-message .message-bubble {
+                max-width: none;
+                width: 100%;
+            }
+            
+            .chat-input-container {
+                padding: 12px;
+            }
+            
+            .chat-input-main-wrapper {
+                min-height: 60px;
+            }
+            
+            .quick-action-buttons {
+                gap: 6px;
+            }
+            
+            .quick-action-btn {
+                min-width: 100px;
+                padding: 8px 12px;
+                font-size: 0.8125rem;
+            }
+        }
+        
+        /* Mobile Large (max-width: 768px) */
+        @media (max-width: 768px) {
+            .tomitech-header {
+                padding: 8px 12px;
+            }
+            
+            .logo-title {
+                font-size: 1rem !important;
+            }
+            
+            .logo-subtitle {
+                font-size: 0.75rem !important;
+            }
+            
+            #chat-messages {
+                padding: 10px 0;
+                padding-bottom: 240px;
+            }
+            
+            .chat-message {
+                padding: 0;
+                margin-bottom: 14px;
+                gap: 8px;
+            }
+            
+            .chat-message .avatar {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+                min-height: 36px;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            
+            .chat-message .avatar i {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                font-size: 1.1rem !important;
+                color: #ffffff !important;
+                width: 100% !important;
+                height: 100% !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            .chat-message .message-bubble {
+                max-width: none;
+                width: 100%;
+                padding: 10px 14px;
+            }
+            
+            .message-content {
+                font-size: 0.9375rem;
+                line-height: 1.5;
+            }
+            
+            .timestamp {
+                font-size: 0.625rem;
+                margin-top: 6px;
+            }
+            
+            .chat-input-container {
+                bottom: 60px;
+                padding: 10px;
+            }
+            
+            .chat-input-main-wrapper {
+                min-height: 56px;
+                border-radius: 14px;
+            }
+            
+            .chat-input-inner {
+                padding: 6px 10px;
+                min-height: 48px;
+            }
+            
+            .chat-input-field {
+                font-size: 0.9375rem;
+            }
+            
+            .chat-input-actions {
+                padding: 6px 6px 6px 0;
+                gap: 3px;
+            }
+            
+            .chat-input-icon-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.875rem;
+            }
+            
+            .chat-send-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8125rem;
+            }
+            
+            .quick-action-buttons {
+                gap: 6px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .quick-action-btn {
+                min-width: 90px;
+                padding: 8px 12px;
+                font-size: 0.75rem;
+                white-space: nowrap;
+            }
+        }
+        
+        /* Mobile Small (max-width: 480px) */
+        @media (max-width: 480px) {
+            .tomitech-header {
+                padding: 6px 10px;
+            }
+            
+            .logo-icon {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            
+            .logo-title {
+                font-size: 0.875rem !important;
+            }
+            
+            .logo-subtitle {
+                font-size: 0.6875rem !important;
+                display: none; /* Hide subtitle on very small screens */
+            }
+            
+            #chat-messages {
+                padding: 8px 0;
+                padding-bottom: 260px;
+            }
+            
+            .chat-message {
+                padding: 0;
+                margin-bottom: 12px;
+                gap: 6px;
+            }
+            
+            .chat-message .avatar {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                min-height: 32px;
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                font-size: 0.875rem;
+            }
+            
+            .chat-message .avatar i {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                font-size: 1rem !important;
+                color: #ffffff !important;
+                width: 100% !important;
+                height: 100% !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            .chat-message .message-bubble {
+                max-width: none;
+                width: 100%;
+                padding: 8px 12px;
+                border-radius: 16px;
+            }
+            
+            .chat-message.user .message-bubble {
+                border-radius: 16px 16px 4px 16px;
+            }
+            
+            .chat-message:not(.user) .message-bubble {
+                border-radius: 16px 16px 16px 4px;
+            }
+            
+            .message-content {
+                font-size: 0.875rem;
+                line-height: 1.5;
+            }
+            
+            .message-content h1 {
+                font-size: 1.125rem;
+            }
+            
+            .message-content h2 {
+                font-size: 1rem;
+            }
+            
+            .message-content h3 {
+                font-size: 0.9375rem;
+            }
+            
+            .timestamp {
+                font-size: 0.625rem;
+                margin-top: 4px;
+            }
+            
+            .chat-input-container {
+                bottom: 60px;
+                padding: 8px;
+            }
+            
+            .chat-input-main-wrapper {
+                min-height: 52px;
+                border-radius: 12px;
+                padding: 3px;
+            }
+            
+            .chat-input-inner {
+                padding: 5px 8px;
+                min-height: 44px;
+            }
+            
+            .chat-input-field {
+                font-size: 0.875rem;
+                min-height: 20px;
+            }
+            
+            .chat-input-actions {
+                padding: 5px 5px 5px 0;
+                gap: 2px;
+            }
+            
+            .chat-input-icon-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8125rem;
+            }
+            
+            .chat-send-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+            
+            .quick-action-buttons {
+                gap: 4px;
+            }
+            
+            .quick-action-btn {
+                min-width: 80px;
+                padding: 6px 10px;
+                font-size: 0.6875rem;
+            }
+            
+            /* Hide some icons on very small screens */
+            #add-content-btn {
+                display: none;
+            }
+        }
+        
+        /* Desktop Large (min-width: 1440px) */
+        @media (min-width: 1440px) {
+            #app-container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+            
+            .chat-message .message-bubble {
+                max-width: none;
+                width: 100%;
+            }
+        }
+        
+        /* Landscape Mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .tomitech-header {
+                padding: 4px 12px;
+            }
+            
+            #chat-messages {
+                padding-bottom: 200px;
+            }
+            
+            .chat-input-container {
+                bottom: 60px;
+                padding: 8px 12px;
+            }
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .chat-input-icon-btn,
+            .chat-send-btn,
+            .quick-action-btn {
+                min-height: 44px; /* Minimum touch target size */
+            }
+            
+            .chat-message .message-bubble {
+                padding: 12px 16px; /* Larger padding for touch */
+            }
+        }
+        
+        /* High DPI Displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .chat-message .avatar {
+                border-width: 2.5px;
+            }
+        }
+        
+        /* Prevent text size adjustment on iOS */
+        @media screen and (max-width: 768px) {
+            html {
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+            
+            input,
+            textarea,
+            select {
+                font-size: 16px !important; /* Prevents zoom on iOS */
+            }
+        }
+        
+        /* Safe area for notched devices (iPhone X, etc.) */
+        @supports (padding: max(0px)) {
+            .chat-input-container {
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
+            }
+            
+            .tomitech-bottom-nav {
+                padding-bottom: max(0px, env(safe-area-inset-bottom));
+            }
+            
+            #chat-messages {
+                padding-left: max(0px, env(safe-area-inset-left));
+                padding-right: max(0px, env(safe-area-inset-right));
+            }
+        }
+        
+        /* ============================================
+           CHAT HISTORY PANEL STYLES
+           ============================================ */
+        
+        /* History Button di Header */
+        .chat-history-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border: 1.5px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: auto;
+            flex-shrink: 0;
+            font-weight: 500;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+        }
+        
+        .chat-history-btn i {
+            font-size: 0.9375rem;
+            color: #ffffff;
+        }
+        
+        .chat-history-btn-text {
+            display: inline-block;
+            color: #ffffff;
+        }
+        
+        .chat-history-btn:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        .chat-history-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 12px;
+        }
+        
+        /* History Panel Overlay */
+        .chat-history-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        
+        .chat-history-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* History Panel */
+        .chat-history-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background: #ffffff;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+            z-index: 2001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-history-panel.active {
+            transform: translateX(0);
+        }
+        
+        /* History Panel Header */
+        .chat-history-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #f1f8f4 0%, #e8f5e9 100%);
+            flex-shrink: 0;
+        }
+        
+        .chat-history-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chat-history-header h3 i {
+            color: var(--tomitech-green-accent);
+        }
+        
+        .chat-history-close {
+            background: transparent;
+            border: none;
+            color: #4caf50;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-history-close:hover {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+        }
+        
+        /* History Content */
+        .chat-history-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .chat-history-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-history-content::-webkit-scrollbar-track {
+            background: #f5f5f5;
+        }
+        
+        .chat-history-content::-webkit-scrollbar-thumb {
+            background: var(--tomitech-green-accent);
+            border-radius: 3px;
+        }
+        
+        /* History List */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        /* History Date Group */
+        .history-date-group {
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            border: 1.5px solid rgba(76, 175, 80, 0.2);
+            border-radius: 12px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .history-date-group::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #10b981 0%, #34d399 100%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .history-date-group:hover {
+            border-color: var(--tomitech-green-accent);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .history-date-group:hover::before {
+            opacity: 1;
+        }
+        
+        .history-date-group.loading {
+            opacity: 0.7;
+            cursor: wait;
+            pointer-events: none;
+        }
+        
+        .history-date-group.loading .history-date-action {
+            color: var(--tomitech-green-accent);
+        }
+        
+        .history-date-group.loading .history-date-action i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .history-date-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .history-date-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #2e7d32;
+            font-size: 0.9375rem;
+        }
+        
+        .history-date-title i {
+            color: var(--tomitech-green-accent);
+            font-size: 0.875rem;
+        }
+        
+        .history-date-count {
+            font-size: 0.75rem;
+            color: #6b7280;
+            background: rgba(76, 175, 80, 0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        
+        .history-date-preview {
+            margin-bottom: 10px;
+            font-size: 0.8125rem;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+        
+        .preview-user {
+            margin-bottom: 6px;
+            color: #1b5e20;
+        }
+        
+        .preview-user strong {
+            color: #2e7d32;
+        }
+        
+        .preview-ai {
+            color: #6b7280;
+        }
+        
+        .preview-ai strong {
+            color: #4caf50;
+        }
+        
+        .preview-empty {
+            color: #9ca3af;
+            font-style: italic;
+        }
+        
+        .history-date-action {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8125rem;
+            color: var(--tomitech-green-accent);
+            font-weight: 500;
+            margin-top: 8px;
+        }
+        
+        .history-date-action i {
+            font-size: 0.75rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .history-date-group:hover .history-date-action i {
+            transform: translateX(4px);
+        }
+        
+        /* Loading State */
+        .history-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: #6b7280;
+            gap: 12px;
+        }
+        
+        .history-loading i {
+            font-size: 2rem;
+            color: var(--tomitech-green-accent);
+        }
+        
+        /* Empty State */
+        .history-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            color: #6b7280;
+        }
+        
+        .history-empty i {
+            font-size: 3rem;
+            color: #d1d5db;
+            margin-bottom: 16px;
+        }
+        
+        .history-empty p {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4b5563;
+            margin: 0 0 8px 0;
+        }
+        
+        .history-empty span {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+        
+        /* Error State */
+        .history-error {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: #6b7280;
+        }
+        
+        .history-error i {
+            font-size: 2.5rem;
+            color: #ef4444;
+            margin-bottom: 16px;
+        }
+        
+        .history-error p {
+            font-size: 0.9375rem;
+            color: #4b5563;
+            margin: 0 0 16px 0;
+        }
+        
+        .retry-btn {
+            background: var(--tomitech-green-accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .retry-btn:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .chat-history-panel {
+                max-width: 100%;
+            }
+            
+            .chat-history-btn {
+                padding: 6px 10px;
+                font-size: 0.8125rem;
+            }
+            
+            .chat-history-btn-text {
+                display: none; /* Hide text on mobile, show only icon */
+            }
+            
+            .chat-history-btn i {
+                font-size: 0.875rem;
+            }
+            
+            .history-date-group {
+                padding: 12px;
+            }
+            
+            .history-date-preview {
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* Extra small mobile */
+        @media (max-width: 480px) {
+            .chat-history-btn {
+                padding: 6px 8px;
+                min-width: 36px;
+            }
+            
+            .chat-history-btn-text {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <!-- Header -->
+        <header class="tomitech-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon" style="background: var(--tomitech-green-accent);">
+                        <img src="../../assets/icons/ai.png" alt="AI" style="width: 32px; height: 32px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <i class="fas fa-leaf" style="display:none; color: white; font-size: 1.5rem;"></i>
+                    </div>
+                    <div class="logo-text">
+                            <div class="logo-title">
+                                AI TOMITECH Assistant
+                                <span class="page-indicator chat">
+                                    <i class="fas fa-sparkles"></i>
+                                    AI Assistant
+                                </span>
+                            </div>
+                            <div class="logo-subtitle" id="header-status">Konsultan Greenhouse & Tanaman</div>
+                    </div>
+                </div>
+                <button id="chat-history-btn" class="chat-history-btn" title="Riwayat Chat">
+                    <i class="fas fa-history"></i>
+                    <span class="chat-history-btn-text">Riwayat</span>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Chat History Panel -->
+        <div id="chat-history-overlay" class="chat-history-overlay"></div>
+        <div id="chat-history-panel" class="chat-history-panel">
+            <div class="chat-history-header">
+                <h3>
+                    <i class="fas fa-history"></i>
+                    Riwayat Chat
+                </h3>
+                <button id="chat-history-close" class="chat-history-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chat-history-content" class="chat-history-content">
+                <!-- History content akan dimuat di sini -->
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <div id="chat-messages" class="chat-scroll">
+                <!-- AI Welcome Message -->
+                <div class="chat-message">
+                    <div class="avatar">
+                        <img src="../../assets/icons/ai.png" alt="AI" class="avatar-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <i class="fas fa-robot avatar-icon-fa"></i>
+                        <span class="avatar-icon-emoji">🤖</span>
+                    </div>
+                    <div class="message-bubble">
+                        <div class="message-content">
+                            Halo! Saya AI Assistant TOMITECH, konsultan ahli Greenhouse dan Tanaman. 
+                            <br><br>
+                            <strong>✨ Fitur Utama:</strong><br>
+                            • <strong>Analisis Data Greenhouse</strong> - Saya membaca semua data yang Anda input (sensor, tanaman, agregat) dan memberikan kesimpulan lengkap tentang kondisi greenhouse<br>
+                            • <strong>Konsultasi Real-time</strong> - Analisis kondisi mikroklimat berdasarkan data sensor terbaru<br>
+                            • <strong>Prediksi & Rekomendasi</strong> - Prediksi hasil panen, deteksi risiko penyakit, dan rekomendasi optimasi<br>
+                            • <strong>Tips Perawatan</strong> - Panduan spesifik berdasarkan jenis tanaman yang Anda tanam<br>
+                            <br>
+                            <strong>💡 Cara Menggunakan:</strong><br>
+                            1. Input data di halaman "Input Data" (sensor, tanaman, agregat)<br>
+                            2. Klik "Analisis Greenhouse" untuk mendapatkan kesimpulan lengkap<br>
+                            3. Atau tanya langsung tentang kondisi greenhouse Anda!
+                        </div>
+                        <span class="timestamp">Baru saja</span>
+                    </div>
+                </div>
+                        
+                        <!-- User Data Summary Card (akan diisi otomatis dari Firestore) -->
+                        <div id="user-data-summary" class="hidden">
+                            <div class="summary-header">
+                                <h3 class="summary-title">
+                                    <i class="fas fa-chart-line"></i>
+                                    Ringkasan Data Aktivitas Anda
+                                </h3>
+                                <button onclick="toggleDataSummary()" class="summary-close-btn">
+                                    <i class="fas fa-times"></i> Tutup
+                                </button>
+                            </div>
+                            <div id="data-summary-content">
+                                <!-- Content will be loaded from Firestore -->
+                            </div>
+                        </div>
+                        
+                <!-- Activity Summary -->
+                <div class="chat-message" id="activity-summary-message" style="display: none;">
+                    <div class="avatar">
+                        <img src="../../assets/icons/ai.png" alt="AI" class="avatar-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <i class="fas fa-robot avatar-icon-fa"></i>
+                        <span class="avatar-icon-emoji">🤖</span>
+                    </div>
+                    <div class="message-bubble">
+                        <div class="message-content">
+                            <div id="activity-summary" class="activity-summary">
+                                <h3><i class="fas fa-chart-pie"></i> Ringkasan Data </h3>
+                                <div id="activity-summary-content">
+                                    <!-- Content will be dynamically inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                        <span class="timestamp">Baru saja</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Input Area - Large Input Design (like Copilot) -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <!-- Main Large Input Field -->
+                    <div class="chat-input-main-wrapper">
+                        <!-- Inner Input Area -->
+                        <div class="chat-input-inner">
+                            <!-- Textarea Input -->
+                            <textarea 
+                                id="chat-input" 
+                                rows="1" 
+                                placeholder="Ask anything" 
+                                class="chat-input-field"
+                            ></textarea>
+                        </div>
+                        <!-- Right Side Actions -->
+                        <div class="chat-input-actions">
+                            <button id="add-content-btn" class="chat-input-icon-btn" title="Add Content">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button id="file-upload-button" class="chat-input-icon-btn" title="Upload File">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="file" id="file-input" style="display: none;" accept=".pdf"/>
+                            <button id="voice-input-btn" class="chat-input-icon-btn" title="Voice Input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button id="send-chat-btn" class="chat-send-btn" title="Kirim Pesan">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Quick Action Buttons (Below Input) -->
+                    <div class="quick-action-buttons">
+                        <button class="quick-action-btn" onclick="sendQuickAction('analisis')">
+                            Analisis
+                        </button>
+                        <button class="quick-action-btn" onclick="sendQuickAction('produk')">
+                            Tips
+                        </button>
+                        <button class="quick-action-btn" onclick="sendQuickAction('profit')">
+                            Kondisi
+                        </button>
+                        <button class="quick-action-btn" onclick="sendQuickAction('ringkasan')">
+                            Ringkasan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!-- Bottom Navigation -->
+    <nav class="tomitech-bottom-nav">
+        <a href="../../dashboard.html" class="tomitech-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="chat.html" class="tomitech-nav-item active">
+            <div class="ai-assistant-nav-icon">
+                <i class="fas fa-robot ai-robot-icon"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+            </div>
+            <span>AI Assistant</span>
+        </a>
+        <a href="plant-input.html" class="tomitech-nav-item">
+            <i class="fas fa-file-alt"></i>
+            <span>Input Data</span>
+        </a>
+        <a href="monitoring.html" class="tomitech-nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Monitoring</span>
+        </a>
+        <a href="forum.html" class="tomitech-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reports</span>
+        </a>
+        <a href="profil.html" class="tomitech-nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+    
+    <!-- Global functions script - must be loaded before module scripts -->
+    <script>
+        // Define toggleDataSummary function globally FIRST (before any onclick handlers)
+        window.toggleDataSummary = function() {
+            const summaryCard = document.getElementById('user-data-summary');
+            if (summaryCard) {
+                summaryCard.classList.toggle('hidden');
+            }
+        };
+        
+        // Define sendQuickAction function globally FIRST
+        window.sendQuickAction = async function(actionType) {
+            console.log('🚀 Quick Action:', actionType);
+            
+            // Emoji untuk setiap action
+            const actionEmojis = {
+                'analisis': '📊',
+                'produk': '♻️',
+                'profit': '💰',
+                'ringkasan': '📋'
+            };
+            
+            // Definisikan pesan untuk setiap action
+            const actionMessages = {
+                'analisis': 'Berdasarkan semua data greenhouse yang sudah saya input, tolong berikan analisis lengkap dan kesimpulan tentang kondisi greenhouse saya:\n\n**Yang saya butuhkan:**\n1. **Kesimpulan Kondisi Greenhouse** - Berikan kesimpulan menyeluruh tentang kondisi greenhouse saat ini berdasarkan data sensor dan tanaman\n2. **Status Kesehatan Tanaman** - Evaluasi kesehatan tanaman berdasarkan data yang ada\n3. **Identifikasi Masalah** - Apakah ada masalah potensial yang terdeteksi dari data?\n4. **Rekomendasi Perbaikan** - Apa yang perlu dilakukan untuk mengoptimalkan kondisi greenhouse?\n5. **Prediksi Kondisi** - Bagaimana prediksi kondisi ke depan berdasarkan trend data?\n\nTolong berikan analisis yang detail dan praktis berdasarkan data yang sudah saya input!',
+                
+                'produk': 'Berdasarkan data greenhouse saya, tolong berikan prediksi hasil panen:\n• Estimasi hasil panen untuk tanaman saat ini berdasarkan data agregat\n• Faktor-faktor yang mempengaruhi hasil (suhu, cahaya, air, dll)\n• Optimasi yang bisa dilakukan untuk meningkatkan hasil\n• Timeline panen yang diharapkan berdasarkan durasi siklus',
+                
+                'profit': 'Hitung potensi hasil panen dari data greenhouse saya:\n• Prediksi hasil panen berdasarkan kondisi saat ini dan data historis\n• Perbandingan dengan siklus sebelumnya (jika ada)\n• Estimasi nilai ekonomi hasil panen\n• Rekomendasi untuk meningkatkan hasil dan efisiensi',
+                
+                'ringkasan': 'Tampilkan ringkasan lengkap dari semua data greenhouse yang sudah saya input:\n• Informasi greenhouse (nama, lokasi, total tanaman)\n• Daftar semua tanaman dengan statusnya\n• Data sensor terbaru (suhu, kelembaban, cahaya, tanah)\n• Trend data sensor 24 jam terakhir\n• Data agregat siklus tanam terbaru\n• Kesimpulan singkat tentang kondisi keseluruhan'
+            };
+            
+            // Dapatkan pesan yang sesuai
+            const message = actionMessages[actionType];
+            
+            if (!message) {
+                console.error('❌ Unknown action type:', actionType);
+                return;
+            }
+            
+            // Set message ke input field (tanpa mengirim otomatis)
+            const chatInput = document.getElementById('chat-input');
+            if (chatInput) {
+                // Set message ke input field
+                chatInput.value = message;
+                chatInput.focus();
+                
+                // Auto-resize textarea
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 150) + 'px';
+                
+                // Tampilkan notifikasi
+            } else {
+                console.error('❌ Chat input not found');
+            }
+        };
+        
+        // Quick notification function (non-intrusive) - Make it global
+        window.showQuickNotification = function(message, type = 'info') {
+            // Remove existing notification jika ada
+            const existing = document.querySelector('.quick-notification');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = 'quick-notification fixed bottom-24 right-4 px-4 py-2 rounded-lg shadow-lg text-white text-sm z-50 animate-fade-in';
+            
+            // Color based on type
+            const colors = {
+                'info': 'bg-blue-500',
+                'success': 'bg-[#6b8e23]',
+                'error': 'bg-red-500'
+            };
+            
+            notification.classList.add(colors[type] || colors.info);
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove setelah 2 detik
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateY(10px)';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 2000);
+        };
+        
+        console.log('✅ Global functions defined');
+    </script>
+    
+    <script type="module">
+    // Import necessary modules and functions
+    import { auth } from '../../config/firebase-init.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { setupChatListeners, addMessageToChat } from '../../assets/js/chat/chat-logic.js';
+    import { getUserGreenhouseDataForAI } from '../../assets/js/greenhouse/greenhouse-service.js';
+    import aiAutoNotificationService from '../../assets/js/core/ai-auto-notification.js';
+    import { initChatHistoryPanel } from '../../assets/js/chat/chat-history-panel.js';
+
+    // --- Global Window Assignments ---
+    // Assign functions to the window object so they can be called from onclick attributes in the HTML.
+    
+    window.toggleDataSummary = function() {
+        document.getElementById('user-data-summary')?.classList.toggle('hidden');
+    };
+
+    window.sendQuickAction = function(actionType) {
+        const actionMessages = {
+            'analisis': 'Berdasarkan semua data greenhouse yang sudah saya input, tolong berikan analisis lengkap dan kesimpulan tentang kondisi greenhouse saya.',
+            'produk': 'Berdasarkan data greenhouse saya, berikan prediksi hasil panen dan tips perawatannya.',
+            'profit': 'Hitung potensi hasil panen dari data greenhouse saya dan berikan estimasi nilai ekonominya.',
+            'ringkasan': 'Tampilkan ringkasan lengkap dari semua data greenhouse yang sudah saya input.'
+        };
+        const message = actionMessages[actionType];
+        if (message) {
+        const chatInput = document.getElementById('chat-input');
+        if (chatInput) {
+                chatInput.value = message;
+            chatInput.focus();
+                chatInput.style.height = 'auto';
+                chatInput.style.height = `${Math.min(chatInput.scrollHeight, 150)}px`;
+        }
+        }
+    };
+
+    // --- Core Logic ---
+
+    // Loads and displays a summary of the user's greenhouse data.
+    async function loadUserDataSummary() {
+        try {
+            const user = auth.currentUser;
+            if (!user) return;
+            
+            const result = await getUserGreenhouseDataForAI(user.uid);
+            if (!result.success || !result.data) return;
+
+                const summaryCard = document.getElementById('user-data-summary');
+                const summaryContent = document.getElementById('data-summary-content');
+            if (summaryCard && summaryContent) {
+                summaryContent.innerHTML = `<p class="text-xs text-gray-600">💡 AI sudah membaca data Anda. Klik "Analisis Greenhouse" untuk kesimpulan lengkap!</p>`;
+                summaryCard.classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error('❌ Error loading user data summary:', error);
+        }
+    }
+    
+    // Checks for data passed from other pages via sessionStorage and notifies the user.
+    function checkLatestDataInput() {
+        try {
+            const latestDataStr = sessionStorage.getItem('latestDataInput');
+            if (latestDataStr) {
+                const dataInput = JSON.parse(latestDataStr);
+                if ((new Date() - new Date(dataInput.timestamp)) / (1000 * 60) < 5) {
+                    const aiMessage = `🎉 Saya lihat Anda baru saja menginput data. Saya sudah membacanya! Klik "Analisis Greenhouse" untuk mendapatkan kesimpulan lengkap.`;
+                    setTimeout(() => addMessageToChat(aiMessage, 'ai'), 1000);
+                    setTimeout(loadUserDataSummary, 1500);
+                    sessionStorage.removeItem('latestDataInput');
+                }
+            }
+        } catch (error) {
+            console.error('Error checking latest data input:', error);
+        }
+    }
+
+    // --- Initialization ---
+
+    // Manages user session and redirects if not logged in.
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log('✅ User authenticated:', user.email);
+            loadUserDataSummary();
+        } else {
+            console.log('⚠️ No user logged in, redirecting...');
+            window.location.href = '../../login.html';
+        }
+    });
+    
+    // Sets up the page once the DOM is loaded.
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('🚀 Initializing chat page...');
+        
+        // This function sets up all event listeners and loads the chat history.
+        setupChatListeners();
+
+        // Initialize chat history panel
+        initChatHistoryPanel();
+
+        checkLatestDataInput();
+        
+        // Listen for AI auto-notifications.
+        if (aiAutoNotificationService?.listen) {
+             aiAutoNotificationService.listen((notification) => {
+                console.log('📢 Received AI auto notification:', notification);
+                addMessageToChat(notification.analysis, 'ai');
+        });
+        }
+        
+        console.log('✅ Chat page initialized.');
+    });
+    </script>
+    <!-- Navigation Indicator -->
+    <script type="module">
+        import { initNavigationIndicator } from '../../assets/js/core/navigation-indicator.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavigationIndicator();
+        });
+    </script>
+</body>
+</html>

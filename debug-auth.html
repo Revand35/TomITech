@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Auth - Greenomics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">🔍 Debug Authentication</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Auth Status -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">🔐 Authentication Status</h2>
+                <div id="auth-status" class="space-y-2">
+                    <p>Loading...</p>
+                </div>
+            </div>
+            
+            <!-- User Data -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">👤 User Data</h2>
+                <div id="user-data" class="space-y-2">
+                    <p>Loading...</p>
+                </div>
+            </div>
+            
+            <!-- Console Logs -->
+            <div class="bg-white rounded-lg shadow p-6 md:col-span-2">
+                <h2 class="text-xl font-semibold mb-4">📝 Console Logs</h2>
+                <div id="console-logs" class="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm max-h-64 overflow-y-auto">
+                    <p>Waiting for logs...</p>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="bg-white rounded-lg shadow p-6 md:col-span-2">
+                <h2 class="text-xl font-semibold mb-4">⚡ Actions</h2>
+                <div class="flex flex-wrap gap-4">
+                    <button id="check-auth" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Check Auth Status
+                    </button>
+                    <button id="go-login" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                        Go to Login
+                    </button>
+                    <button id="go-dashboard" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                        Go to Dashboard
+                    </button>
+                    <button id="clear-logs" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                        Clear Logs
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import authInstance from './assets/js/auth.js';
+        import { auth } from './config/firebase-init.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+        const authStatus = document.getElementById('auth-status');
+        const userData = document.getElementById('user-data');
+        const consoleLogs = document.getElementById('console-logs');
+        const checkAuthBtn = document.getElementById('check-auth');
+        const goLoginBtn = document.getElementById('go-login');
+        const goDashboardBtn = document.getElementById('go-dashboard');
+        const clearLogsBtn = document.getElementById('clear-logs');
+
+        let logCount = 0;
+
+        function addLog(message, type = 'info') {
+            logCount++;
+            const timestamp = new Date().toLocaleTimeString();
+            const colors = {
+                info: 'text-blue-400',
+                success: 'text-green-400',
+                error: 'text-red-400',
+                warning: 'text-yellow-400'
+            };
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `mb-1 ${colors[type]}`;
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            
+            consoleLogs.appendChild(logEntry);
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
+        }
+
+        function updateDisplay() {
+            const isAuth = authInstance.isUserAuthenticated();
+            const currentUser = authInstance.getCurrentUser();
+            const firebaseUser = auth.currentUser;
+            
+            authStatus.innerHTML = `
+                <p><strong>AuthInstance Ready:</strong> ${authInstance ? '✅ Yes' : '❌ No'}</p>
+                <p><strong>AuthInstance Authenticated:</strong> ${isAuth ? '✅ Yes' : '❌ No'}</p>
+                <p><strong>Firebase User:</strong> ${firebaseUser ? '✅ Yes' : '❌ No'}</p>
+                <p><strong>Timestamp:</strong> ${new Date().toLocaleTimeString()}</p>
+            `;
+            
+            if (currentUser) {
+                userData.innerHTML = `
+                    <p><strong>Name:</strong> ${currentUser.displayName || 'N/A'}</p>
+                    <p><strong>Email:</strong> ${currentUser.email || 'N/A'}</p>
+                    <p><strong>UID:</strong> ${currentUser.uid || 'N/A'}</p>
+                    <p><strong>Role:</strong> ${currentUser.role || 'N/A'}</p>
+                `;
+            } else if (firebaseUser) {
+                userData.innerHTML = `
+                    <p><strong>Name:</strong> ${firebaseUser.displayName || 'N/A'}</p>
+                    <p><strong>Email:</strong> ${firebaseUser.email || 'N/A'}</p>
+                    <p><strong>UID:</strong> ${firebaseUser.uid || 'N/A'}</p>
+                    <p><strong>Role:</strong> N/A (Firebase only)</p>
+                `;
+            } else {
+                userData.innerHTML = '<p class="text-red-500">No user data available</p>';
+            }
+        }
+
+        // Override console.log to capture logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog(args.join(' '), 'info');
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLog(args.join(' '), 'error');
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addLog(args.join(' '), 'warning');
+        };
+
+        // Listen for auth state changes
+        onAuthStateChanged(auth, (user) => {
+            addLog(`Auth state changed: ${user ? 'User logged in' : 'User logged out'}`, user ? 'success' : 'warning');
+            if (user) {
+                addLog(`User details: ${user.email} (${user.displayName})`, 'info');
+            }
+            updateDisplay();
+        });
+
+        // Event listeners
+        checkAuthBtn.addEventListener('click', () => {
+            addLog('Manual auth check triggered', 'info');
+            updateDisplay();
+        });
+
+        goLoginBtn.addEventListener('click', () => {
+            addLog('Navigating to login page', 'info');
+            window.location.href = './login.html';
+        });
+
+        goDashboardBtn.addEventListener('click', () => {
+            addLog('Navigating to dashboard', 'info');
+            window.location.href = './index.html';
+        });
+
+        clearLogsBtn.addEventListener('click', () => {
+            consoleLogs.innerHTML = '<p>Logs cleared</p>';
+            logCount = 0;
+        });
+
+        // Initial display
+        addLog('Debug page loaded', 'success');
+        updateDisplay();
+
+        // Periodic updates
+        setInterval(updateDisplay, 2000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Real-time Monitoring - TOMITECH</title>
+    <link rel="icon" href="../../assets/icons/logo.png">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com https://*.gstatic.com https://*.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net data: blob: https:; img-src 'self' data: https: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org; connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://esm.run https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://apis.google.com https://*.google.com https://*.googleapis.com http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; frame-src 'self' https://accounts.google.com https://*.firebaseapp.com; worker-src 'self' blob:; manifest-src 'self';">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    
+    <!-- Leaflet (OpenStreetMap) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Leaflet Draw -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- TOMITECH Design System -->
+    <link rel="stylesheet" href="../../assets/css/tomitech-design-system.css">
+    
+    <style>
+        body {
+            background: var(--tomitech-green-bg);
+            padding-bottom: 70px;
+        }
+        
+        .main-content {
+            padding: var(--spacing-md);
+            padding-bottom: 100px;
+        }
+        
+        /* Greenhouse Selector */
+        .greenhouse-selector-container {
+            margin-bottom: var(--spacing-lg);
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .greenhouse-selector-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .greenhouse-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(76, 175, 80, 0.2);
+            border-radius: 8px;
+            background: #ffffff;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .greenhouse-select:focus {
+            outline: none;
+            border-color: var(--tomitech-green-accent);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        
+        /* Stat Cards */
+        .stats-grid-monitoring {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .stat-card-monitoring {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .stat-card-monitoring:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .stat-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+        
+        .stat-card-icon.temperature { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .stat-card-icon.humidity { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+        .stat-card-icon.light { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .stat-card-icon.soil { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        
+        .stat-card-value-container {
+            display: flex;
+            align-items: baseline;
+            gap: var(--spacing-xs);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .stat-card-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        
+        .stat-card-unit {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .stat-card-label {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .stat-card-mini-chart {
+            height: 80px;
+            width: 100%;
+            margin-top: var(--spacing-sm);
+            position: relative;
+        }
+        
+        .stat-card-mini-chart canvas {
+            max-height: 80px;
+        }
+        
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .chart-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .chart-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
+        
+        /* Map Container */
+        .map-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .map-container-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .map-container-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #greenhouse-map {
+            width: 100%;
+            height: 400px;
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .map-area-tools {
+            margin-top: var(--spacing-md);
+            background: rgba(76, 175, 80, 0.08);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: 10px;
+            padding: var(--spacing-md);
+        }
+
+        .map-area-tools-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .map-area-tools-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #2d5016;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .map-area-hint {
+            font-size: 0.8125rem;
+            color: #4b5563;
+            margin: 0 0 var(--spacing-sm) 0;
+        }
+
+        .clear-areas-btn {
+            background: transparent;
+            border: 1px solid rgba(45, 80, 22, 0.2);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #2d5016;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .clear-areas-btn:hover {
+            background: rgba(45, 80, 22, 0.08);
+            border-color: rgba(45, 80, 22, 0.35);
+        }
+
+        .marked-areas-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .marked-areas-list .empty {
+            font-size: 0.8125rem;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .area-item {
+            background: #ffffff;
+            border: 1px solid rgba(45, 80, 22, 0.12);
+            border-radius: 8px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .area-item:hover {
+            border-color: rgba(45, 80, 22, 0.4);
+            box-shadow: 0 6px 12px rgba(45, 80, 22, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .area-item-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .area-item-name {
+            font-weight: 600;
+            color: #2d5016;
+        }
+
+        .area-item-size {
+            font-size: 0.8125rem;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .area-item-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        
+        /* Leaflet Map Styles */
+        .leaflet-container {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .greenhouse-marker {
+            background: transparent !important;
+            border: none !important;
+        }
+        
+        .greenhouse-popup .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .greenhouse-popup .leaflet-popup-content {
+            margin: 0;
+        }
+        
+        /* Loading State */
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .loading-state i {
+            font-size: 3rem;
+            color: var(--tomitech-green-accent);
+            margin-bottom: 16px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid-monitoring {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            #greenhouse-map {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="tomitech-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <img src="../../assets/icons/tittle.png" alt="TOMITECH" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <i class="fas fa-leaf" style="display:none; color: white; font-size: 1.5rem;"></i>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-title">
+                        Real-time Monitoring
+                        <span class="page-indicator monitoring">
+                            <i class="fas fa-chart-line"></i>
+                            Monitoring
+                        </span>
+                    </div>
+                    <div class="logo-subtitle">Greenhouse Sensor Data</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="../../dashboard.html" class="action-btn green" title="Dashboard">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Greenhouse Selector -->
+        <div class="greenhouse-selector-container">
+            <div class="greenhouse-selector-label">
+                <i class="fas fa-seedling"></i>
+                Pilih Greenhouse
+            </div>
+            <select id="greenhouse-select" class="greenhouse-select">
+                <option value="">Loading greenhouses...</option>
+            </select>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stats-grid-monitoring">
+            <div class="stat-card-monitoring">
+                <div class="stat-card-header">
+                    <div class="stat-card-icon temperature">
+                        <i class="fas fa-thermometer-half"></i>
+                    </div>
+                    <div class="stat-card-label">Temperature</div>
+                </div>
+                <div class="stat-card-value-container">
+                    <div class="stat-card-value" id="stat-temperature">--</div>
+                    <div class="stat-card-unit">°C</div>
+                </div>
+                <div class="stat-card-mini-chart">
+                    <canvas id="mini-chart-temperature"></canvas>
+                </div>
+            </div>
+            
+            <div class="stat-card-monitoring">
+                <div class="stat-card-header">
+                    <div class="stat-card-icon humidity">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="stat-card-label">Humidity</div>
+                </div>
+                <div class="stat-card-value-container">
+                    <div class="stat-card-value" id="stat-humidity">--</div>
+                    <div class="stat-card-unit">%</div>
+                </div>
+                <div class="stat-card-mini-chart">
+                    <canvas id="mini-chart-humidity"></canvas>
+                </div>
+            </div>
+            
+            <div class="stat-card-monitoring">
+                <div class="stat-card-header">
+                    <div class="stat-card-icon light">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="stat-card-label">Light Level</div>
+                </div>
+                <div class="stat-card-value-container">
+                    <div class="stat-card-value" id="stat-light">--</div>
+                    <div class="stat-card-unit">lux</div>
+                </div>
+                <div class="stat-card-mini-chart">
+                    <canvas id="mini-chart-light"></canvas>
+                </div>
+            </div>
+            
+            <div class="stat-card-monitoring">
+                <div class="stat-card-header">
+                    <div class="stat-card-icon soil">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div class="stat-card-label">Soil Moisture</div>
+                </div>
+                <div class="stat-card-value-container">
+                    <div class="stat-card-value" id="stat-soil">--</div>
+                    <div class="stat-card-unit">%</div>
+                </div>
+                <div class="stat-card-mini-chart">
+                    <canvas id="mini-chart-soil"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Google Maps -->
+        <div class="map-container">
+            <div class="map-container-header">
+                <div class="map-container-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Lokasi Greenhouse
+                </div>
+            </div>
+            <div id="greenhouse-map"></div>
+            <div class="map-area-tools">
+                <div class="map-area-tools-header">
+                    <div class="map-area-tools-title">
+                        <i class="fas fa-draw-polygon"></i>
+                        Daerah Ditandai
+                    </div>
+                    <button id="clear-areas-btn" type="button" class="clear-areas-btn">
+                        <i class="fas fa-trash-alt"></i>
+                        Hapus Semua
+                    </button>
+                </div>
+                <p class="map-area-hint">
+                    Gunakan tombol poligon atau persegi di pojok kiri atas peta untuk menandai area greenhouse. Klik area pada daftar untuk fokus ke lokasi tersebut.
+                </p>
+                <ul id="marked-areas-list" class="marked-areas-list">
+                    <li class="empty">Belum ada area yang ditandai.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="tomitech-bottom-nav">
+        <a href="../../dashboard.html" class="tomitech-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="chat.html" class="tomitech-nav-item">
+            <div class="ai-assistant-nav-icon">
+                <i class="fas fa-robot ai-robot-icon"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+            </div>
+            <span>AI Assistant</span>
+        </a>
+        <a href="plant-input.html" class="tomitech-nav-item">
+            <i class="fas fa-file-alt"></i>
+            <span>Input Data</span>
+        </a>
+        <a href="monitoring.html" class="tomitech-nav-item active">
+            <i class="fas fa-chart-line"></i>
+            <span>Monitoring</span>
+        </a>
+        <a href="forum.html" class="tomitech-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reports</span>
+        </a>
+        <a href="profil.html" class="tomitech-nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        // Import modules
+        import { auth } from '../../config/firebase-init.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { RealtimeSensorMonitor } from '../../assets/js/monitoring/realtime-sensor-monitor.js';
+        import { GreenhouseMapManager } from '../../assets/js/maps/greenhouse-map-manager.js';
+        import { GreenhouseSelector } from '../../assets/js/monitoring/greenhouse-selector.js';
+        import { getGreenhousesWithLocation } from '../../assets/js/greenhouse/greenhouse-service.js';
+
+        // Global variables
+        let sensorMonitor = null;
+        let miniCharts = {};
+        let mapManager = null;
+        let greenhouseSelector = null;
+        let currentUserId = null;
+
+        // No callback needed for Leaflet (loads synchronously)
+
+        /**
+         * Create mini chart untuk stat card (real-time tanpa plugin streaming)
+         */
+        function createMiniChart(canvasId, label, unit, borderColor, backgroundColor) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas || typeof Chart === 'undefined') {
+                return null;
+            }
+
+            const ctx = canvas.getContext('2d');
+            const maxDataPoints = 20; // Tampilkan 20 data point terakhir
+            let dataPoints = [];
+            
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: label,
+                        data: [],
+                        borderColor: borderColor,
+                        backgroundColor: backgroundColor,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 0
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `${label}: ${context.parsed.y.toFixed(2)} ${unit}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+
+            // Store data points array in chart object for easy access
+            chart.dataPoints = dataPoints;
+            chart.maxDataPoints = maxDataPoints;
+            
+            return chart;
+        }
+
+        /**
+         * Initialize mini charts untuk stat cards
+         */
+        function initializeMiniCharts() {
+            miniCharts.temperature = createMiniChart(
+                'mini-chart-temperature',
+                'Temperature',
+                '°C',
+                '#ef4444',
+                'rgba(239, 68, 68, 0.1)'
+            );
+
+            miniCharts.humidity = createMiniChart(
+                'mini-chart-humidity',
+                'Humidity',
+                '%',
+                '#3b82f6',
+                'rgba(59, 130, 246, 0.1)'
+            );
+
+            miniCharts.lightLevel = createMiniChart(
+                'mini-chart-light',
+                'Light Level',
+                'lux',
+                '#f59e0b',
+                'rgba(245, 158, 11, 0.1)'
+            );
+
+            miniCharts.soilMoisture = createMiniChart(
+                'mini-chart-soil',
+                'Soil Moisture',
+                '%',
+                '#10b981',
+                'rgba(16, 185, 129, 0.1)'
+            );
+
+            console.log('✅ Mini charts initialized');
+        }
+
+        /**
+         * Update mini chart dengan data baru
+         */
+        function updateMiniChart(chartType, value) {
+            if (!miniCharts[chartType]) {
+                return;
+            }
+
+            const chart = miniCharts[chartType];
+            const now = new Date();
+            const timeLabel = now.getHours().toString().padStart(2, '0') + ':' + 
+                            now.getMinutes().toString().padStart(2, '0') + ':' + 
+                            now.getSeconds().toString().padStart(2, '0');
+
+            // Add new data point
+            chart.data.labels.push(timeLabel);
+            chart.data.datasets[0].data.push(value);
+
+            // Keep only last maxDataPoints
+            if (chart.data.labels.length > chart.maxDataPoints) {
+                chart.data.labels.shift();
+                chart.data.datasets[0].data.shift();
+            }
+
+            // Update chart
+            chart.update('none'); // 'none' untuk no animation
+        }
+
+        /**
+         * Reset mini charts
+         */
+        function resetMiniCharts() {
+            Object.keys(miniCharts).forEach(key => {
+                if (miniCharts[key]) {
+                    miniCharts[key].data.labels = [];
+                    miniCharts[key].data.datasets[0].data = [];
+                    miniCharts[key].update('none');
+                }
+            });
+            console.log('🔄 Mini charts reset');
+        }
+
+        // Update stat cards
+        function updateStatCards(sensorData) {
+            if (sensorData.temperature !== undefined) {
+                document.getElementById('stat-temperature').textContent = sensorData.temperature.toFixed(1);
+                updateMiniChart('temperature', sensorData.temperature);
+            }
+            if (sensorData.humidity !== undefined) {
+                document.getElementById('stat-humidity').textContent = sensorData.humidity.toFixed(1);
+                updateMiniChart('humidity', sensorData.humidity);
+            }
+            if (sensorData.lightLevel !== undefined) {
+                document.getElementById('stat-light').textContent = sensorData.lightLevel.toFixed(0);
+                updateMiniChart('lightLevel', sensorData.lightLevel);
+            }
+            if (sensorData.soilMoisture !== undefined) {
+                document.getElementById('stat-soil').textContent = sensorData.soilMoisture.toFixed(1);
+                updateMiniChart('soilMoisture', sensorData.soilMoisture);
+            }
+        }
+
+        // Handle greenhouse selection
+        async function handleGreenhouseSelect(greenhouseId, greenhouse) {
+            console.log('🔄 Switching to greenhouse:', greenhouseId);
+
+            // Stop previous monitoring
+            if (sensorMonitor) {
+                sensorMonitor.stopMonitoring();
+            }
+            
+            // Reset mini charts
+            resetMiniCharts();
+
+            // Start new monitoring
+            if (greenhouseId) {
+                sensorMonitor = new RealtimeSensorMonitor(greenhouseId);
+                sensorMonitor.startMonitoring(
+                    (sensorData) => {
+                        // Update stat cards (termasuk mini charts)
+                        updateStatCards(sensorData);
+                        
+                        // Update map info window
+                        if (mapManager) {
+                            mapManager.updateMarkerInfo(greenhouseId, sensorData);
+                        }
+                    },
+                    (error) => {
+                        console.error('❌ Monitoring error:', error);
+                    }
+                );
+            }
+
+            // Highlight selected marker on map
+            if (mapManager) {
+                mapManager.showInfoWindow(greenhouseId);
+            }
+        }
+
+        // Initialize monitoring page
+        async function initializeMonitoring(userId) {
+            currentUserId = userId;
+
+            // Initialize mini charts untuk stat cards
+            initializeMiniCharts();
+
+            // Initialize map manager (OpenStreetMap dengan Leaflet)
+            mapManager = new GreenhouseMapManager('greenhouse-map', {
+                areaListElementId: 'marked-areas-list'
+            });
+            
+            // Wait for Leaflet to load
+            if (typeof L !== 'undefined') {
+                await mapManager.initMap();
+            } else {
+                // Wait for Leaflet to load
+                let checkCount = 0;
+                const checkInterval = setInterval(() => {
+                    if (typeof L !== 'undefined') {
+                        clearInterval(checkInterval);
+                        mapManager.initMap();
+                    }
+                    checkCount++;
+                    if (checkCount > 50) { // 5 seconds timeout
+                        clearInterval(checkInterval);
+                        console.error('❌ Leaflet library failed to load');
+                    }
+                }, 100);
+            }
+
+            // Initialize greenhouse selector
+            greenhouseSelector = new GreenhouseSelector('greenhouse-select', handleGreenhouseSelect);
+            await greenhouseSelector.loadGreenhouses(userId);
+
+            // Load greenhouses with location for map
+            const locationResult = await getGreenhousesWithLocation(userId);
+            if (locationResult.success && locationResult.data.length > 0) {
+                locationResult.data.forEach(greenhouse => {
+                    mapManager.addGreenhouseMarker(
+                        greenhouse,
+                        null, // sensor data akan diupdate nanti
+                        (greenhouseId) => {
+                            // Click marker -> switch greenhouse
+                            greenhouseSelector.selectGreenhouse(greenhouseId);
+                        }
+                    );
+                });
+                
+                // Fit bounds untuk semua markers
+                setTimeout(() => {
+                    mapManager.fitBounds();
+                }, 500);
+            }
+
+            console.log('✅ Monitoring page initialized');
+        }
+
+        // Auth state change handler
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                console.log('✅ User authenticated:', user.email);
+                await initializeMonitoring(user.uid);
+            } else {
+                console.log('⚠️ No user logged in, redirecting...');
+                window.location.href = '../../login.html';
+            }
+        });
+
+        // Clear areas button
+        const clearAreasBtn = document.getElementById('clear-areas-btn');
+        if (clearAreasBtn) {
+            clearAreasBtn.addEventListener('click', () => {
+                if (mapManager) {
+                    mapManager.clearMarkedAreas();
+                }
+            });
+        }
+    </script>
+    <!-- Navigation Indicator -->
+    <script type="module">
+        import { initNavigationIndicator } from '../../assets/js/core/navigation-indicator.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavigationIndicator();
+        });
+    </script>
+</body>
+</html>
+

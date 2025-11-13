@@ -1,0 +1,681 @@
+/* TOMITECH Global CSS - Design System */
+/* Color Palette dari gambar */
+:root {
+    /* Primary Colors dari Logo */
+    --tomitech-light-green: #8ec67c;
+    --tomitech-off-white: #edefed;
+    --tomitech-dark-green: #2c4d32;
+    --tomitech-vibrant-green: #3ea377;
+    --tomitech-grayish-green: #b1c4bb;
+    
+    /* Additional Colors untuk UI */
+    --white: #ffffff;
+    --dark-gray: #424242;
+    --medium-gray: #9e9e9e;
+    --light-gray: #f5f5f5;
+    
+    /* Accent Colors untuk Action Buttons */
+    --accent-blue: #4285f4;
+    --accent-purple: #9c27b0;
+    --accent-orange: #ff9800;
+    --accent-teal: #00bcd4;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--tomitech-off-white);
+    color: var(--dark-gray);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+/* Header Styles */
+.tomitech-header {
+    background: linear-gradient(135deg, var(--tomitech-dark-green) 0%, var(--tomitech-vibrant-green) 100%);
+    color: var(--white);
+    padding: 1rem 1.25rem;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.tomitech-header .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tomitech-header .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.tomitech-header .logo-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--tomitech-vibrant-green);
+    border-radius: 10px;
+}
+
+.tomitech-header .logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.tomitech-header .logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.tomitech-header .logo-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--white);
+}
+
+.tomitech-header .logo-subtitle {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 0.15rem;
+}
+
+.tomitech-header .header-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.tomitech-header .header-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tomitech-header .header-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Card Styles */
+.tomitech-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1rem;
+}
+
+.tomitech-card-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.tomitech-card-profile .profile-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--tomitech-light-green);
+}
+
+.tomitech-card-profile .profile-info {
+    flex: 1;
+}
+
+.tomitech-card-profile .profile-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--dark-gray);
+    margin-bottom: 0.25rem;
+}
+
+.tomitech-card-profile .profile-detail {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+    margin-bottom: 0.15rem;
+}
+
+.tomitech-card-profile .eco-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--white);
+    border: 2px solid var(--tomitech-grayish-green);
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+}
+
+.tomitech-card-profile .eco-score-label {
+    font-size: 0.7rem;
+    color: var(--medium-gray);
+    margin-bottom: 0.25rem;
+}
+
+.tomitech-card-profile .eco-score-value {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--tomitech-vibrant-green);
+}
+
+/* Action Buttons Grid */
+.action-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.action-button {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    color: var(--white);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    min-height: 120px;
+}
+
+.action-button:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.action-button.blue {
+    background: linear-gradient(135deg, var(--accent-blue), #5a9ef7);
+}
+
+.action-button.green {
+    background: linear-gradient(135deg, var(--tomitech-vibrant-green), var(--tomitech-light-green));
+}
+
+.action-button.purple {
+    background: linear-gradient(135deg, var(--accent-purple), #ba68c8);
+}
+
+.action-button.orange {
+    background: linear-gradient(135deg, var(--accent-orange), #ffb74d);
+}
+
+.action-button .icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.action-button .title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.action-button .subtitle {
+    font-size: 0.75rem;
+    opacity: 0.9;
+}
+
+/* Recent Activities */
+.recent-activities {
+    margin-top: 1.5rem;
+}
+
+.recent-activities-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.recent-activities-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--dark-gray);
+}
+
+.recent-activities-link {
+    font-size: 0.9rem;
+    color: var(--tomitech-vibrant-green);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.activity-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.activity-card.light-green {
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+}
+
+.activity-card.light-blue {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+}
+
+.activity-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--white);
+}
+
+.activity-icon.green {
+    background: var(--tomitech-vibrant-green);
+}
+
+.activity-icon.blue {
+    background: var(--accent-blue);
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+    margin-bottom: 0.25rem;
+}
+
+.activity-detail {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: var(--medium-gray);
+    text-align: right;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    background: var(--white);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.75rem 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--medium-gray);
+    transition: all 0.3s ease;
+    padding: 0.25rem 0.5rem;
+}
+
+.bottom-nav-item i {
+    font-size: 1.4rem;
+    margin-bottom: 0.25rem;
+}
+
+.bottom-nav-item span {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.bottom-nav-item.active {
+    color: var(--tomitech-vibrant-green);
+}
+
+.bottom-nav-item.active i {
+    color: var(--tomitech-vibrant-green);
+}
+
+/* Form Styles */
+.form-container {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    margin: 1rem 0;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+    margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--tomitech-grayish-green);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--dark-gray);
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--tomitech-vibrant-green);
+    box-shadow: 0 0 0 3px rgba(62, 163, 119, 0.1);
+}
+
+.form-input::placeholder {
+    color: var(--medium-gray);
+}
+
+.form-button {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--tomitech-vibrant-green), var(--tomitech-light-green));
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.form-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.form-button:active {
+    transform: translateY(0);
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border: 2px solid var(--tomitech-grayish-green);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.search-bar i {
+    color: var(--medium-gray);
+    margin-right: 0.75rem;
+}
+
+.search-bar input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+    background: transparent;
+}
+
+.search-bar input::placeholder {
+    color: var(--medium-gray);
+}
+
+/* Filter Chips */
+.filter-chips {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    scrollbar-width: none;
+}
+
+.filter-chips::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-chip {
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.filter-chip.selected {
+    background: var(--tomitech-vibrant-green);
+    color: var(--white);
+    border-color: var(--tomitech-vibrant-green);
+}
+
+.filter-chip:not(.selected) {
+    background: var(--tomitech-off-white);
+    color: var(--dark-gray);
+    border-color: var(--tomitech-grayish-green);
+}
+
+/* Report Card */
+.report-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.report-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.report-card-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.report-card-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--white);
+}
+
+.report-card-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--dark-gray);
+    margin-bottom: 0.25rem;
+}
+
+.report-card-subtitle {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+}
+
+.report-card-time {
+    font-size: 0.75rem;
+    color: var(--medium-gray);
+}
+
+.report-card-metrics {
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid var(--tomitech-off-white);
+    border-bottom: 1px solid var(--tomitech-off-white);
+}
+
+.report-metric {
+    text-align: center;
+}
+
+.report-metric-value {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.report-metric-value.green {
+    color: var(--tomitech-vibrant-green);
+}
+
+.report-metric-value.blue {
+    color: var(--accent-blue);
+}
+
+.report-metric-value.purple {
+    color: var(--accent-purple);
+}
+
+.report-metric-label {
+    font-size: 0.75rem;
+    color: var(--medium-gray);
+}
+
+.report-card-engagement {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--tomitech-off-white);
+}
+
+.report-engagement-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+}
+
+.report-card-tag {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-top: 0.75rem;
+}
+
+.report-card-tag.green {
+    background: var(--tomitech-vibrant-green);
+}
+
+.report-card-tag.blue {
+    background: var(--accent-blue);
+}
+
+/* Main Content Padding */
+.main-content {
+    padding: 1rem 1.25rem;
+    padding-bottom: 5rem; /* Space for bottom nav */
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .tomitech-header .logo-title {
+        font-size: 1.1rem;
+    }
+    
+    .tomitech-header .logo-subtitle {
+        font-size: 0.7rem;
+    }
+    
+    .action-button {
+        min-height: 100px;
+        padding: 1.25rem;
+    }
+    
+    .action-button .icon {
+        font-size: 1.75rem;
+    }
+}
+

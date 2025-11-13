@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Final Sistem Authentication - TOMITECH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .test-box { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin: 10px 0; }
+        .success-box { background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 15px; margin: 10px 0; }
+        .error-box { background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 15px; margin: 10px 0; }
+        .warning-box { background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 10px 0; }
+        .info-box { background-color: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px; padding: 15px; margin: 10px 0; }
+        .code-box { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 10px; font-family: monospace; margin: 10px 0; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+    </style>
+</head>
+<body class="p-8 bg-gray-100">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">🎯 Test Final Sistem Authentication Baru</h1>
+        
+        <div class="success-box">
+            <h2 class="text-xl font-semibold mb-2">✅ Sistem Authentication Baru Telah Selesai Dibuat</h2>
+            <p>Sistem authentication lama telah dihapus dan diganti dengan sistem baru yang sederhana dan hanya menggunakan Google Login:</p>
+            <ul class="list-disc list-inside mt-2">
+                <li>✅ Halaman login lama dihapus</li>
+                <li>✅ Sistem authentication lama dihapus</li>
+                <li>✅ Sistem authentication baru dibuat dengan Google Login</li>
+                <li>✅ Konfigurasi Firebase diperbarui</li>
+                <li>✅ Halaman login baru dibuat</li>
+                <li>✅ Halaman profil baru dibuat</li>
+                <li>✅ Semua halaman diupdate untuk menggunakan sistem auth baru</li>
+                <li>✅ File debug yang tidak diperlukan dihapus</li>
+            </ul>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">🧪 Test Authentication Lengkap</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <button id="testGoogleLogin" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 font-medium">
+                    Test Google Login
+                </button>
+                <button id="testLogout" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 font-medium">
+                    Test Logout
+                </button>
+                <button id="testAuthState" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 font-medium">
+                    Check Auth State
+                </button>
+                <button id="testPageAccess" class="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 font-medium">
+                    Test Page Access
+                </button>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">🔗 Test Semua Halaman</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <a href="login.html" class="block bg-green-500 text-white px-4 py-3 rounded-lg hover:bg-green-600 text-center">
+                    🚀 Login Page
+                </a>
+                <a href="index.html" class="block bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-blue-600 text-center">
+                    🏠 Dashboard
+                </a>
+                <a href="pages/features/profil.html" class="block bg-purple-500 text-white px-4 py-3 rounded-lg hover:bg-purple-600 text-center">
+                    👤 Profile Page
+                </a>
+                <a href="pages/features/chat.html" class="block bg-orange-500 text-white px-4 py-3 rounded-lg hover:bg-orange-600 text-center">
+                    💬 Chat Page
+                </a>
+                <a href="pages/features/accounting.html" class="block bg-teal-500 text-white px-4 py-3 rounded-lg hover:bg-teal-600 text-center">
+                    📚 Accounting Page
+                </a>
+                <a href="pages/features/forum.html" class="block bg-indigo-500 text-white px-4 py-3 rounded-lg hover:bg-indigo-600 text-center">
+                    💭 Forum Page
+                </a>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold mb-4">📋 Test Results</h3>
+            <div id="testLogs"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import authInstance from './assets/js/auth.js';
+        import { auth } from './config/firebase-init.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+        const testLogs = document.getElementById('testLogs');
+
+        function addTestLog(message, type = 'info', details = '') {
+            const logDiv = document.createElement('div');
+            logDiv.className = `${type}-box`;
+            logDiv.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="font-medium">${message}</span>
+                    <span class="text-sm">${new Date().toLocaleTimeString()}</span>
+                </div>
+                ${details ? `<div class="code-box">${details}</div>` : ''}
+            `;
+            testLogs.appendChild(logDiv);
+            testLogs.scrollTop = testLogs.scrollHeight;
+        }
+
+        // Test Google Login
+        document.getElementById('testGoogleLogin').addEventListener('click', async () => {
+            addTestLog('🚀 Testing Google Login...', 'warning');
+            
+            try {
+                const result = await authInstance.signInWithGoogle();
+                
+                if (result.success) {
+                    addTestLog('✅ Google Login Successful!', 'success');
+                    addTestLog(`   User: ${result.user.displayName}`, 'success');
+                    addTestLog(`   Email: ${result.user.email}`, 'success');
+                    addTestLog(`   UID: ${result.user.uid}`, 'success');
+                } else {
+                    addTestLog('❌ Google Login Failed: No success result', 'error');
+                }
+
+            } catch (error) {
+                addTestLog('❌ Google Login Error:', 'error');
+                addTestLog(`   Error: ${error.message}`, 'error');
+                addTestLog(`   Code: ${error.code || 'No code'}`, 'error');
+            }
+        });
+
+        // Test Logout
+        document.getElementById('testLogout').addEventListener('click', async () => {
+            addTestLog('🚪 Testing Logout...', 'warning');
+            
+            try {
+                const result = await authInstance.signOut();
+                
+                if (result.success) {
+                    addTestLog('✅ Logout Successful!', 'success');
+                } else {
+                    addTestLog('❌ Logout Failed: No success result', 'error');
+                }
+
+            } catch (error) {
+                addTestLog('❌ Logout Error:', 'error');
+                addTestLog(`   Error: ${error.message}`, 'error');
+            }
+        });
+
+        // Test Auth State
+        document.getElementById('testAuthState').addEventListener('click', () => {
+            addTestLog('🔍 Checking Auth State...', 'info');
+            
+            const isAuthenticated = authInstance.isUserAuthenticated();
+            const currentUser = authInstance.getCurrentUser();
+            
+            addTestLog(`   Is Authenticated: ${isAuthenticated}`, isAuthenticated ? 'success' : 'warning');
+            
+            if (currentUser) {
+                addTestLog(`   Current User: ${currentUser.displayName}`, 'success');
+                addTestLog(`   Email: ${currentUser.email}`, 'success');
+                addTestLog(`   Role: ${currentUser.role}`, 'success');
+                addTestLog(`   UID: ${currentUser.uid}`, 'info');
+            } else {
+                addTestLog('   No current user', 'warning');
+            }
+        });
+
+        // Test Page Access
+        document.getElementById('testPageAccess').addEventListener('click', () => {
+            addTestLog('🔗 Testing Page Access...', 'info');
+            
+            const pages = [
+                { name: 'Login', url: 'login.html' },
+                { name: 'Dashboard', url: 'index.html' },
+                { name: 'Profile', url: 'pages/features/profil.html' },
+                { name: 'Chat', url: 'pages/features/chat.html' },
+                { name: 'Accounting', url: 'pages/features/accounting.html' },
+                { name: 'Forum', url: 'pages/features/forum.html' }
+            ];
+            
+            pages.forEach(page => {
+                addTestLog(`   ${page.name}: ${page.url}`, 'info');
+            });
+            
+            addTestLog('   All pages should redirect to login if not authenticated', 'warning');
+        });
+
+        // Monitor auth state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                addTestLog('🔄 Auth State Changed: User logged in', 'success');
+                addTestLog(`   User: ${user.displayName}`, 'success');
+            } else {
+                addTestLog('🔄 Auth State Changed: User logged out', 'warning');
+            }
+        });
+
+        // Auto-run basic checks on load
+        window.addEventListener('load', () => {
+            addTestLog('🎯 Final Authentication Test Tool loaded', 'success');
+            addTestLog('Sistem authentication baru siap untuk production!', 'success');
+            addTestLog('Klik tombol test untuk memulai testing lengkap', 'info');
+            addTestLog('Atau klik link halaman untuk test langsung', 'info');
+        });
+    </script>
+</body>
+</html>

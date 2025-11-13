@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Login - Greenomics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">🔧 Debug Login Issues</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Step 1: Test JavaScript</h2>
+            <button id="jsTestBtn" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Test JavaScript</button>
+            <div id="jsResult" class="mt-2 text-sm"></div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Step 2: Test Firebase Import</h2>
+            <button id="firebaseTestBtn" class="bg-green-500 text-white px-4 py-2 rounded mr-2">Test Firebase</button>
+            <div id="firebaseResult" class="mt-2 text-sm"></div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Step 3: Test Google Login</h2>
+            <button id="googleTestBtn" class="bg-red-500 text-white px-4 py-2 rounded mr-2">Test Google Login</button>
+            <div id="googleResult" class="mt-2 text-sm"></div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Console Logs</h2>
+            <div id="consoleLogs" class="bg-gray-100 p-4 rounded text-sm font-mono max-h-40 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Capture console logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const consoleLogs = document.getElementById('consoleLogs');
+        
+        function addToConsole(message, type = 'log') {
+            const div = document.createElement('div');
+            div.className = type === 'error' ? 'text-red-600' : 'text-gray-800';
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            consoleLogs.appendChild(div);
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+
+        // Test 1: JavaScript
+        document.getElementById('jsTestBtn').addEventListener('click', () => {
+            const result = document.getElementById('jsResult');
+            result.innerHTML = '<span class="text-green-600">✅ JavaScript is working!</span>';
+            console.log('JavaScript test passed');
+        });
+
+        // Test 2: Firebase Import
+        document.getElementById('firebaseTestBtn').addEventListener('click', async () => {
+            const result = document.getElementById('firebaseResult');
+            try {
+                console.log('Testing Firebase import...');
+                
+                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+                const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+                
+                const firebaseConfig = {
+                    apiKey: "AIzaSyD43R9_h0qZc5TFTrBn_Zt76Il3jDKP7kw",
+                    authDomain: "greenomics-id.firebaseapp.com",
+                    projectId: "greenomics-id",
+                    storageBucket: "greenomics-id.firebasestorage.app",
+                    messagingSenderId: "5727343643",
+                    appId: "1:5727343643:web:0b84a6197ee989aa5dd4be"
+                };
+                
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                
+                result.innerHTML = '<span class="text-green-600">✅ Firebase imported and initialized successfully!</span>';
+                console.log('Firebase test passed:', { app, auth });
+                
+            } catch (error) {
+                result.innerHTML = `<span class="text-red-600">❌ Firebase error: ${error.message}</span>`;
+                console.error('Firebase test failed:', error);
+            }
+        });
+
+        // Test 3: Google Login
+        document.getElementById('googleTestBtn').addEventListener('click', async () => {
+            const result = document.getElementById('googleResult');
+            try {
+                console.log('Testing Google Login...');
+                
+                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+                const { getAuth, GoogleAuthProvider, signInWithPopup } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+                
+                const firebaseConfig = {
+                    apiKey: "AIzaSyD43R9_h0qZc5TFTrBn_Zt76Il3jDKP7kw",
+                    authDomain: "greenomics-id.firebaseapp.com",
+                    projectId: "greenomics-id",
+                    storageBucket: "greenomics-id.firebasestorage.app",
+                    messagingSenderId: "5727343643",
+                    appId: "1:5727343643:web:0b84a6197ee989aa5dd4be"
+                };
+                
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                const provider = new GoogleAuthProvider();
+                
+                result.innerHTML = '<span class="text-yellow-600">🔄 Opening Google login popup...</span>';
+                console.log('Attempting Google login...');
+                
+                const result_login = await signInWithPopup(auth, provider);
+                const user = result_login.user;
+                
+                result.innerHTML = `<span class="text-green-600">✅ Google login successful! User: ${user.email}</span>`;
+                console.log('Google login test passed:', user);
+                
+            } catch (error) {
+                result.innerHTML = `<span class="text-red-600">❌ Google login error: ${error.message}</span>`;
+                console.error('Google login test failed:', error);
+            }
+        });
+
+        console.log('Debug page loaded successfully');
+    </script>
+</body>
+</html>

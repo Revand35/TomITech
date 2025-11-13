@@ -1,0 +1,12 @@
+{
+  "name": "moral-intelligence-tailwind",
+  "version": "1.0.0",
+  "description": "Production Tailwind CSS setup for Moral Intelligence",
+  "scripts": {
+    "build-css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --watch",
+    "build-css-prod": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

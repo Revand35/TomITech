@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Data - TOMITECH</title>
+    <meta name="theme-color" content="#2c4d32">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- TOMITECH Design System -->
+    <link rel="stylesheet" href="../../assets/css/tomitech-design-system.css">
+    
+    <script>
+        // Redirect to plant-input.html
+        window.location.replace('plant-input.html');
+    </script>
+    
+    <style>
+        :root {
+            --primary-green: #2d5a27;
+            --light-green: #4a7c59;
+            --accent-green: #6b8e23;
+            --soft-green: #e8f5e8;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --dark-gray: #2c3e50;
+            --text-gray: #6c757d;
+        }
+        
+        body { font-family: 'Inter', sans-serif; }
+        .nav-button.active { color: #6B8E23; }
+        .nav-button.active svg { color: #6B8E23; }
+        .material-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .material-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .reading-progress { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            height: 4px; 
+            background: linear-gradient(90deg, #6B8E23, #556B2F); 
+            z-index: 1000; 
+            transition: width 0.3s ease;
+        }
+        .stat-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    
+        /* Modern Gradients */
+        .modern-gradient {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 50%, var(--accent-green) 100%);
+            box-shadow: 0 4px 15px rgba(45, 90, 39, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .modern-gradient:hover {
+            box-shadow: 0 6px 25px rgba(45, 90, 39, 0.35);
+            transform: translateY(-2px);
+        }
+        
+        .card-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, var(--light-gray) 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card-gradient:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+    </style>
+    <script type="module" src="../../assets/js/auth.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#e8f5e8] to-[#f8f9fa]">
+
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress" class="reading-progress" style="width: 0%"></div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="pb-20">
+        <!-- Input Data Header -->
+        <div class="bg-gradient-to-r from-[#2d5a27] via-[#4a7c59] to-[#6b8e23] text-white p-6 rounded-b-3xl shadow-xl">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold mb-1">Data Greenhouse</h1>
+                    <p class="text-green-100 text-sm">Catat data sensor dan aktivitas tanaman</p>
+                </div>
+                <button id="add-data-button" class="bg-white/20 hover:bg-white/30 p-3 rounded-full transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7h14"/></svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-6 space-y-6">
+
+            <!-- Input Form -->
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Tambah Aktivitas Lingkungan</h2>
+                
+                <form id="environmental-activity-form" class="space-y-6">
+                    <!-- Activity Type -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Aktivitas</label>
+                        <select id="activity-type" class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Pilih jenis aktivitas</option>
+                            <option value="waste">Pengelolaan Limbah</option>
+                            <option value="energy">Penggunaan Energi</option>
+                            <option value="water">Penggunaan Air</option>
+                            <option value="carbon">Emisi Karbon</option>
+                            <option value="recycling">Daur Ulang</option>
+                        </select>
+                    </div>
+
+                    <!-- Material/Resource -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Material/Sumber Daya</label>
+                        <select id="material-type" class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Pilih material</option>
+                            <option value="plastic">Plastik</option>
+                            <option value="paper">Kertas</option>
+                            <option value="metal">Logam</option>
+                            <option value="organic">Organik</option>
+                            <option value="electricity">Listrik</option>
+                            <option value="water">Air</option>
+                        </select>
+                    </div>
+
+                    <!-- Amount -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah</label>
+                        <div class="flex">
+                            <input type="number" id="amount" placeholder="0" class="flex-1 p-3 border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <select id="unit" class="p-3 border border-gray-200 border-l-0 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="kg">kg</option>
+                                <option value="liter">liter</option>
+                                <option value="kwh">kWh</option>
+                                <option value="m3">m³</option>
+                                <option value="piece">buah</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Action -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Aksi</label>
+                        <select id="action" class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Pilih aksi</option>
+                            <option value="recycled">Daur Ulang</option>
+                            <option value="reduced">Dikurangi</option>
+                            <option value="reused">Digunakan Ulang</option>
+                            <option value="disposed">Dibuang</option>
+                            <option value="conserved">Dihasilkan</option>
+                        </select>
+                    </div>
+
+                    <!-- Cost -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Biaya (Opsional)</label>
+                        <input type="number" id="cost" placeholder="0" class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+
+                    <!-- Notes -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Catatan</label>
+                        <textarea id="notes" rows="3" placeholder="Tambahkan catatan tentang aktivitas ini..." class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full bg-gradient-to-r from-[#4a7c59] to-[#6b8e23] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all">
+                        💰 Hitung Nilai Ekonomi
+                    </button>
+                </form>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Hasil Aktivitas</h2>
+                <div id="recent-activities" class="space-y-4">
+                    <!-- Sample activities -->
+                    <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-[#6b8e23] rounded-full flex items-center justify-center text-white text-sm font-bold">♻️</div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Daur Ulang Plastik</h3>
+                                <p class="text-sm text-gray-600">50 kg • Rp 150.000</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-green-600">+5 Eco-Score</p>
+                            <p class="text-xs text-gray-500">2 jam lalu</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-blue-50 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">⚡</div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Penghematan Listrik</h3>
+                                <p class="text-sm text-gray-600">100 kWh • Rp 150.000</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-blue-600">+3 Eco-Score</p>
+                            <p class="text-xs text-gray-500">1 hari lalu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculation Results Modal -->
+    <div id="calculation-results-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-800">📊 Hasil Perhitungan Nilai Ekonomi</h2>
+                <button onclick="closeCalculationResults()" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6" id="calculation-results-content">
+                <!-- Results will be populated here -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="px-6 py-4 border-t border-gray-200 flex space-x-3">
+                <button onclick="closeCalculationResults()" class="flex-1 bg-gray-500 text-white py-3 rounded-xl font-semibold hover:bg-gray-600 transition-all duration-200 transform hover:scale-105">
+                    ✏️ Edit Data
+                </button>
+                <button id="save-to-firestore-btn" class="flex-1 bg-gradient-to-r from-[#4a7c59] to-[#6b8e23] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                    💾 Simpan ke Database
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Material Reader Modal -->
+    <div id="material-reader-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl w-full max-w-6xl h-[95vh] flex flex-col">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 flex-shrink-0">
+                <h2 id="material-title" class="text-xl font-bold text-gray-800">Loading...</h2>
+                <button onclick="closeMaterialReader()" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="flex-1 overflow-hidden p-6" id="material-content">
+                <div class="text-center py-20">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+                    <p class="text-gray-600">Memuat konten...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 p-3 z-40 shadow-lg">
+        <div class="flex justify-around items-center max-w-lg mx-auto">
+            <a href="../../index.html" data-page="home" class="nav-button flex flex-col items-center text-gray-500 text-xs font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="./chat.html" data-page="chat" class="nav-button flex flex-col items-center text-gray-500 text-xs font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423z" />
+                </svg>
+                AI Assistant
+            </a>
+            <a href="./accounting.html" data-page="accounting" class="nav-button active flex flex-col items-center text-gray-500 text-xs font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Input Data
+            </a>
+            <a href="./forum.html" data-page="forum" class="nav-button flex flex-col items-center text-gray-500 text-xs font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Reports
+            </a>
+            <a href="./profil.html" data-page="profile" class="nav-button flex flex-col items-center text-gray-500 text-xs font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                Profil
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+
+    <!-- Import User Stats System (replaces realtime-stats and material-tracker) -->
+    <script type="module" src="../../assets/js/core/user-stats.js"></script>
+
+    <script>
+        function setActiveNav() {
+            document.querySelectorAll('.nav-button').forEach(button => {
+                if (button.dataset.page === 'accounting') {
+                    button.classList.add('active');
+                }
+            });
+        }
+        
+        // Update completion rate
+        function updateCompletionRate() {
+            const materialsRead = parseInt(document.querySelector('[data-stat="materials-read"]')?.textContent || '0');
+            const materialsCompleted = parseInt(document.querySelector('[data-stat="materials-completed"]')?.textContent || '0');
+            
+            const completionRate = materialsRead > 0 ? Math.round((materialsCompleted / materialsRead) * 100) : 0;
+            const completionRateElement = document.getElementById('completion-rate');
+            if (completionRateElement) {
+                completionRateElement.textContent = `${completionRate}%`;
+            }
+        }
+
+        // Material Reader Functions
+        function openMaterialReader(materialId, materialName, materialUrl) {
+            const modal = document.getElementById('material-reader-modal');
+            const titleElement = document.getElementById('material-title');
+            const contentElement = document.getElementById('material-content');
+            
+            // Set title
+            titleElement.textContent = materialName;
+            
+            // Show modal
+            modal.classList.remove('hidden');
+            
+            // Start tracking using userStats
+            if (window.userStats) {
+                window.userStats.startMaterialTracking(materialId, materialName, 'document');
+            }
+            
+            // Load content
+            loadMaterialContent(materialUrl, materialName);
+        }
+
+        function closeMaterialReader() {
+            const modal = document.getElementById('material-reader-modal');
+            modal.classList.add('hidden');
+
+            // Stop tracking using userStats
+            if (window.userStats) {
+                window.userStats.stopMaterialTracking();
+            }
+        }
+
+        
+        async function loadMaterialContent(url, materialName) {
+            const contentElement = document.getElementById('material-content');
+
+            try {
+                // Detect file type from URL
+                const fileExtension = url.split('.').pop().toLowerCase();
+                const isPDF = fileExtension === 'pdf' || url.includes('.pdf');
+
+                if (isPDF) {
+                    // Embed PDF viewer
+                    contentElement.innerHTML = `
+                        <div class="h-full flex flex-col">
+                            <div class="flex-1 bg-gray-100 rounded-lg overflow-hidden" style="min-height: 600px;">
+                                <iframe
+                                    src="${url}"
+                                    class="w-full h-full"
+                                    style="min-height: 600px; border: none;"
+                                    title="${materialName}">
+                                </iframe>
+                            </div>
+                            <div class="mt-4 flex justify-center gap-3">
+                                <a href="${url}" target="_blank"
+                                   class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                                    🔗 Buka di Tab Baru
+                                </a>
+                                <button onclick="downloadMaterial('${url}', '${materialName}')"
+                                        class="bg-[#2d5a27] text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                                    📥 Unduh
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else if (fileExtension === 'doc' || fileExtension === 'docx' ||
+                           fileExtension === 'ppt' || fileExtension === 'pptx' ||
+                           fileExtension === 'xls' || fileExtension === 'xlsx') {
+                    // Use Google Docs Viewer for Office documents
+                    const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+                    contentElement.innerHTML = `
+                        <div class="h-full flex flex-col">
+                            <div class="flex-1 bg-gray-100 rounded-lg overflow-hidden" style="min-height: 600px;">
+                                <iframe
+                                    src="${viewerUrl}"
+                                    class="w-full h-full"
+                                    style="min-height: 600px; border: none;"
+                                    title="${materialName}">
+                                </iframe>
+                            </div>
+                            <div class="mt-4 flex justify-center gap-3">
+                                <a href="${url}" target="_blank"
+                                   class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                                    🔗 Buka di Tab Baru
+                                </a>
+                                <button onclick="downloadMaterial('${url}', '${materialName}')"
+                                        class="bg-[#2d5a27] text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                                    📥 Unduh
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // For other file types, show download option
+                    contentElement.innerHTML = `
+                        <div class="text-center py-10">
+                            <div class="w-24 h-24 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">${materialName}</h3>
+                            <p class="text-gray-600 mb-6">File ini tidak dapat ditampilkan di browser. Silakan unduh untuk membukanya.</p>
+                            <div class="space-y-3">
+                                <button onclick="downloadMaterial('${url}', '${materialName}')"
+                                        class="bg-[#2d5a27] text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                                    📥 Unduh Materi
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('Error loading material content:', error);
+                contentElement.innerHTML = `
+                    <div class="text-center py-10">
+                        <div class="text-red-500 mb-4">❌ Gagal memuat konten</div>
+                        <p class="text-gray-600">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        
+        // Make functions global
+        window.openMaterialReader = openMaterialReader;
+        window.closeMaterialReader = closeMaterialReader;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            setActiveNav();
+            
+            // Setup mark complete button
+            const markCompleteBtn = document.getElementById('mark-complete-btn');
+            if (markCompleteBtn) {
+                markCompleteBtn.addEventListener('click', () => {
+                    if (window.userStats) {
+                        window.userStats.forceCompleteMaterial();
+                    }
+                });
+            }
+            
+            // Update completion rate when stats change
+            setInterval(updateCompletionRate, 1000);
+        });
+    </script>
+        <script type="module">
+            import authInstance from '../../assets/js/auth.js';
+            import { auth } from '../../config/firebase-init.js';
+            import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+            
+            // Authentication will be handled in the main script block below
+            
+            // Materials functionality has been disabled
+            // This function is kept for compatibility but does nothing
+            async function loadMateri() {
+                console.log("📝 Materials functionality disabled - focusing on environmental activities");
+            }
+            
+            // Helper: Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+            }
+            
+            // Helper: Escape HTML to prevent XSS
+            function escapeHtml(text) {
+                if (!text) return '';
+                const map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return text.toString().replace(/[&<>"']/g, m => map[m]);
+            }
+
+            // Download material function
+            window.downloadMaterial = async function(url, filename) {
+                try {
+                    // Show loading indicator
+                    const btn = event.target;
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunduh...';
+                    btn.disabled = true;
+
+                    // Fetch the file as blob
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('Gagal mengunduh file');
+
+                    const blob = await response.blob();
+
+                    // Create download link
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Cleanup
+                    window.URL.revokeObjectURL(downloadUrl);
+                    document.body.removeChild(a);
+
+                    // Restore button
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                } catch (error) {
+                    console.error('Error downloading file:', error);
+                    alert('Gagal mengunduh file: ' + error.message);
+
+                    // Restore button
+                    if (event && event.target) {
+                        event.target.innerHTML = '📥 Unduh';
+                        event.target.disabled = false;
+                    }
+                }
+            };
+
+            document.addEventListener("DOMContentLoaded", loadMateri);
+        </script>
+        
+        <script type="module">
+            // Import Firebase Service untuk Environmental Activities
+            import environmentalService from '../../assets/js/core/environmental-activity-service.js';
+            // Import AI Auto Notification Service
+            import aiAutoNotificationService from '../../assets/js/core/ai-auto-notification.js';
+            // Import Firebase Auth functions (needed for authentication callback in this script block)
+            import { auth } from '../../config/firebase-init.js';
+            import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+            
+            // Destructure the functions from the service
+            const { saveEnvironmentalActivity, getUserActivities, getActivityStats, calculateEconomicValue, calculateEcoScore } = environmentalService;
+            
+            // Global variable to store current calculation data
+            let currentCalculationData = null;
+            
+            // ===== FUNCTION DEFINITIONS (must be before authentication callback) =====
+            // All functions are defined here to avoid hoisting issues
+            
+            // Update stats display dari Firebase Firestore
+            async function updateStatsDisplay() {
+                try {
+                    const stats = await getActivityStats();
+                    
+                    // Update stat cards if they exist
+                    const wasteAmountElement = document.querySelector('.stat-pulse');
+                    if (wasteAmountElement) {
+                        wasteAmountElement.textContent = `${stats.totalWasteAmount}`;
+                    }
+                    
+                    const economicValueElement = document.querySelectorAll('.stat-pulse')[1];
+                    if (economicValueElement) {
+                        economicValueElement.textContent = `Rp ${(stats.totalEconomicValue / 1000000).toFixed(1)}M`;
+                    }
+                    
+                    const ecoScoreElement = document.querySelectorAll('.stat-pulse')[2];
+                    if (ecoScoreElement) {
+                        ecoScoreElement.textContent = `${stats.averageEcoScore}`;
+                    }
+                    
+                    const efficiencyElement = document.querySelectorAll('.stat-pulse')[3];
+                    if (efficiencyElement) {
+                        const efficiency = stats.totalActivities > 0 ? 
+                            Math.round((stats.averageEcoScore / 100) * 100) : 0;
+                        efficiencyElement.textContent = `${efficiency}%`;
+                    }
+                    
+                    console.log('📊 Stats display updated from Firebase:', stats);
+                    
+                } catch (error) {
+                    console.error('Error updating stats display:', error);
+                    // Don't show error notification for stats - it's not critical
+                }
+            }
+            
+            // Load recent activities dari Firebase Firestore
+            async function loadRecentActivities() {
+                try {
+                    const activities = await getUserActivities(5); // Ambil 5 aktivitas terbaru
+                    const activitiesContainer = document.getElementById('recent-activities');
+                    
+                    if (!activitiesContainer) {
+                        console.log('Recent activities container not found');
+                        return;
+                    }
+                    
+                    // Clear existing activities
+                    activitiesContainer.innerHTML = '';
+                    
+                    if (activities.length === 0) {
+                        activitiesContainer.innerHTML = `
+                            <div class="text-center py-8 text-gray-500">
+                                <div class="text-4xl mb-2">📝</div>
+                                <p>Belum ada aktivitas yang dicatat</p>
+                                <p class="text-sm">Mulai catat aktivitas lingkungan Anda!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Add activities to UI
+                    activities.forEach(activity => {
+                        addToRecentActivities(activity);
+                    });
+                    
+                } catch (error) {
+                    console.error('Error loading recent activities:', error);
+                    // Show friendly message instead of error
+                    const activitiesContainer = document.getElementById('recent-activities');
+                    if (activitiesContainer) {
+                        activitiesContainer.innerHTML = `
+                            <div class="text-center py-8 text-gray-500">
+                                <div class="text-4xl mb-2">📝</div>
+                                <p>Belum ada aktivitas yang dicatat</p>
+                                <p class="text-sm">Mulai catat aktivitas lingkungan Anda!</p>
+                            </div>
+                        `;
+                    }
+                }
+            }
+            
+            // Add to recent activities (updated untuk Firebase data)
+            function addToRecentActivities(activityData) {
+                const activitiesContainer = document.getElementById('recent-activities');
+                const activityElement = document.createElement('div');
+                
+                const icons = {
+                    'waste': '🗑️',
+                    'energy': '⚡',
+                    'water': '💧',
+                    'carbon': '🌍',
+                    'recycling': '♻️'
+                };
+                
+                const icon = icons[activityData.activityType] || '📊';
+                
+                // Format timestamp
+                const timestamp = activityData.timestamp?.toDate ? 
+                    activityData.timestamp.toDate() : 
+                    new Date(activityData.timestamp || activityData.createdAt);
+                
+                const timeAgo = getTimeAgo(timestamp);
+                
+                activityElement.className = 'flex items-center justify-between p-4 bg-green-50 rounded-xl';
+                activityElement.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-[#6b8e23] rounded-full flex items-center justify-center text-white text-sm font-bold">${icon}</div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">${activityData.materialType.charAt(0).toUpperCase() + activityData.materialType.slice(1)} ${activityData.action.charAt(0).toUpperCase() + activityData.action.slice(1)}</h3>
+                            <p class="text-sm text-gray-600">${activityData.amount} ${activityData.unit} • Rp ${activityData.economicValue.toLocaleString()}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-semibold text-green-600">+${activityData.ecoScore} Eco-Score</p>
+                        <p class="text-xs text-gray-500">${timeAgo}</p>
+                    </div>
+                `;
+                
+                activitiesContainer.insertBefore(activityElement, activitiesContainer.firstChild);
+            }
+            
+            // Helper function untuk format waktu
+            function getTimeAgo(date) {
+                const now = new Date();
+                const diffInSeconds = Math.floor((now - date) / 1000);
+                
+                if (diffInSeconds < 60) return 'Baru saja';
+                if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} menit lalu`;
+                if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} jam lalu`;
+                return `${Math.floor(diffInSeconds / 86400)} hari lalu`;
+            }
+            
+            // Authentication flow: Wait for user to be authenticated before loading data
+            // This prevents the "User belum login" errors we were seeing
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    console.log('User authenticated:', user.displayName);
+                    // User is authenticated, now load stats and activities
+                    try {
+                        await updateStatsDisplay();
+                        await loadRecentActivities();
+                    } catch (error) {
+                        console.error('Error loading data after authentication:', error);
+                    }
+                } else {
+                    // Redirect to login if not authenticated
+                    window.location.href = '../../login.html';
+                }
+            });
+            
+            // Form submission handler - Calculate first, then show results
+            // This creates a two-step process: Calculate → Review → Save
+            document.getElementById('environmental-activity-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Tampilkan loading state
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.textContent = '🧮 Menghitung...';
+                submitButton.disabled = true;
+                
+                try {
+                    const formData = {
+                        activityType: document.getElementById('activity-type').value,
+                        materialType: document.getElementById('material-type').value,
+                        amount: document.getElementById('amount').value,
+                        unit: document.getElementById('unit').value,
+                        action: document.getElementById('action').value,
+                        cost: document.getElementById('cost').value,
+                        notes: document.getElementById('notes').value
+                    };
+                    
+                    // Validasi form
+                    if (!formData.activityType || !formData.materialType || !formData.amount || !formData.action) {
+                        throw new Error('Mohon lengkapi semua field yang wajib diisi');
+                    }
+                    
+                    // Hitung nilai ekonomi dan eco-score
+                    const economicValue = formData.cost && parseFloat(formData.cost) > 0 
+                        ? parseFloat(formData.cost)
+                        : calculateEconomicValue(
+                            formData.activityType, 
+                            formData.materialType, 
+                            formData.amount, 
+                            formData.action
+                        );
+                    
+                    const ecoScore = calculateEcoScore(
+                        formData.activityType, 
+                        formData.action, 
+                        formData.amount
+                    );
+                    
+                    // Simpan data untuk digunakan saat save
+                    currentCalculationData = {
+                        ...formData,
+                        economicValue: economicValue,
+                        ecoScore: ecoScore,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Tampilkan hasil perhitungan dengan AI Gemini
+                    await showCalculationResults(currentCalculationData);
+                    
+                } catch (error) {
+                    console.error('Error calculating:', error);
+                    showErrorNotification(`❌ Gagal menghitung: ${error.message}`);
+                } finally {
+                    // Reset button state
+                    submitButton.textContent = originalText;
+                    submitButton.disabled = false;
+                }
+            });
+            
+            // Save to Firestore handler
+            // This is the second step: User reviews calculation results and decides to save
+            document.getElementById('save-to-firestore-btn').addEventListener('click', async function() {
+                if (!currentCalculationData) {
+                    showErrorNotification('❌ Tidak ada data untuk disimpan');
+                    return;
+                }
+                
+                // Tampilkan loading state
+                const saveButton = this;
+                const originalText = saveButton.textContent;
+                saveButton.textContent = '💾 Menyimpan...';
+                saveButton.disabled = true;
+                
+                try {
+                    // Simpan ke Firebase Firestore
+                    const savedActivity = await saveEnvironmentalActivity(currentCalculationData);
+                    
+                    // Simpan info aktivitas terbaru untuk AI notification
+                    sessionStorage.setItem('latestActivity', JSON.stringify({
+                        material: currentCalculationData.materialType,
+                        amount: currentCalculationData.amount,
+                        unit: currentCalculationData.unit,
+                        action: currentCalculationData.action,
+                        economicValue: savedActivity.economicValue,
+                        ecoScore: savedActivity.ecoScore,
+                        timestamp: new Date().toISOString(),
+                        activityType: currentCalculationData.activityType
+                    }));
+                    
+                    // Trigger AI Auto Notification
+                    console.log('🤖 Triggering AI auto notification...');
+                    await aiAutoNotificationService.triggerAutoNotification({
+                        activityType: currentCalculationData.activityType,
+                        materialType: currentCalculationData.materialType,
+                        amount: currentCalculationData.amount,
+                        unit: currentCalculationData.unit,
+                        action: currentCalculationData.action,
+                        cost: currentCalculationData.cost,
+                        notes: currentCalculationData.notes,
+                        economicValue: savedActivity.economicValue,
+                        ecoScore: savedActivity.ecoScore
+                    });
+                    
+                    // Tampilkan notifikasi sukses
+                    showSuccessNotification(
+                        `✅ Aktivitas berhasil disimpan ke Firebase! 
+                        Nilai ekonomi: Rp ${savedActivity.economicValue.toLocaleString()}
+                        Eco-Score: +${savedActivity.ecoScore}
+                        📝 Data tersimpan di cloud database
+                        🤖 AI sedang menganalisis aktivitas Anda...
+                        💡 Buka AI Assistant untuk melihat analisis!`
+                    );
+                    
+                    // Update UI
+                    await updateStatsDisplay();
+                    addToRecentActivities(savedActivity);
+                
+                    // Reset form dan tutup modal
+                    document.getElementById('environmental-activity-form').reset();
+                    closeCalculationResults();
+                    currentCalculationData = null;
+                    
+                } catch (error) {
+                    console.error('Error saving activity:', error);
+                    showErrorNotification(`❌ Gagal menyimpan aktivitas: ${error.message}`);
+                } finally {
+                    // Reset button state
+                    saveButton.textContent = originalText;
+                    saveButton.disabled = false;
+                }
+            });
+            
+            // Show calculation results in modal with AI Gemini integration
+            async function showCalculationResults(data) {
+                const modal = document.getElementById('calculation-results-modal');
+                const contentElement = document.getElementById('calculation-results-content');
+                
+                // Show loading state first
+                contentElement.innerHTML = `
+                    <div class="text-center py-10">
+                        <div class="relative">
+                            <div class="animate-spin rounded-full h-16 w-16 border-4 border-green-200 border-t-green-500 mx-auto mb-4"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-2xl">🤖</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 font-medium">AI Gemini sedang menganalisis aktivitas Anda...</p>
+                        <p class="text-sm text-gray-500 mt-2">Menghitung dampak lingkungan dan nilai ekonomi yang akurat</p>
+                        <div class="mt-4 flex justify-center space-x-1">
+                            <div class="w-2 h-2 bg-[#6b8e23] rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-[#6b8e23] rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-[#6b8e23] rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        </div>
+                    </div>
+                `;
+                
+                // Show modal immediately with loading state
+                modal.classList.remove('hidden');
+                
+                try {
+                    // Get AI analysis from Gemini
+                    const aiAnalysis = await getAIAnalysis(data);
+                    
+                    // Activity type icons
+                    const activityIcons = {
+                        'waste': '🗑️',
+                        'energy': '⚡',
+                        'water': '💧',
+                        'carbon': '🌍',
+                        'recycling': '♻️'
+                    };
+                    
+                    // Action descriptions
+                    const actionDescriptions = {
+                        'recycled': 'Daur Ulang',
+                        'reduced': 'Dikurangi',
+                        'reused': 'Digunakan Ulang',
+                        'disposed': 'Dibuang',
+                        'conserved': 'Dihasilkan'
+                    };
+                    
+                    const icon = activityIcons[data.activityType] || '📊';
+                    const actionDesc = actionDescriptions[data.action] || data.action;
+                    
+                    // Use AI-enhanced values or fallback to calculated values
+                    const finalEconomicValue = aiAnalysis.economicValue || data.economicValue;
+                    const finalEcoScore = aiAnalysis.ecoScore || data.ecoScore;
+                    
+                    // Calculate environmental impact
+                    const impactLevel = finalEcoScore >= 8 ? 'Tinggi' : finalEcoScore >= 6 ? 'Sedang' : 'Rendah';
+                    const impactColor = finalEcoScore >= 8 ? 'text-green-600' : finalEcoScore >= 6 ? 'text-yellow-600' : 'text-red-600';
+                    
+                    contentElement.innerHTML = `
+                        <!-- Activity Summary -->
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="w-16 h-16 bg-[#6b8e23] rounded-full flex items-center justify-center text-white text-2xl">
+                                    ${icon}
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-800">${data.materialType.charAt(0).toUpperCase() + data.materialType.slice(1)} ${actionDesc}</h3>
+                                    <p class="text-gray-600">${data.amount} ${data.unit}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Key Metrics -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-white rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold text-green-600">Rp ${finalEconomicValue.toLocaleString()}</div>
+                                    <div class="text-sm text-gray-600">Nilai Ekonomi</div>
+                                    ${aiAnalysis.economicValue ? '<div class="text-xs text-green-500 mt-1">🤖 AI Enhanced</div>' : ''}
+                                </div>
+                                <div class="bg-white rounded-lg p-4 text-center">
+                                    <div class="text-2xl font-bold ${impactColor}">${finalEcoScore}/10</div>
+                                    <div class="text-sm text-gray-600">Eco-Score</div>
+                                    ${aiAnalysis.ecoScore ? '<div class="text-xs text-green-500 mt-1">🤖 AI Enhanced</div>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Detailed Breakdown -->
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-gray-800 mb-3">📋 Detail Perhitungan</h4>
+                            
+                            <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Jenis Aktivitas:</span>
+                                    <span class="font-medium">${data.activityType.charAt(0).toUpperCase() + data.activityType.slice(1)}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Material:</span>
+                                    <span class="font-medium">${data.materialType.charAt(0).toUpperCase() + data.materialType.slice(1)}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Jumlah:</span>
+                                    <span class="font-medium">${data.amount} ${data.unit}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Aksi:</span>
+                                    <span class="font-medium">${actionDesc}</span>
+                                </div>
+                                ${data.cost && parseFloat(data.cost) > 0 ? `
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Biaya Input:</span>
+                                    <span class="font-medium">Rp ${parseFloat(data.cost).toLocaleString()}</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                            
+                            <!-- AI Analysis -->
+                            ${aiAnalysis.analysis ? `
+                            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4 border-l-4 border-purple-400">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm mr-3">
+                                        🤖
+                                    </div>
+                                    <h5 class="font-semibold text-gray-800">Analisis AI Gemini</h5>
+                                </div>
+                                <p class="text-sm text-gray-700 leading-relaxed">${aiAnalysis.analysis}</p>
+                                <div class="mt-2 text-xs text-purple-600 font-medium">
+                                    ✨ Dihitung dengan teknologi AI terdepan
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Environmental Impact -->
+                            <div class="bg-blue-50 rounded-lg p-4">
+                                <h5 class="font-semibold text-gray-800 mb-2">🌱 Dampak Lingkungan</h5>
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                        <div class="bg-[#6b8e23] h-2 rounded-full" style="width: ${(finalEcoScore / 10) * 100}%"></div>
+                                    </div>
+                                    <span class="text-sm font-medium ${impactColor}">${impactLevel}</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    ${finalEcoScore >= 8 ? 'Aktivitas ini sangat baik untuk lingkungan!' : 
+                                      finalEcoScore >= 6 ? 'Aktivitas ini cukup baik untuk lingkungan.' : 
+                                      'Aktivitas ini memiliki dampak lingkungan yang perlu diperhatikan.'}
+                                </p>
+                            </div>
+                            
+                            ${data.notes ? `
+                            <div class="bg-yellow-50 rounded-lg p-4">
+                                <h5 class="font-semibold text-gray-800 mb-2">📝 Catatan</h5>
+                                <p class="text-gray-700">${data.notes}</p>
+                            </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    
+                    // Update the calculation data with AI-enhanced values
+                    currentCalculationData.economicValue = finalEconomicValue;
+                    currentCalculationData.ecoScore = finalEcoScore;
+                    currentCalculationData.aiAnalysis = aiAnalysis;
+                    
+                } catch (error) {
+                    console.error('Error getting AI analysis:', error);
+                    // Fallback to original calculation if AI fails
+                    showFallbackResults(data);
+                }
+            }
+            
+            // Fallback function if AI analysis fails
+            function showFallbackResults(data) {
+                const contentElement = document.getElementById('calculation-results-content');
+                
+                // Activity type icons
+                const activityIcons = {
+                    'waste': '🗑️',
+                    'energy': '⚡',
+                    'water': '💧',
+                    'carbon': '🌍',
+                    'recycling': '♻️'
+                };
+                
+                // Action descriptions
+                const actionDescriptions = {
+                    'recycled': 'Daur Ulang',
+                    'reduced': 'Dikurangi',
+                    'reused': 'Digunakan Ulang',
+                    'disposed': 'Dibuang',
+                    'conserved': 'Dihasilkan'
+                };
+                
+                const icon = activityIcons[data.activityType] || '📊';
+                const actionDesc = actionDescriptions[data.action] || data.action;
+                
+                // Calculate environmental impact
+                const impactLevel = data.ecoScore >= 8 ? 'Tinggi' : data.ecoScore >= 6 ? 'Sedang' : 'Rendah';
+                const impactColor = data.ecoScore >= 8 ? 'text-green-600' : data.ecoScore >= 6 ? 'text-yellow-600' : 'text-red-600';
+                
+                contentElement.innerHTML = `
+                    <!-- Activity Summary -->
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-6">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="w-16 h-16 bg-[#6b8e23] rounded-full flex items-center justify-center text-white text-2xl">
+                                ${icon}
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">${data.materialType.charAt(0).toUpperCase() + data.materialType.slice(1)} ${actionDesc}</h3>
+                                <p class="text-gray-600">${data.amount} ${data.unit}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Key Metrics -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 text-center">
+                                <div class="text-2xl font-bold text-green-600">Rp ${data.economicValue.toLocaleString()}</div>
+                                <div class="text-sm text-gray-600">Nilai Ekonomi</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 text-center">
+                                <div class="text-2xl font-bold ${impactColor}">${data.ecoScore}/10</div>
+                                <div class="text-sm text-gray-600">Eco-Score</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detailed Breakdown -->
+                    <div class="space-y-4">
+                        <h4 class="font-semibold text-gray-800 mb-3">📋 Detail Perhitungan</h4>
+                        
+                        <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Jenis Aktivitas:</span>
+                                <span class="font-medium">${data.activityType.charAt(0).toUpperCase() + data.activityType.slice(1)}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Material:</span>
+                                <span class="font-medium">${data.materialType.charAt(0).toUpperCase() + data.materialType.slice(1)}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Jumlah:</span>
+                                <span class="font-medium">${data.amount} ${data.unit}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Aksi:</span>
+                                <span class="font-medium">${actionDesc}</span>
+                            </div>
+                            ${data.cost && parseFloat(data.cost) > 0 ? `
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Biaya Input:</span>
+                                <span class="font-medium">Rp ${parseFloat(data.cost).toLocaleString()}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        <!-- Environmental Impact -->
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <h5 class="font-semibold text-gray-800 mb-2">🌱 Dampak Lingkungan</h5>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-[#6b8e23] h-2 rounded-full" style="width: ${(data.ecoScore / 10) * 100}%"></div>
+                                </div>
+                                <span class="text-sm font-medium ${impactColor}">${impactLevel}</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                ${data.ecoScore >= 8 ? 'Aktivitas ini sangat baik untuk lingkungan!' : 
+                                  data.ecoScore >= 6 ? 'Aktivitas ini cukup baik untuk lingkungan.' : 
+                                  'Aktivitas ini memiliki dampak lingkungan yang perlu diperhatikan.'}
+                            </p>
+                        </div>
+                        
+                        ${data.notes ? `
+                        <div class="bg-yellow-50 rounded-lg p-4">
+                            <h5 class="font-semibold text-gray-800 mb-2">📝 Catatan</h5>
+                            <p class="text-gray-700">${data.notes}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            // Get AI analysis from Gemini
+            async function getAIAnalysis(data) {
+                try {
+                    // Import Gemini service
+                    const { analyzeEnvironmentalActivity } = await import('../../assets/js/core/gemini-service.js');
+                    
+                    const prompt = `
+                    Analisis aktivitas lingkungan berikut untuk Green Accounting:
+                    
+                    Jenis Aktivitas: ${data.activityType}
+                    Material: ${data.materialType}
+                    Jumlah: ${data.amount} ${data.unit}
+                    Aksi: ${data.action}
+                    Biaya Input: ${data.cost ? 'Rp ' + data.cost : 'Tidak ada'}
+                    Catatan: ${data.notes || 'Tidak ada'}
+                    
+                    Hitung dan berikan:
+                    1. Nilai ekonomi yang lebih akurat berdasarkan kondisi pasar saat ini
+                    2. Eco-score (1-10) berdasarkan dampak lingkungan
+                    3. Analisis singkat tentang dampak lingkungan aktivitas ini
+                    
+                    Format jawaban dalam JSON:
+                    {
+                        "economicValue": angka_nilai_ekonomi,
+                        "ecoScore": angka_eco_score_1_10,
+                        "analysis": "analisis_singkat_dampak_lingkungan"
+                    }
+                    `;
+                    
+                    const response = await analyzeEnvironmentalActivity(prompt);
+                    
+                    // Parse AI response
+                    const aiResult = JSON.parse(response);
+                    
+                    return {
+                        economicValue: aiResult.economicValue || data.economicValue,
+                        ecoScore: aiResult.ecoScore || data.ecoScore,
+                        analysis: aiResult.analysis || ''
+                    };
+                    
+                } catch (error) {
+                    console.error('Error getting AI analysis:', error);
+                    // Return original values if AI fails
+                    return {
+                        economicValue: data.economicValue,
+                        ecoScore: data.ecoScore,
+                        analysis: ''
+                    };
+                }
+            }
+            
+            // Close calculation results modal
+            function closeCalculationResults() {
+                const modal = document.getElementById('calculation-results-modal');
+                modal.classList.add('hidden');
+                currentCalculationData = null;
+            }
+            
+            // Make functions global
+            window.closeCalculationResults = closeCalculationResults;
+            
+            // Show success notification
+            function showSuccessNotification(message) {
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-20 right-4 bg-[#6b8e23] text-white p-4 rounded-lg shadow-lg z-50 max-w-sm';
+                notification.innerHTML = `
+                    <div class="flex flex-col space-y-2">
+                        <div class="flex items-start space-x-2">
+                            <div class="text-lg">🎉</div>
+                            <div>
+                                <p class="text-sm font-medium whitespace-pre-line">${message}</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 mt-2">
+                            <a href="../features/chat.html" class="flex-1 bg-white text-green-600 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-green-50 transition-colors text-center">
+                                🤖 Konsultasi AI
+                            </a>
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" class="px-3 py-2 bg-[#2d5a27] text-white rounded-lg text-xs hover:bg-green-700">
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(notification);
+                
+                // Auto remove after 10 seconds (lebih lama untuk beri waktu klik)
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 10000);
+            }
+            
+            // Show error notification
+            function showErrorNotification(message) {
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-20 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50 max-w-sm';
+                notification.innerHTML = `
+                    <div class="flex items-start space-x-2">
+                        <div class="text-lg">⚠️</div>
+                        <div>
+                            <p class="text-sm font-medium">${message}</p>
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-xs text-red-100 hover:text-white mt-1">Tutup</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(notification);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 5000);
+            }
+            
+            // Page initialization is now handled in the authentication callback above
+            // This ensures stats only load after user is authenticated
+        </script>
+</body>
+</html>
+   

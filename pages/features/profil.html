@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - TOMITECH</title>
+    <meta name="theme-color" content="#2c4d32">
+    <meta name="description" content="TOMITECH - Platform AI untuk Optimasi Greenhouse dan Tanaman">
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://generativelanguage.googleapis.com https://esm.run https://apis.google.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://generativelanguage.googleapis.com https://content-firebaseappcheck.googleapis.com https://www.gstatic.com https://apis.google.com https://esm.run https://cdn.jsdelivr.net https://cdnjs.cloudflare.com http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; frame-src 'self' https://accounts.google.com https://*.firebaseapp.com; worker-src 'self' blob:; manifest-src 'self';">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- TOMITECH Design System -->
+    <link rel="stylesheet" href="../../assets/css/tomitech-design-system.css">
+    
+    <style>
+        .main-content {
+            padding: var(--spacing-md);
+            padding-bottom: 100px;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--tomitech-green-accent), var(--tomitech-green-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--white);
+            font-weight: 700;
+            border: 4px solid var(--white);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--tomitech-green-muted);
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .info-value {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+        
+        .user-id {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--tomitech-green-light), var(--white));
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--tomitech-green-muted);
+        }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--tomitech-green-accent);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        /* Settings Section */
+        .settings-section {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .settings-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            padding: 0 var(--spacing-sm);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            background: var(--white);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--tomitech-green-muted);
+        }
+        
+        .settings-item:hover {
+            background: var(--tomitech-green-bg);
+            transform: translateX(4px);
+        }
+        
+        .settings-item-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .settings-item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--tomitech-green-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--tomitech-green-accent);
+            font-size: 1.125rem;
+        }
+        
+        .settings-item-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .settings-item-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        
+        .settings-item-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .settings-item-right {
+            color: var(--text-light);
+            font-size: 1.25rem;
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: var(--tomitech-green-accent);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--white);
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+        
+        /* Edit Button */
+        .edit-profile-btn {
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            background: var(--tomitech-green-accent);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-full);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.2s ease;
+        }
+        
+        .edit-profile-btn:hover {
+            background: var(--tomitech-green-dark);
+            transform: scale(1.1);
+        }
+        
+        .profile-header-card {
+            position: relative;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-md);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            max-width: 400px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-2xl);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+        }
+        
+        .modal-close:hover {
+            background: var(--tomitech-green-bg);
+            color: var(--text-primary);
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--tomitech-green-muted);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--tomitech-green-accent);
+            box-shadow: 0 0 0 3px rgba(62, 163, 119, 0.1);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .btn {
+            flex: 1;
+            padding: var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: var(--tomitech-green-accent);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background: var(--tomitech-green-dark);
+        }
+        
+        .btn-secondary {
+            background: var(--tomitech-green-bg);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--tomitech-green-muted);
+        }
+        
+        .btn-danger {
+            background: var(--red);
+            color: var(--white);
+        }
+        
+        .btn-danger:hover {
+            background: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="tomitech-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <img src="../../assets/icons/tittle.png" alt="TOMITECH" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <i class="fas fa-user" style="display:none; color: white; font-size: 1.5rem;"></i>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-title">
+                        Profil Pengguna
+                        <span class="page-indicator profile">
+                            <i class="fas fa-user"></i>
+                            Profil
+                        </span>
+                    </div>
+                    <div class="logo-subtitle">Informasi Akun TOMITECH</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="logoutBtn" class="action-btn" style="background: var(--tomitech-green-light);" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- User Profile Card -->
+        <div class="tomitech-card profile-header-card" style="text-align: center; padding: var(--spacing-xl); margin-bottom: var(--spacing-lg);">
+            <button class="edit-profile-btn" id="editProfileBtn" title="Edit Profil">
+                <i class="fas fa-edit"></i>
+            </button>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--spacing-md);">
+                <div id="userAvatar" class="profile-avatar">
+                    👤
+                </div>
+                <div style="text-align: center;">
+                    <h2 id="userName" style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-xs); font-family: 'Poppins', sans-serif;">Loading...</h2>
+                    <p id="userEmail" style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--spacing-xs);">Loading...</p>
+                    <p id="userRole" style="display: inline-block; padding: var(--spacing-xs) var(--spacing-md); background: var(--tomitech-green-light); color: var(--tomitech-green-accent); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600;">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalGreenhouses">0</div>
+                <div class="stat-label">Greenhouse</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalPlants">0</div>
+                <div class="stat-label">Tanaman</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalSensorData">0</div>
+                <div class="stat-label">Data Sensor</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalChatMessages">0</div>
+                <div class="stat-label">Chat AI</div>
+            </div>
+        </div>
+
+        <!-- Account Information -->
+        <div class="tomitech-card" style="margin-bottom: var(--spacing-lg);">
+            <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-md); font-family: 'Poppins', sans-serif;">📋 Informasi Akun</h3>
+            <div>
+                <div class="info-row">
+                    <span class="info-label">Email</span>
+                    <span id="userEmailDetail" class="info-value">Loading...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Nama Lengkap</span>
+                    <span id="userDisplayName" class="info-value">Loading...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Role</span>
+                    <span id="userRoleDetail" class="info-value">Loading...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Bergabung</span>
+                    <span id="userJoinDate" class="info-value">Loading...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">User ID</span>
+                    <span id="userId" class="info-value user-id">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-section">
+            <h3 class="settings-section-title">⚙️ Pengaturan Akun</h3>
+            <div class="tomitech-card" style="padding: 0;">
+                <div class="settings-item" id="changePasswordBtn">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title">Ubah Password</div>
+                            <div class="settings-item-desc">Ganti password akun Anda</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-right">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="settings-item" id="editNameBtn">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title">Edit Nama</div>
+                            <div class="settings-item-desc">Ubah nama tampilan Anda</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-right">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Settings -->
+        <div class="settings-section">
+            <h3 class="settings-section-title">🔔 Pengaturan Aplikasi</h3>
+            <div class="tomitech-card" style="padding: 0;">
+                <div class="settings-item">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title">Notifikasi</div>
+                            <div class="settings-item-desc">Terima notifikasi penting</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-right">
+                        <div class="toggle-switch" id="notificationToggle"></div>
+                    </div>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title">Mode Gelap</div>
+                            <div class="settings-item-desc">Tampilan gelap untuk mata</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-right">
+                        <div class="toggle-switch" id="darkModeToggle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data & Privacy -->
+        <div class="settings-section">
+            <h3 class="settings-section-title">🔒 Data & Privasi</h3>
+            <div class="tomitech-card" style="padding: 0;">
+                <div class="settings-item" id="exportDataBtn">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title">Export Data</div>
+                            <div class="settings-item-desc">Unduh semua data Anda</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-right">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="settings-item" id="deleteAccountBtn">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background: #ffebee; color: var(--red);">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" style="color: var(--red);">Hapus Akun</div>
+                            <div class="settings-item-desc">Hapus akun secara permanen</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-right">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About -->
+        <div class="settings-section">
+            <h3 class="settings-section-title">ℹ️ Tentang</h3>
+            <div class="tomitech-card" style="padding: 0;">
+                <div class="settings-item">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title">Versi Aplikasi</div>
+                            <div class="settings-item-desc">TOMITECH v1.0.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title">Kebijakan Privasi</div>
+                            <div class="settings-item-desc">Baca kebijakan privasi kami</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-right">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Name Modal -->
+    <div class="modal" id="editNameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Nama</h3>
+                <button class="modal-close" id="closeEditNameModal">&times;</button>
+            </div>
+            <form id="editNameForm">
+                <div class="form-group">
+                    <label class="form-label">Nama Lengkap</label>
+                    <input type="text" id="editNameInput" class="form-input" placeholder="Masukkan nama lengkap" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEditName">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal" id="changePasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ubah Password</h3>
+                <button class="modal-close" id="closeChangePasswordModal">&times;</button>
+            </div>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label class="form-label">Password Lama</label>
+                    <input type="password" id="oldPasswordInput" class="form-input" placeholder="Masukkan password lama" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password Baru</label>
+                    <input type="password" id="newPasswordInput" class="form-input" placeholder="Masukkan password baru (min. 6 karakter)" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Konfirmasi Password Baru</label>
+                    <input type="password" id="confirmPasswordInput" class="form-input" placeholder="Konfirmasi password baru" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelChangePassword">Batal</button>
+                    <button type="submit" class="btn btn-primary">Ubah Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div class="modal" id="deleteAccountModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color: var(--red);">Hapus Akun</h3>
+                <button class="modal-close" id="closeDeleteAccountModal">&times;</button>
+            </div>
+            <div style="margin-bottom: var(--spacing-lg);">
+                <p style="color: var(--text-primary); margin-bottom: var(--spacing-md);">
+                    <strong>Peringatan!</strong> Tindakan ini tidak dapat dibatalkan.
+                </p>
+                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+                    Semua data Anda akan dihapus secara permanen, termasuk:
+                </p>
+                <ul style="color: var(--text-secondary); font-size: 0.875rem; padding-left: var(--spacing-lg); margin-bottom: var(--spacing-md);">
+                    <li>Data greenhouse dan tanaman</li>
+                    <li>Data sensor dan agregat</li>
+                    <li>Riwayat chat dengan AI</li>
+                    <li>Semua aktivitas dan statistik</li>
+                </ul>
+                <div class="form-group">
+                    <label class="form-label">Ketik "HAPUS" untuk konfirmasi</label>
+                    <input type="text" id="deleteConfirmInput" class="form-input" placeholder="HAPUS" required>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancelDeleteAccount">Batal</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteAccount" disabled>Hapus Akun</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="tomitech-bottom-nav">
+        <a href="../../dashboard.html" class="tomitech-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="chat.html" class="tomitech-nav-item">
+            <div class="ai-assistant-nav-icon">
+                <i class="fas fa-robot ai-robot-icon"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+            </div>
+            <span>AI Assistant</span>
+        </a>
+        <a href="plant-input.html" class="tomitech-nav-item">
+            <i class="fas fa-file-alt"></i>
+            <span>Input Data</span>
+        </a>
+        <a href="monitoring.html" class="tomitech-nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Monitoring</span>
+        </a>
+        <a href="forum.html" class="tomitech-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reports</span>
+        </a>
+        <a href="profil.html" class="tomitech-nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script type="module">
+        // Import Firebase config
+        import { firebaseConfig } from '../../config/config.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, deleteUser } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, getCountFromServer } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        console.log('✅ Firebase initialized for profile page');
+
+        // Get elements
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Show notification function
+        function showNotification(message, type = 'info') {
+            const existingNotif = document.getElementById('profile-notification');
+            if (existingNotif) {
+                existingNotif.remove();
+            }
+            
+            const colors = {
+                success: 'var(--tomitech-green-accent)',
+                error: 'var(--red)',
+                warning: 'var(--orange)',
+                info: 'var(--blue)'
+            };
+            
+            const notification = document.createElement('div');
+            notification.id = 'profile-notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type]};
+                color: var(--white);
+                padding: var(--spacing-md);
+                border-radius: var(--radius-md);
+                box-shadow: var(--shadow-lg);
+                z-index: 10000;
+                max-width: 300px;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <p style="margin: 0; font-size: 0.875rem; font-weight: 500;">${message}</p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: transparent; border: none; color: var(--white); font-size: 1.25rem; cursor: pointer; margin-left: var(--spacing-sm);">&times;</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Load user data from Firestore
+        async function loadUserDataFromFirestore(user) {
+            try {
+                console.log('📊 Loading user data from Firestore for:', user.uid);
+                
+                const userRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userRef);
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    console.log('✅ User data loaded from Firestore:', userData);
+                    
+                    // Combine Firebase user data with Firestore data
+                    const combinedUserData = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName,
+                        photoURL: user.photoURL,
+                        emailVerified: user.emailVerified,
+                        createdAt: userData.createdAt,
+                        lastLogin: userData.lastLogin,
+                        role: userData.role || 'user',
+                        stats: userData.stats || {
+                            forumPosts: 0,
+                            quizCompleted: 0,
+                            activeDays: 1
+                        }
+                    };
+                    
+                    return combinedUserData;
+                } else {
+                    console.log('⚠️ User document not found in Firestore, using Firebase user data only');
+                    
+                    // Return basic Firebase user data if Firestore document doesn't exist
+                    return {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName,
+                        photoURL: user.photoURL,
+                        emailVerified: user.emailVerified,
+                        createdAt: { seconds: Math.floor(Date.now() / 1000) },
+                        lastLogin: { seconds: Math.floor(Date.now() / 1000) },
+                        role: 'user',
+                        stats: {
+                            forumPosts: 0,
+                            quizCompleted: 0,
+                            activeDays: 1
+                        }
+                    };
+                }
+            } catch (error) {
+                console.error('❌ Error loading user data from Firestore:', error);
+                showNotification('Gagal memuat data pengguna: ' + error.message, 'error');
+                
+                // Return basic Firebase user data as fallback
+                return {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    emailVerified: user.emailVerified,
+                    createdAt: { seconds: Math.floor(Date.now() / 1000) },
+                    lastLogin: { seconds: Math.floor(Date.now() / 1000) },
+                    role: 'user',
+                    stats: {
+                        forumPosts: 0,
+                        quizCompleted: 0,
+                        activeDays: 1
+                    }
+                };
+            }
+        }
+
+        // Update user profile display
+        function updateUserProfile(userData) {
+            console.log('📝 Updating profile with user data:', userData);
+            
+            if (userData) {
+                // Basic info
+                const userName = document.getElementById('userName');
+                const userEmail = document.getElementById('userEmail');
+                const userRole = document.getElementById('userRole');
+                
+                if (userName) {
+                    userName.textContent = userData.displayName || 'User';
+                }
+                if (userEmail) {
+                    userEmail.textContent = userData.email || 'user@example.com';
+                }
+                if (userRole) {
+                    userRole.textContent = userData.role || 'user';
+                }
+                
+                // Detailed info
+                document.getElementById('userId').textContent = userData.uid || 'N/A';
+                document.getElementById('userEmailDetail').textContent = userData.email || 'N/A';
+                document.getElementById('userDisplayName').textContent = userData.displayName || 'N/A';
+                document.getElementById('userRoleDetail').textContent = userData.role || 'N/A';
+                
+                // Format join date
+                let joinDate = 'N/A';
+                if (userData.createdAt) {
+                    if (userData.createdAt.seconds) {
+                        joinDate = new Date(userData.createdAt.seconds * 1000).toLocaleDateString('id-ID', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    } else if (userData.createdAt.toDate) {
+                        joinDate = userData.createdAt.toDate().toLocaleDateString('id-ID', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    }
+                }
+                document.getElementById('userJoinDate').textContent = joinDate;
+
+                // Avatar
+                const avatar = document.getElementById('userAvatar');
+                if (userData.photoURL) {
+                    avatar.innerHTML = `<img src="${userData.photoURL}" alt="Profile">`;
+                } else {
+                    const initials = userData.displayName ?
+                        userData.displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) :
+                        '👤';
+                    avatar.textContent = initials.length <= 2 ? initials : '👤';
+                    avatar.style.fontSize = initials.length <= 2 ? '2rem' : '2.5rem';
+                }
+
+                console.log('✅ Profile updated successfully');
+            } else {
+                console.log('⚠️ No user data provided to updateUserProfile');
+            }
+        }
+
+        // Load user statistics
+        async function loadUserStatistics(userId) {
+            try {
+                console.log('📊 Loading user statistics for:', userId);
+                
+                // Count greenhouses
+                const greenhousesQuery = query(collection(db, 'greenhouses'), where('userId', '==', userId));
+                const greenhousesSnapshot = await getCountFromServer(greenhousesQuery);
+                document.getElementById('totalGreenhouses').textContent = greenhousesSnapshot.data().count;
+                
+                // Count plants
+                const plantsQuery = query(collection(db, 'plants'), where('userId', '==', userId));
+                const plantsSnapshot = await getCountFromServer(plantsQuery);
+                document.getElementById('totalPlants').textContent = plantsSnapshot.data().count;
+                
+                // Count sensor data
+                const sensorQuery = query(collection(db, 'sensor_data'), where('userId', '==', userId));
+                const sensorSnapshot = await getCountFromServer(sensorQuery);
+                document.getElementById('totalSensorData').textContent = sensorSnapshot.data().count;
+                
+                // Count chat messages
+                const chatQuery = query(collection(db, 'chat_messages'), where('userId', '==', userId));
+                const chatSnapshot = await getCountFromServer(chatQuery);
+                document.getElementById('totalChatMessages').textContent = chatSnapshot.data().count;
+                
+                console.log('✅ Statistics loaded successfully');
+            } catch (error) {
+                console.error('❌ Error loading statistics:', error);
+                // Set to 0 if error
+                document.getElementById('totalGreenhouses').textContent = '0';
+                document.getElementById('totalPlants').textContent = '0';
+                document.getElementById('totalSensorData').textContent = '0';
+                document.getElementById('totalChatMessages').textContent = '0';
+            }
+        }
+
+        // Modal handlers
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // Edit Name handlers
+        document.getElementById('editProfileBtn')?.addEventListener('click', () => {
+            const currentName = document.getElementById('userDisplayName').textContent;
+            document.getElementById('editNameInput').value = currentName === 'N/A' ? '' : currentName;
+            openModal('editNameModal');
+        });
+
+        document.getElementById('editNameBtn')?.addEventListener('click', () => {
+            const currentName = document.getElementById('userDisplayName').textContent;
+            document.getElementById('editNameInput').value = currentName === 'N/A' ? '' : currentName;
+            openModal('editNameModal');
+        });
+
+        document.getElementById('closeEditNameModal')?.addEventListener('click', () => closeModal('editNameModal'));
+        document.getElementById('cancelEditName')?.addEventListener('click', () => closeModal('editNameModal'));
+
+        document.getElementById('editNameForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newName = document.getElementById('editNameInput').value.trim();
+            
+            if (!newName) {
+                showNotification('Nama tidak boleh kosong', 'error');
+                return;
+            }
+
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    showNotification('User tidak ditemukan', 'error');
+                    return;
+                }
+
+                await updateProfile(user, { displayName: newName });
+                document.getElementById('userName').textContent = newName;
+                document.getElementById('userDisplayName').textContent = newName;
+                
+                // Update avatar initials
+                const avatar = document.getElementById('userAvatar');
+                const initials = newName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                avatar.textContent = initials.length <= 2 ? initials : '👤';
+                avatar.style.fontSize = initials.length <= 2 ? '2rem' : '2.5rem';
+                
+                showNotification('Nama berhasil diubah!', 'success');
+                closeModal('editNameModal');
+            } catch (error) {
+                console.error('❌ Error updating name:', error);
+                showNotification('Gagal mengubah nama: ' + error.message, 'error');
+            }
+        });
+
+        // Change Password handlers
+        document.getElementById('changePasswordBtn')?.addEventListener('click', () => {
+            document.getElementById('changePasswordForm').reset();
+            openModal('changePasswordModal');
+        });
+
+        document.getElementById('closeChangePasswordModal')?.addEventListener('click', () => closeModal('changePasswordModal'));
+        document.getElementById('cancelChangePassword')?.addEventListener('click', () => closeModal('changePasswordModal'));
+
+        document.getElementById('changePasswordForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const oldPassword = document.getElementById('oldPasswordInput').value;
+            const newPassword = document.getElementById('newPasswordInput').value;
+            const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+            if (newPassword !== confirmPassword) {
+                showNotification('Password baru tidak cocok', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showNotification('Password minimal 6 karakter', 'error');
+                return;
+            }
+
+            try {
+                const user = auth.currentUser;
+                if (!user || !user.email) {
+                    showNotification('User tidak ditemukan', 'error');
+                    return;
+                }
+
+                // Re-authenticate user
+                const credential = EmailAuthProvider.credential(user.email, oldPassword);
+                await reauthenticateWithCredential(user, credential);
+
+                // Update password
+                await updatePassword(user, newPassword);
+                
+                showNotification('Password berhasil diubah!', 'success');
+                closeModal('changePasswordModal');
+                document.getElementById('changePasswordForm').reset();
+            } catch (error) {
+                console.error('❌ Error changing password:', error);
+                if (error.code === 'auth/wrong-password') {
+                    showNotification('Password lama salah', 'error');
+                } else if (error.code === 'auth/weak-password') {
+                    showNotification('Password terlalu lemah', 'error');
+                } else {
+                    showNotification('Gagal mengubah password: ' + error.message, 'error');
+                }
+            }
+        });
+
+        // Delete Account handlers
+        document.getElementById('deleteAccountBtn')?.addEventListener('click', () => {
+            document.getElementById('deleteConfirmInput').value = '';
+            document.getElementById('confirmDeleteAccount').disabled = true;
+            openModal('deleteAccountModal');
+        });
+
+        document.getElementById('closeDeleteAccountModal')?.addEventListener('click', () => closeModal('deleteAccountModal'));
+        document.getElementById('cancelDeleteAccount')?.addEventListener('click', () => closeModal('deleteAccountModal'));
+
+        document.getElementById('deleteConfirmInput')?.addEventListener('input', (e) => {
+            const confirmBtn = document.getElementById('confirmDeleteAccount');
+            confirmBtn.disabled = e.target.value !== 'HAPUS';
+        });
+
+        document.getElementById('confirmDeleteAccount')?.addEventListener('click', async () => {
+            const confirmText = document.getElementById('deleteConfirmInput').value;
+            
+            if (confirmText !== 'HAPUS') {
+                showNotification('Ketik "HAPUS" untuk konfirmasi', 'error');
+                return;
+            }
+
+            if (!confirm('Apakah Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan!')) {
+                return;
+            }
+
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    showNotification('User tidak ditemukan', 'error');
+                    return;
+                }
+
+                // Delete user account
+                await deleteUser(user);
+                
+                showNotification('Akun berhasil dihapus', 'success');
+                setTimeout(() => {
+                    window.location.href = '../../login.html';
+                }, 2000);
+            } catch (error) {
+                console.error('❌ Error deleting account:', error);
+                showNotification('Gagal menghapus akun: ' + error.message, 'error');
+            }
+        });
+
+        // Export Data handler
+        document.getElementById('exportDataBtn')?.addEventListener('click', async () => {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    showNotification('User tidak ditemukan', 'error');
+                    return;
+                }
+
+                showNotification('Menyiapkan data untuk diunduh...', 'info');
+                
+                // Get all user data
+                const [greenhouses, plants, sensorData, chatMessages] = await Promise.all([
+                    getDocs(query(collection(db, 'greenhouses'), where('userId', '==', user.uid))),
+                    getDocs(query(collection(db, 'plants'), where('userId', '==', user.uid))),
+                    getDocs(query(collection(db, 'sensor_data'), where('userId', '==', user.uid))),
+                    getDocs(query(collection(db, 'chat_messages'), where('userId', '==', user.uid)))
+                ]);
+
+                const exportData = {
+                    exportDate: new Date().toISOString(),
+                    user: {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName
+                    },
+                    greenhouses: greenhouses.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+                    plants: plants.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+                    sensorData: sensorData.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+                    chatMessages: chatMessages.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+                };
+
+                // Download as JSON
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `tomitech-export-${user.uid}-${Date.now()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showNotification('Data berhasil diunduh!', 'success');
+            } catch (error) {
+                console.error('❌ Error exporting data:', error);
+                showNotification('Gagal mengekspor data: ' + error.message, 'error');
+            }
+        });
+
+        // Toggle switches
+        const notificationToggle = document.getElementById('notificationToggle');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        // Load toggle states from localStorage
+        const notificationEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+        const darkModeEnabled = localStorage.getItem('darkModeEnabled') === 'true';
+
+        if (notificationEnabled) {
+            notificationToggle?.classList.add('active');
+        }
+
+        if (darkModeEnabled) {
+            darkModeToggle?.classList.add('active');
+            document.body.classList.add('dark-mode');
+        }
+
+        notificationToggle?.addEventListener('click', () => {
+            notificationToggle.classList.toggle('active');
+            const enabled = notificationToggle.classList.contains('active');
+            localStorage.setItem('notificationsEnabled', enabled.toString());
+            showNotification(enabled ? 'Notifikasi diaktifkan' : 'Notifikasi dinonaktifkan', 'info');
+        });
+
+        darkModeToggle?.addEventListener('click', () => {
+            darkModeToggle.classList.toggle('active');
+            const enabled = darkModeToggle.classList.contains('active');
+            localStorage.setItem('darkModeEnabled', enabled.toString());
+            document.body.classList.toggle('dark-mode', enabled);
+            showNotification(enabled ? 'Mode gelap diaktifkan' : 'Mode gelap dinonaktifkan', 'info');
+        });
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Logout handler
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                console.log('🚪 Logging out user...');
+                await signOut(auth);
+                showNotification('Logout berhasil!', 'success');
+                setTimeout(() => {
+                    window.location.href = '../../login.html';
+                }, 1000);
+            } catch (error) {
+                console.error('❌ Logout error:', error);
+                showNotification('Gagal logout: ' + error.message, 'error');
+            }
+        });
+
+        // Initialize page
+        console.log('🚀 Profil page script loaded');
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 DOM loaded, setting up auth listener...');
+            
+            // Check authentication status
+            onAuthStateChanged(auth, async (user) => {
+                console.log('🔐 Auth state changed, user:', user);
+                
+                if (user) {
+                    console.log('✅ User authenticated, loading profile data...');
+                    
+                    try {
+                        // Load user data from Firestore
+                        const userData = await loadUserDataFromFirestore(user);
+                        updateUserProfile(userData);
+                        
+                        // Load statistics
+                        await loadUserStatistics(user.uid);
+                        
+                        showNotification(`Selamat datang, ${userData.displayName || userData.email}!`, 'success');
+                    } catch (error) {
+                        console.error('❌ Error loading user profile:', error);
+                        showNotification('Gagal memuat profil pengguna', 'error');
+                    }
+                } else {
+                    console.log('❌ No user authenticated, redirecting to login...');
+                    showNotification('Anda belum login. Mengalihkan ke halaman login...', 'warning');
+                    setTimeout(() => {
+                        window.location.href = '../../login.html';
+                    }, 2000);
+                }
+            });
+        });
+    </script>
+    <!-- Navigation Indicator -->
+    <script type="module">
+        import { initNavigationIndicator } from '../../assets/js/core/navigation-indicator.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavigationIndicator();
+        });
+    </script>
+</body>
+</html>
+

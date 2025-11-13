@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saran & Kritik - Moral Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .nav-button.active { color: #4f46e5; }
+        .rating-table { font-size: 14px; }
+        .rating-table th, .rating-table td { padding: 8px 4px; text-align: center; }
+        .rating-table input[type="radio"] { transform: scale(1.2); }
+    </style>
+    <script type="module" src="../../assets/js/auth/auth-guard.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-100">
+
+    <!-- Main App Container -->
+    <div id="app-container" class="pb-24">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white p-6 rounded-b-3xl shadow-xl">
+            <div class="flex items-center space-x-4">
+                <a href="./profil.html" class="p-2 bg-white/20 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
+                </a>
+                <div class="flex-1">
+                    <h1 class="text-xl font-bold">Saran & Kritik</h1>
+                    <p class="text-green-200 text-sm">Bantu kami meningkatkan aplikasi</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 space-y-6">
+            <!-- Survey Form -->
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Evaluasi Aplikasi Moral Intelligence</h3>
+                
+                <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                    <p class="text-sm text-blue-800 mb-2"><strong>Petunjuk:</strong> Beri tanda centang (✓) pada jawaban yang paling sesuai dengan pendapat Anda.</p>
+                    <p class="text-sm text-blue-700">
+                        <strong>Skala penilaian:</strong><br>
+                        1 = Sangat Tidak Setuju | 2 = Tidak Setuju | 3 = Netral | 4 = Setuju | 5 = Sangat Setuju
+                    </p>
+                </div>
+
+                <form id="survey-form" class="space-y-6">
+                    <!-- Rating Questions -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full rating-table border border-gray-300">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-300 text-left p-3">No</th>
+                                    <th class="border border-gray-300 text-left p-3">Pernyataan</th>
+                                    <th class="border border-gray-300">1</th>
+                                    <th class="border border-gray-300">2</th>
+                                    <th class="border border-gray-300">3</th>
+                                    <th class="border border-gray-300">4</th>
+                                    <th class="border border-gray-300">5</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Section A: Desain Tampilan -->
+                                <tr class="bg-blue-50">
+                                    <td class="border border-gray-300 font-bold p-3" colspan="7">A. Desain Tampilan</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">1</td>
+                                    <td class="border border-gray-300 p-3 text-left">Teks mudah dibaca</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q1" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q1" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q1" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q1" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q1" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">2</td>
+                                    <td class="border border-gray-300 p-3 text-left">Warna dan tata letak jelas</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q2" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q2" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q2" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q2" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q2" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">3</td>
+                                    <td class="border border-gray-300 p-3 text-left">Desain menarik</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q3" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q3" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q3" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q3" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q3" value="5"></td>
+                                </tr>
+
+                                <!-- Section B: Kemudahan Penggunaan -->
+                                <tr class="bg-green-50">
+                                    <td class="border border-gray-300 font-bold p-3" colspan="7">B. Kemudahan Penggunaan</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">4</td>
+                                    <td class="border border-gray-300 p-3 text-left">Aplikasi berjalan lancar di web, Android, dan iOS</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q4" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q4" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q4" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q4" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q4" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">5</td>
+                                    <td class="border border-gray-300 p-3 text-left">Menu dan fitur mudah dioperasikan</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q5" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q5" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q5" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q5" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q5" value="5"></td>
+                                </tr>
+
+                                <!-- Section C: Media -->
+                                <tr class="bg-purple-50">
+                                    <td class="border border-gray-300 font-bold p-3" colspan="7">C. Media</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">6</td>
+                                    <td class="border border-gray-300 p-3 text-left">Media Chatbot AI relevan</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q6" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q6" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q6" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q6" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q6" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">7</td>
+                                    <td class="border border-gray-300 p-3 text-left">Media pendukung (gambar, video) sesuai dengan materi</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q7" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q7" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q7" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q7" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q7" value="5"></td>
+                                </tr>
+
+                                <!-- Section D: Materi -->
+                                <tr class="bg-orange-50">
+                                    <td class="border border-gray-300 font-bold p-3" colspan="7">D. Materi</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">8</td>
+                                    <td class="border border-gray-300 p-3 text-left">Penjelasan materi mudah dipahami</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q8" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q8" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q8" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q8" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q8" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">9</td>
+                                    <td class="border border-gray-300 p-3 text-left">Soal bervariasi</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q9" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q9" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q9" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q9" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q9" value="5"></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-300 p-3">10</td>
+                                    <td class="border border-gray-300 p-3 text-left">Aplikasi mendukung belajar materi mandiri dan diskusi kelompok</td>
+                                    <td class="border border-gray-300"><input type="radio" name="q10" value="1" required></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q10" value="2"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q10" value="3"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q10" value="4"></td>
+                                    <td class="border border-gray-300"><input type="radio" name="q10" value="5"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Usage Information -->
+                    <div class="space-y-4 mt-8">
+                        <h4 class="text-lg font-semibold text-gray-800">Informasi Penggunaan Aplikasi</h4>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">a. Perangkat yang digunakan:</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center"><input type="radio" name="device" value="Android" class="mr-2" required> Android</label>
+                                <label class="flex items-center"><input type="radio" name="device" value="iOS" class="mr-2"> iOS</label>
+                                <label class="flex items-center"><input type="radio" name="device" value="Web" class="mr-2"> Web</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">b. Frekuensi penggunaan aplikasi:</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center"><input type="radio" name="frequency" value="0-10" class="mr-2" required> 0 – 10 kali</label>
+                                <label class="flex items-center"><input type="radio" name="frequency" value="11-20" class="mr-2"> 11 – 20 kali</label>
+                                <label class="flex items-center"><input type="radio" name="frequency" value="21-30" class="mr-2"> 21 – 30 kali</label>
+                                <label class="flex items-center"><input type="radio" name="frequency" value="30+" class="mr-2"> Lebih dari 30 kali</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">c. Fitur yang paling sering digunakan:</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center"><input type="radio" name="mostUsedFeature" value="Kuis" class="mr-2" required> Kuis</label>
+                                <label class="flex items-center"><input type="radio" name="mostUsedFeature" value="Materi" class="mr-2"> Materi</label>
+                                <label class="flex items-center"><input type="radio" name="mostUsedFeature" value="Chatbot" class="mr-2"> Chatbot</label>
+                                <label class="flex items-center"><input type="radio" name="mostUsedFeature" value="Video" class="mr-2"> Video</label>
+                                <label class="flex items-center"><input type="radio" name="mostUsedFeature" value="Forum" class="mr-2"> Forum</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">d. Tujuan penggunaan aplikasi:</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center"><input type="radio" name="purpose" value="Belajar mandiri" class="mr-2" required> Untuk belajar mandiri</label>
+                                <label class="flex items-center"><input type="radio" name="purpose" value="Mengajar/diskusi" class="mr-2"> Untuk mengajar / diskusi kelompok</label>
+                                <label class="flex items-center"><input type="radio" name="purpose" value="Referensi" class="mr-2"> Untuk mencari referensi bersikap</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Saran dan masukan tambahan (opsional):</label>
+                            <textarea id="additionalFeedback" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Tuliskan saran atau kritik Anda untuk perbaikan aplikasi..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-4 rounded-xl font-medium hover:shadow-lg transition-all duration-300">
+                            Kirim Feedback
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Success Message -->
+            <div id="success-message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    Terima kasih! Feedback Anda berhasil dikirim dan akan membantu kami meningkatkan aplikasi.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 p-4 z-50">
+        <div class="flex justify-around items-center max-w-lg mx-auto">
+            <a href="../../index.html" data-page="home" class="nav-button flex flex-col items-center space-y-1 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <span class="text-xs font-medium">Beranda</span>
+            </a>
+            <a href="./chat.html" data-page="chat" class="nav-button flex flex-col items-center space-y-1 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span class="text-xs font-medium">Quiz</span>
+            </a>
+            <a href="./forum.html" data-page="forum" class="nav-button flex flex-col items-center space-y-1 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span class="text-xs font-medium">Forum</span>
+            </a>
+            <a href="./accounting.html" data-page="accounting" class="nav-button flex flex-col items-center space-y-1 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                <span class="text-xs font-medium">Materi</span>
+            </a>
+            <a href="./profil.html" data-page="profile" class="nav-button flex flex-col items-center space-y-1 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span class="text-xs font-medium">Profil</span>
+            </a>
+        </div>
+    </div>
+    <script type="module">
+        import { db, auth } from '../../config/firebase-init.js';
+        import { collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        let isSubmitting = false; // Flag to prevent double submission
+
+        document.addEventListener('DOMContentLoaded', () => {
+          const form = document.getElementById('survey-form');
+
+          // Remove any existing listeners before adding new one
+          form.removeEventListener('submit', handleSurveySubmit);
+          form.addEventListener('submit', handleSurveySubmit);
+        });
+
+        async function handleSurveySubmit(e) {
+          e.preventDefault();
+
+          // Prevent double submission
+          if (isSubmitting) {
+            console.log('⏳ Already submitting...');
+            return;
+          }
+
+          isSubmitting = true;
+
+          try {
+            const user = auth.currentUser;
+            if (!user) {
+              alert('Anda harus login untuk mengirim feedback.');
+              isSubmitting = false;
+              return;
+            }
+
+            const formData = new FormData(e.target);
+            const surveyData = {
+              userId: user.uid,
+              userEmail: user.email,
+              userName: user.displayName || user.email || 'Anonymous',
+              ratings: {
+                textReadability: parseInt(formData.get('q1')),
+                colorLayout: parseInt(formData.get('q2')),
+                attractiveDesign: parseInt(formData.get('q3')),
+                crossPlatform: parseInt(formData.get('q4')),
+                easeOfUse: parseInt(formData.get('q5')),
+                chatbotRelevance: parseInt(formData.get('q6')),
+                mediaSupport: parseInt(formData.get('q7')),
+                materialClarity: parseInt(formData.get('q8')),
+                questionVariety: parseInt(formData.get('q9')),
+                learningSupport: parseInt(formData.get('q10')),
+              },
+              device: formData.get('device'),
+              frequency: formData.get('frequency'),
+              mostUsedFeature: formData.get('mostUsedFeature'),
+              purpose: formData.get('purpose'),
+              additionalFeedback: document.getElementById('additionalFeedback').value,
+              timestamp: serverTimestamp(),
+            };
+
+            await addDoc(collection(db, 'surveyResponses'), surveyData);
+
+            console.log('✅ Survey submitted successfully');
+
+            const successMessage = document.getElementById('success-message');
+            successMessage.classList.remove('hidden');
+            e.target.reset();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => successMessage.classList.add('hidden'), 5000);
+          } catch (error) {
+            console.error('❌ Error submitting survey:', error);
+            alert('Gagal mengirim feedback. Silakan coba lagi.');
+          } finally {
+            isSubmitting = false;
+          }
+        }
+      </script>
+</body>
+</html>

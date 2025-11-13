@@ -1,0 +1,10 @@
+{
+  "port": 8080,
+  "host": "127.0.0.1",
+  "root": ".",
+  "open": true,
+  "file": "index.html",
+  "wait": 100,
+  "logLevel": 2,
+  "middleware": []
+}

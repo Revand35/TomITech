@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TOMITECH</title>
+    <meta name="theme-color" content="#2c4d32">
+    <meta name="description" content="TOMITECH - Platform AI untuk Optimasi Greenhouse dan Tanaman">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- TOMITECH Design System -->
+    <link rel="stylesheet" href="./assets/css/tomitech-design-system.css">
+    
+    <style>
+        /* Dashboard Specific Styles */
+        .main-content {
+            padding: var(--spacing-md);
+            padding-bottom: 100px;
+        }
+        
+        .profile-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--tomitech-green-bg) 100%);
+        }
+        
+        .profile-card .profile-avatar {
+            border: 3px solid var(--tomitech-green-light);
+        }
+        
+        .action-grid {
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .recent-activities {
+            margin-top: var(--spacing-xl);
+        }
+        
+        .recent-activities-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .recent-activities-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .recent-activities-link {
+            font-size: 0.875rem;
+            color: var(--tomitech-green-accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .activity-card.light-green {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        }
+        
+        .activity-card.light-blue {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        }
+        
+        .activity-card .activity-icon.green {
+            background: var(--tomitech-green-accent);
+        }
+        
+        .activity-card .activity-icon.blue {
+            background: var(--blue);
+        }
+        
+        /* Action Destination Badge - Ensure visible */
+        .action-destination-badge {
+            position: absolute !important;
+            top: 10px !important;
+            right: 10px !important;
+            background: linear-gradient(135deg, #2c4d32 0%, #1a3320 100%) !important;
+            padding: 6px 14px !important;
+            border-radius: 16px !important;
+            font-size: 0.75rem !important;
+            font-weight: 700 !important;
+            color: #ffffff !important;
+            border: 2px solid rgba(255, 255, 255, 0.2) !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.8px !important;
+            z-index: 1000 !important;
+            white-space: nowrap !important;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            font-family: 'Poppins', sans-serif !important;
+            line-height: 1.2 !important;
+        }
+        
+        .action-card:hover .action-destination-badge {
+            background: linear-gradient(135deg, #1a3320 0%, #2c4d32 100%) !important;
+            transform: scale(1.08) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="tomitech-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <img src="./assets/icons/tittle.png" alt="TOMITECH" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <i class="fas fa-leaf" style="display:none; color: white; font-size: 1.5rem;"></i>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-title">
+                        TOMITECH
+                        <span class="page-indicator dashboard">
+                            <i class="fas fa-home"></i>
+                            Dashboard
+                        </span>
+                    </div>
+                    <div class="logo-subtitle">Platform AI untuk Optimasi Greenhouse</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="pages/features/chat.html" class="action-btn green" title="AI Assistant">
+                    <span style="font-size: 0.75rem; font-weight: 600;">AI</span>
+                </a>
+                <button class="action-btn" title="Notifications">
+                    <i class="fas fa-shopping-bag"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100" alt="Profile" class="profile-avatar" id="user-avatar">
+            <div class="profile-info">
+                <div class="profile-name" id="user-name">Loading...</div>
+                <div class="profile-detail" id="user-role">Petani Greenhouse</div>
+                <div class="profile-detail" id="user-email">Loading...</div>
+                <div class="profile-detail" id="user-field">Bidang: user</div>
+            </div>
+            <div class="eco-score">
+                <div class="eco-score-label">Health Score</div>
+                <div class="eco-score-value" id="eco-score-value">87</div>
+            </div>
+        </div>
+
+        <!-- Stats Cards Grid -->
+        <div class="stats-grid-modern" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-md); margin: var(--spacing-lg) 0;">
+            <div class="stats-card animate-fade-in" style="animation-delay: 0.1s;">
+                <div class="stats-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="stats-value" id="total-activities">0</div>
+                <div class="stats-label">Total Aktivitas</div>
+                <div class="stats-trend up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+12% dari bulan lalu</span>
+                </div>
+            </div>
+            <div class="stats-card animate-fade-in" style="animation-delay: 0.2s;">
+                <div class="stats-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="stats-value" id="total-value">Rp 0</div>
+                <div class="stats-label">Nilai Ekonomi</div>
+                <div class="stats-trend up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+8% dari bulan lalu</span>
+                </div>
+            </div>
+            <div class="stats-card animate-fade-in" style="animation-delay: 0.3s;">
+                <div class="stats-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="stats-value" id="total-plants">0</div>
+                <div class="stats-label">Total Tanaman</div>
+                <div class="stats-trend up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+8 tanaman baru</span>
+                </div>
+            </div>
+            <div class="stats-card animate-fade-in" style="animation-delay: 0.4s;">
+                <div class="stats-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stats-value" id="health-score-display">0</div>
+                <div class="stats-label">Health Score</div>
+                <div class="stats-trend up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Optimal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons Grid -->
+        <div class="action-grid">
+            <a href="pages/features/plant-input.html" class="action-card blue modern-card">
+                <div class="action-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="action-title">Input Data</div>
+                <div class="action-subtitle">Aktivitas Lingkungan</div>
+            </a>
+            <a href="pages/features/chat.html" class="action-card green modern-card">
+                <div class="action-icon ai-assistant-card-icon">
+                    <i class="fas fa-robot ai-robot-icon"></i>
+                    <i class="fas fa-sparkles ai-sparkle"></i>
+                    <i class="fas fa-sparkles ai-sparkle"></i>
+                    <i class="fas fa-sparkles ai-sparkle"></i>
+                </div>
+                <div class="action-title">AI Assistant</div>
+                <div class="action-subtitle">Konsultan Green</div>
+            </a>
+            <a href="pages/features/monitoring.html" class="action-card teal modern-card">
+                <div class="action-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="action-title">Monitoring</div>
+                <div class="action-subtitle">Real-time Sensor</div>
+            </a>
+            <a href="pages/features/forum.html" class="action-card purple modern-card">
+                <div class="action-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="action-title">Reports</div>
+                <div class="action-subtitle">Analisis Data</div>
+            </a>
+            <a href="pages/features/profil.html" class="action-card orange modern-card">
+                <div class="action-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="action-title">Profil</div>
+                <div class="action-subtitle">Pengaturan</div>
+            </a>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="recent-activities">
+            <div class="recent-activities-header">
+                <h3 class="recent-activities-title">Aktivitas Terbaru</h3>
+                <a href="pages/features/forum.html" class="recent-activities-link">Lihat Semua</a>
+            </div>
+            
+            <!-- Activity Card 1 -->
+            <div class="activity-card light-green">
+                <div class="activity-icon green">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Tanaman Tomat Ditambahkan</div>
+                    <div class="activity-subtitle">5 tanaman - Status: Aktif</div>
+                </div>
+                <div class="activity-time">2 jam lalu</div>
+            </div>
+
+            <!-- Activity Card 2 -->
+            <div class="activity-card light-blue">
+                <div class="activity-icon blue">
+                    <i class="fas fa-thermometer-half"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Data Sensor Diperbarui</div>
+                    <div class="activity-subtitle">Suhu: 25°C, Kelembaban: 65%</div>
+                </div>
+                <div class="activity-time">1 hari lalu</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="tomitech-bottom-nav">
+        <a href="dashboard.html" class="tomitech-nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="pages/features/chat.html" class="tomitech-nav-item">
+            <div class="ai-assistant-nav-icon">
+                <i class="fas fa-robot ai-robot-icon"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+                <i class="fas fa-sparkles ai-sparkle"></i>
+            </div>
+            <span>AI Assistant</span>
+        </a>
+        <a href="pages/features/plant-input.html" class="tomitech-nav-item">
+            <i class="fas fa-file-alt"></i>
+            <span>Input Data</span>
+        </a>
+        <a href="pages/features/monitoring.html" class="tomitech-nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Monitoring</span>
+        </a>
+        <a href="pages/features/forum.html" class="tomitech-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reports</span>
+        </a>
+        <a href="pages/features/profil.html" class="tomitech-nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        // Import Firebase config from config.js
+        import { firebaseConfig } from './config/config.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore, doc, getDoc, collection, query, where, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { getActivityStats } from './assets/js/core/environmental-activity-service.js';
+
+        // Initialize Firebase dengan config dari config.js
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Animate number counter
+        function animateCounter(element, target, prefix = '', suffix = '') {
+            const duration = 1000;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = prefix + Math.floor(current).toLocaleString('id-ID') + suffix;
+            }, 16);
+        }
+
+        // Load user data and stats
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                console.log('✅ User logged in:', user.uid);
+                
+                // Update user info
+                document.getElementById('user-name').textContent = user.displayName || 'User';
+                document.getElementById('user-email').textContent = `Email: ${user.email || 'N/A'}`;
+                
+                if (user.photoURL) {
+                    document.getElementById('user-avatar').src = user.photoURL;
+                }
+                
+                // Fetch user document from Firestore
+                try {
+                    const userDocRef = doc(db, 'users', user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+                    
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        if (userData.role) {
+                            document.getElementById('user-role').textContent = userData.role;
+                        }
+                        if (userData.field) {
+                            document.getElementById('user-field').textContent = `Bidang: ${userData.field}`;
+                        }
+                        if (userData.healthScore || userData.ecoScore) {
+                            const healthScoreEl = document.getElementById('eco-score-value');
+                            const score = userData.healthScore || userData.ecoScore;
+                            healthScoreEl.textContent = score;
+                            // Animate counter
+                            animateCounter(healthScoreEl, score);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+                
+                // Load activity stats
+                try {
+                    const stats = await getActivityStats();
+                    if (stats) {
+                        // Animate counters
+                        if (stats.totalActivities) {
+                            animateCounter(document.getElementById('total-activities'), stats.totalActivities);
+                        }
+                        if (stats.totalEconomicValue) {
+                            animateCounter(document.getElementById('total-value'), stats.totalEconomicValue, 'Rp ');
+                        }
+                        if (stats.totalPlants) {
+                            animateCounter(document.getElementById('total-plants'), stats.totalPlants);
+                        }
+                        if (stats.averageHealthScore) {
+                            animateCounter(document.getElementById('health-score-display'), stats.averageHealthScore);
+                        } else if (stats.averageEcoScore) {
+                            // Fallback untuk kompatibilitas
+                            animateCounter(document.getElementById('health-score-display'), stats.averageEcoScore);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading stats:', error);
+                    
+                    // Check if error is about missing index
+                    if (error.message && error.message.includes('requires an index')) {
+                        console.warn('⚠️ Firestore index belum dibuat. Dashboard akan menampilkan data default.');
+                        
+                        // Show default values
+                        animateCounter(document.getElementById('total-activities'), 0);
+                        animateCounter(document.getElementById('total-value'), 0, 'Rp ');
+                        animateCounter(document.getElementById('total-plants'), 0);
+                        animateCounter(document.getElementById('health-score-display'), 0);
+                        
+                        // Show helpful message (optional - bisa di-comment jika tidak ingin)
+                        // showNotification('Index Firestore belum dibuat. Silakan buat index untuk melihat statistik.', 'info');
+                    } else {
+                        // Other errors - show default values
+                        animateCounter(document.getElementById('total-activities'), 0);
+                        animateCounter(document.getElementById('total-value'), 0, 'Rp ');
+                        animateCounter(document.getElementById('total-plants'), 0);
+                        animateCounter(document.getElementById('health-score-display'), 0);
+                    }
+                }
+            } else {
+                console.log('❌ No user logged in, redirecting to login.');
+                window.location.href = './login.html';
+            }
+        });
+    </script>
+    <!-- Navigation Indicator -->
+    <script type="module">
+        import { initNavigationIndicator } from './assets/js/core/navigation-indicator.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavigationIndicator();
+        });
+    </script>
+</body>
+</html>

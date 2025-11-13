@@ -1,0 +1,39 @@
+<!-- CSP Debug Version - Use this if login still fails -->
+<!-- Replace the CSP in login.html with this more permissive version for debugging -->
+
+<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http:;
+    style-src 'self' 'unsafe-inline' https: http:;
+    font-src 'self' https: http: data:;
+    img-src 'self' data: https: http: blob:;
+    connect-src 'self' https: http: ws: wss:;
+    frame-src 'self' https: http:;
+    worker-src 'self' blob:;
+    manifest-src 'self';
+    object-src 'none';
+    base-uri 'self';
+">
+
+<!-- 
+INSTRUCTIONS:
+1. If login still fails, temporarily replace the CSP in login.html with the above
+2. Test login functionality
+3. Once working, gradually tighten the CSP by adding specific domains
+4. Final production CSP should be more restrictive
+-->
+
+<!-- Production CSP (use after testing) -->
+<!--
+<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://esm.run;
+    style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data: https: blob:;
+    connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://generativelanguage.googleapis.com https://content-firebaseappcheck.googleapis.com https://www.gstatic.com https://apis.google.com https://esm.run https://cdn.jsdelivr.net;
+    frame-src 'self' https://accounts.google.com https://*.firebaseapp.com;
+    worker-src 'self' blob:;
+    manifest-src 'self';
+">
+-->

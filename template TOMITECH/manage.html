@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>ESMART Weather Station</title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <link href="assets/css/material-components-web.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="assets/css/font.css" />
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link href="assets/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
+  <link href="assets/demo/demo.css" rel="stylesheet" />
+</head>
+
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <div class="sidebar" data-color="purple" data-background-color="black" data-image="../assets/img/sidebar-2.jpg">
+      <div class="logo">
+        <a href="http://www.creative-tim.com" class="simple-text logo-normal">ESMART WEATHER</a>
+      </div>
+      <div class="sidebar-wrapper" >
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">
+              <i class="material-icons">dashboard</i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="manage.html">
+              <i class="material-icons">cloud</i>
+              <p>Kelola Stasiun Cuaca</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="#">
+              <i class="material-icons">settings</i>
+              <p>Pengaturan</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="#">
+              <i class="material-icons">person</i>
+              <p>Profil Pengguna</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="#">
+              <i class="material-icons">bubble_chart</i>
+              <p>Big Data</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="#">
+              <i class="material-icons">notifications</i>
+              <p>Notifikasi dan Feed</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="#">
+              <i class="material-icons">logout</i>
+              <p>Keluar</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel">
+      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <a class="navbar-brand" href="javascript:void(0)">MANAGE STASIUN CUACA</a>
+          </div>
+
+        </div>
+      </nav>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Tambahkan Stasiun Cuaca</h4>
+                </div>
+                <div class="card-body">
+                  <form>
+                    <h4>Data Mesin Cuaca</Canvas></h4>
+                    <div class='row'>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">ID Stasiun Cuaca</label>
+                          <input type="text" id="log0" class="form-control updateLog">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Kode OTP</label>
+                          <input type="text" id="log1" class="form-control updateLog">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Nama Stasiun Cuaca</label>
+                          <input type="text" id="log2" class="form-control updateLog">
+                        </div>
+                      </div>
+                      <div class="col-md-12 float-right">
+                        <button type="button" onclick="logUpdate(3)" class="float-right btn btn-primary pull-right">Ambil</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4" style='display : none'>
+              <div class="card card-profile">
+                <div class="card-avatar">
+                  <a href="#pablo">
+                    <img class="img" src="../assets/img/faces/marc.jpg" />
+                  </a>
+                </div>
+                <div class="card-body">
+                  <h6 class="card-category">CEO / Co-Founder</h6>
+                  <h4 class="card-title">Alec Thompson</h4>
+                  <p class="card-description">
+                    Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                  </p>
+                  <a href="#pablo" class="btn btn-primary btn-round">Follow</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Stasiun Cuaca</h4>
+                </div>
+                <div class="card-body">
+                  <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Station 1
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <div class="dropdown-item" href="#">
+                        <div class="row">
+                          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                            <div class="row">
+                              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                <div class="card card-stats">
+                                  <div class="card-header card-header-warning card-header-icon">
+                                    <div class="card-icon">
+                                      <i class="material-icons">thermostat</i>
+                                    </div>
+                                    <p class="card-category">Temperatur</p>
+                                    <h3 class="card-title"><span id='temperature'>1</span>
+                                      <small>°C</small>
+                                    </h3>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons text-warning">warning</i>
+                                      <a href="#pablo" class="warning-link">Get More Space...</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                <div class="card card-stats">
+                                  <div class="card-header card-header-success card-header-icon">
+                                    <div class="card-icon">
+                                      <i class="material-icons">air</i>
+                                    </div>
+                                    <p class="card-category">Kelembapan</p>
+                                    <h3 class="card-title"><span id='humidity'>1</span>
+                                      <small>RH</small>
+                                    </h3>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">date_range</i> Last 24 Hours
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                <div class="card card-stats">
+                                  <div class="card-header card-header-danger card-header-icon">
+                                    <div class="card-icon">
+                                      <i class="material-icons">flare</i>
+                                    </div>
+                                    <p class="card-category">Intensitas Cahaya</p>
+                                    <h3 class="card-title"><span id='lux'>1</span>
+                                      <small>lux</small>
+                                    </h3>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">local_offer</i> Tracked from Github
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                <div class="card card-stats">
+                                  <div class="card-header card-header-info card-header-icon">
+                                    <div class="card-icon">
+                                      <i class="material-icons">compress</i>
+                                    </div>
+                                    <p class="card-category">Tekanan Relatif</p>
+                                    <h3 class="card-title"><span id='rpressure'>1</span>
+                                      <small>mb</small>
+                                    </h3>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">update</i> Just Updated
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                <div class="card card-stats">
+                                  <div class="card-header card-header-warning card-header-icon">
+                                    <div class="card-icon">
+                                      <i class="material-icons">compress</i>
+                                    </div>
+                                    <p class="card-category">Tekanan Absolut</p>
+                                    <h3 class="card-title"><span id='apressure'>1</span>
+                                      <small>mb</small>
+                                    </h3>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons text-warning">warning</i>
+                                      <a href="#pablo" class="warning-link">Get More Space...</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                <div class="card card-stats">
+                                  <div class="card-header card-header-info card-header-icon">
+                                    <div class="card-icon">
+                                      <i class="material-icons">height</i>
+                                    </div>
+                                    <p class="card-category">Altitude</p>
+                                    <h3 class="card-title"><span id='altitude'>1</span>
+                                      <small>m</small>
+                                    </h3>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">update</i> Just Updated
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                <div class="card card-stats">
+                                  <div class="card-header card-header-success card-header-icon">
+                                    <div class="card-icon">
+                                      <i class="material-icons">bolt</i>
+                                    </div>
+                                    <p class="card-category">Arus Solar Cell</p>
+                                    <h3 class="card-title"><span id='current'>1</span>
+                                      <small>A</small>
+                                    </h3>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">date_range</i> Last 24 Hours
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                <div class="card card-stats">
+                                  <div class="card-header card-header-danger card-header-icon">
+                                    <div class="card-icon">
+                                      <i class="material-icons">bolt</i>
+                                    </div>
+                                    <p class="card-category">Tegangan Solar Cell</p>
+                                    <h3 class="card-title"><span id='voltage'>1</span>
+                                      <small>V</small></h3>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">local_offer</i> Tracked from Github
+                                    </div>
+                                  </div>
+                                </div>
+                              </div> 
+                            </div>
+                            <div class="row">
+                              <div class="col-xl-4 col-lg-12">
+                                <div class="card card-chart">
+                                  <div class="card-header">
+                                    <canvas id="temperatureLive"></canvas>
+                                  </div>
+                                  <div class="card-body ">
+                                    <div class='row'>
+                                      <div class="col-md-6">
+                                        <h4 class="card-title">Temperatur</h4>
+                                      </div>
+                                      <div class="col-md-2">
+                                      </div>
+                                      <div class="col-md-4" style='padding-right : 20px;'>
+                                        <a href='https://docs.google.com/spreadsheets/d/e/2PACX-1vTMRZxojyIIMVGjZob0jLU3kZU8J6jl-AWVYg4RqDC2rPng0IMIsA5JeeytcA1i7nf7KOHl5LsRfncC/pub?output=csv'><button class="btn btn-primary">CSV</button></a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">access_time</i> Realtime
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-12">
+                                <div class="card card-chart">
+                                  <div class="card-header">
+                                    <canvas id="humidityLive"></canvas>
+                                  </div>
+                                  <div class="card-body ">
+                                    <div class='row'>
+                                      <div class="col-md-6">
+                                        <h4 class="card-title">Kelembaban</h4>
+                                      </div>
+                                      <div class="col-md-2">
+                                      </div>
+                                      <div class="col-md-4" style='padding-right : 20px;'>
+                                        <a href='https://docs.google.com/spreadsheets/d/e/2PACX-1vRnCqQHS6ehESulxjNN87G1KGFtx2pBM3drze_5uh0FByHEUNNvxIt0VruGtcMDw0xMkbT7FPI7uDvv/pub?output=csv'><button class="btn btn-primary">CSV</button></a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">access_time</i> Realtime
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-12">
+                                <div class="card card-chart">
+                                  <div class="card-header">
+                                    <canvas id="luxLive"></canvas>
+                                  </div>
+                                  <div class="card-body ">
+                                    <div class='row'>
+                                      <div class="col-md-6">
+                                        <h4 class="card-title">Intensitas Cahaya</h4>
+                                      </div>
+                                      <div class="col-md-2">
+                                      </div>
+                                      <div class="col-md-4" style='padding-right : 20px;'>
+                                        <a href='https://docs.google.com/spreadsheets/d/e/2PACX-1vRJDYvCj3ZI93Mq7_lMjM7vHjiTkDpKk5spaKQ_R9bkFgTCLv0Zhj1XPJRi-rcB7qyVti_zUcqrknS9/pub?output=csv'><button class="btn btn-primary">CSV</button></a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">access_time</i> Realtime
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-xl-4 col-lg-12">
+                                <div class="card card-chart">
+                                  <div class="card-header">
+                                    <canvas id="currentLive"></canvas>
+                                  </div>
+                                  <div class="card-body ">
+                                    <div class='row'>
+                                      <div class="col-md-6">
+                                        <h4 class="card-title">Arus Sel Surya</h4>
+                                      </div>
+                                      <div class="col-md-2">
+                                        
+                                      </div>
+                                      <div class="col-md-4" style='padding-right : 20px;'>
+                                        <a href='https://docs.google.com/spreadsheets/d/e/2PACX-1vSK_g-XmTOo4jVIX7kZ-U3SuM5et3Qs0_TH4GvjyQjQV3projJOteJc3Fn-VqopnmaYBTcdXWbW3PYq/pub?output=csv'><button class="btn btn-primary">CSV</button></a>
+                                      </div>
+                                      
+                                    </div>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">access_time</i> Realtime
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-12">
+                                <div class="card card-chart">
+                                  <div class="card-header">
+                                    <canvas id="voltageLive"></canvas>
+                                  </div>
+                                  <div class="card-body ">
+                                    <div class='row'>
+                                      <div class="col-md-6">
+                                        <h4 class="card-title">Tegangan Sel Surya</h4>
+                                      </div>
+                                      <div class="col-md-2">
+                                        
+                                      </div>
+                                      <div class="col-md-4" style='padding-right : 20px;'>
+                                        <a href='https://docs.google.com/spreadsheets/d/e/2PACX-1vTL-Yv3PBd-VKMnmeCwoxZL1fHF4mqYxvABt2gtZbFTduk8UIAptsKpTEqMYbO72UtKdR_qjHi3CqW9/pub?output=csv'><button class="btn btn-primary">CSV</button></a>
+                                      </div>
+                                      
+                                    </div>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">access_time</i> Realtime
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-12">
+                                <div class="card card-chart">
+                                  <div class="card-header">
+                                    <canvas id="pressureLive"></canvas>
+                                  </div>
+                                  <div class="card-body ">
+                                    <div class='row'>
+                                      <div class="col-md-6">
+                                        <h4 class="card-title">Tekanan Relatif dan Absolut</h4>
+                                      </div>
+                                      <div class="col-md-2">
+                                        
+                                      </div>
+                                      <div class="col-md-4" style='padding-right : 20px;'>
+                                        <a href='https://docs.google.com/spreadsheets/d/e/2PACX-1vRB6g5-7QwEKv35-HP4NTWZURBOhlaGSdhKQfKYYUElR2DkbCm-sbg3N-u8o9t6AdrRMwhVVKFCbwIw/pub?output=csv'><button class="btn btn-primary">CSV</button></a>
+                                      </div>
+                                      
+                                    </div>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">access_time</i> Realtime
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-xl-8 col-lg-12">
+                                
+                                    <div id="map"></div>
+                                  
+                                  <div class="card-body ">
+                                    <h4 class="card-title text-center" style='color : white; font-weight : bold;'>Lokasi Weather Station</h4>
+                                  </div>
+                   
+                             
+                              </div>
+                              <div class="col-xl-4 col-lg-12">
+                                <div class="card card-chart">
+                                  <div class="card-header">
+                                    <canvas id="powerLive"></canvas>
+                                  </div>
+                                  <div class="card-body ">
+                                    <div class='row'>
+                                      <div class="col-md-6">
+                                        <h4 class="card-title">Daya Sel Surya</h4>
+                                      </div>
+                                      <div class="col-md-2">
+                                        
+                                      </div>
+                                      <div class="col-md-4" style='padding-right : 20px;'>
+                                        <a href='https://docs.google.com/spreadsheets/d/e/2PACX-1vQ69twyOjqiIA3n6bRRyOUhanyV4YUH3ClbRiPvtRo-KEDBTrLvPshuSiQzbp1y3-A34GCkWXU-O837/pub?output=csv'><button class="btn btn-primary">CSV</button></a>
+                                      </div>
+                                      
+                                    </div>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="stats">
+                                      <i class="material-icons">access_time</i> Realtime
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>   
+                          </div>
+
+                          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                            <div class="card">
+                              <div class="card-header card-header-primary">
+                                <h4 class="card-title">Edit Pengaturan Stasiun Cuaca 1</h4>
+                              </div>
+                              <div class="card-body">
+                                <form>
+                                  <div class="row">
+                                    <div class="col-md-2">
+                                      <h5>Relay 0</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(0)" id="relay0">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 1</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(1)" id="relay1">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 2</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(2)" id="relay2">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 3</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(3)" id="relay3">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 4</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(4)" id="relay4">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 5</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(5)" id="relay5">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-2">
+                                      <h5>Relay 6</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(6)" id="relay6">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 7</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(7)" id="relay7">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 8</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(8)" id="relay8">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 9</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(9)" id="relay9">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 10</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(10)" id="relay10">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                    <div class="col-md-2">
+                                      <h5>Relay 11</h5>
+                                      <label class="switch">
+                                        <input type="checkbox" class="relay" onclick="relay(11)" id="relay11">
+                                        <span class="slider round"></span>
+                                      </label> 
+                                    </div>
+                                  </div>
+                                  <br>
+                                  
+                                  <div class="row">
+                                    <div class="col-md-7">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Google Spread Sheet ID All Data</label>
+                                        <input type="text" id="gas0"  class="form-control update">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <button type="button" onclick="gas(0,event.target)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="reseta(0,event.target)" class="btn btn-primary pull-right">reset table</button>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-7">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Google Spread Sheet ID Temperature</label>
+                                        <input type="text" id="gas1"  class="form-control update">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <button type="button" onclick="gas(1,event.target)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="reseta(1,event.target)" class="btn btn-primary pull-right">reset table</button>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-7">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Google Spread Sheet ID Kelembaban</label>
+                                        <input type="text" id="gas2"  class="form-control update">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <button type="button" onclick="gas(2,event.target)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="reseta(2,event.target)" class="btn btn-primary pull-right">reset table</button>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-7">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Google Spread Sheet ID Intensitas Cahaya</label>
+                                        <input type="text" id="gas3" class="form-control update">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <button type="button" onclick="gas(3,event.target)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="reseta(3,event.target)" class="btn btn-primary pull-right">reset table</button>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-7">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Google Spread Sheet ID Tekanan Relatif dan Absolut</label>
+                                        <input type="text" id="gas4" class="form-control update">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <button type="button" onclick="gas(4,event.target)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="reseta(4,event.target)" class="btn btn-primary pull-right">reset table</button>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-7">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Google Spread Sheet ID Altitude</label>
+                                        <input type="text" id="gas5" class="form-control update">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <button type="button" onclick="gas(5,event.target)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="reseta(5,event.target)" class="btn btn-primary pull-right">reset table</button>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-7">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Google Spread Sheet ID Arus, Tegangan, dan Daya Sel Surya</label>
+                                        <input type="text" id="gas6" class="form-control update">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <button type="button" onclick="gas(6,event.target)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="reseta(6,event.target)" class="btn btn-primary pull-right">reset table</button>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-7">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Google Spread Sheet ID Lokasi</label>
+                                        <input type="text" id="gas7" class="form-control update">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <button type="button" onclick="gas(7,event.target)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="reseta(7,event.target)" class="btn btn-primary pull-right">reset table</button>
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <h4>Kecepatan Logger (detik)</h4>
+                                  <div class='row'>
+                                    <div class="col-md-3">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Semua Data</label>
+                                        <input type="text" id="log0" class="form-control updateLog">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="logUpdate(0)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Temperatur</label>
+                                        <input type="text" id="log1" class="form-control updateLog">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="logUpdate(1)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Kelembapan</label>
+                                        <input type="text" id="log2" class="form-control updateLog">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="logUpdate(2)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Intensitas Cahaya</label>
+                                        <input type="text" id="log3" class="form-control updateLog">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="logUpdate(3)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                  </div>
+                                  <div class='row'>
+                                    <div class="col-md-3">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Tekanan</label>
+                                        <input type="text" id="log4" class="form-control updateLog">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="logUpdate(4)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Altitude</label>
+                                        <input type="text" id="log5" class="form-control updateLog">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="logUpdate(5)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Power</label>
+                                        <input type="text" id="log6" class="form-control updateLog">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="logUpdate(6)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Lokasi</label>
+                                        <input type="text" id="log7" class="form-control updateLog">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <button type="button" onclick="logUpdate(7)" class="btn btn-primary pull-right">Update</button>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4" style='display : none'>
+              <div class="card card-profile">
+                <div class="card-avatar">
+                  <a href="#pablo">
+                    <img class="img" src="../assets/img/faces/marc.jpg" />
+                  </a>
+                </div>
+                <div class="card-body">
+                  <h6 class="card-category">CEO / Co-Founder</h6>
+                  <h4 class="card-title">Alec Thompson</h4>
+                  <p class="card-description">
+                    Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                  </p>
+                  <a href="#pablo" class="btn btn-primary btn-round">Follow</a>
+                </div>
+              </div>
+            </div>
+          </div>         
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/material-components-web.min.js"></script>
+  <script src="assets/js/core/jquery.min.js"></script>
+  <script src="assets/js/core/popper.min.js"></script>
+  <script src="assets/js/core/bootstrap-material-design.min.js"></script>
+  <script src="assets/js/index.umd.js"></script>
+  <script src="assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <script src="assets/js/moment.js"></script>
+	<script src="assets/js/Chart.min.js"></script>
+	<script src="assets/js/chartjs-plugin-streaming1.0"></script>
+  <script async defer src="assets/js/buttons.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbPdxJyEesKSSgtJcL1PwXPE4o7JIdcug"></script>
+  <script src="assets/js/plugins/chartist.min.js"></script>
+  <script src="assets/js/plugins/bootstrap-notify.js"></script>
+  <script src="assets/js/material-dashboard.js?v=2.1.0"></script>
+  <script src="assets/demo/demo.js"></script>
+  <script>
+    $(document).ready(function() {
+      $().ready(function() {
+        $sidebar = $('.sidebar');
+
+        $sidebar_img_container = $sidebar.find('.sidebar-background');
+
+        $full_page = $('.full-page');
+
+        $sidebar_responsive = $('body > .navbar-collapse');
+
+        window_width = $(window).width();
+
+        $('.fixed-plugin a').click(function(event) {
+          // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
+          if ($(this).hasClass('switch-trigger')) {
+            if (event.stopPropagation) {
+              event.stopPropagation();
+            } else if (window.event) {
+              window.event.cancelBubble = true;
+            }
+          }
+        });
+
+        $('.fixed-plugin .active-color span').click(function() {
+          $full_page_background = $('.full-page-background');
+
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data-color', new_color);
+          }
+
+          if ($full_page.length != 0) {
+            $full_page.attr('filter-color', new_color);
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.attr('data-color', new_color);
+          }
+        });
+
+        $('.fixed-plugin .background-color .badge').click(function() {
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('background-color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data-background-color', new_color);
+          }
+        });
+
+        $('.fixed-plugin .img-holder').click(function() {
+          $full_page_background = $('.full-page-background');
+
+          $(this).parent('li').siblings().removeClass('active');
+          $(this).parent('li').addClass('active');
+
+
+          var new_image = $(this).find("img").attr('src');
+
+          if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+            $sidebar_img_container.fadeOut('fast', function() {
+              $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+              $sidebar_img_container.fadeIn('fast');
+            });
+          }
+
+          if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+            $full_page_background.fadeOut('fast', function() {
+              $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+              $full_page_background.fadeIn('fast');
+            });
+          }
+
+          if ($('.switch-sidebar-image input:checked').length == 0) {
+            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
+            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
+          }
+        });
+
+        $('.switch-sidebar-image input').change(function() {
+          $full_page_background = $('.full-page-background');
+
+          $input = $(this);
+
+          if ($input.is(':checked')) {
+            if ($sidebar_img_container.length != 0) {
+              $sidebar_img_container.fadeIn('fast');
+              $sidebar.attr('data-image', '#');
+            }
+
+            if ($full_page_background.length != 0) {
+              $full_page_background.fadeIn('fast');
+              $full_page.attr('data-image', '#');
+            }
+
+            background_image = true;
+          } else {
+            if ($sidebar_img_container.length != 0) {
+              $sidebar.removeAttr('data-image');
+              $sidebar_img_container.fadeOut('fast');
+            }
+
+            if ($full_page_background.length != 0) {
+              $full_page.removeAttr('data-image', '#');
+              $full_page_background.fadeOut('fast');
+            }
+
+            background_image = false;
+          }
+        });
+
+        $('.switch-sidebar-mini input').change(function() {
+          $body = $('body');
+
+          $input = $(this);
+
+          if (md.misc.sidebar_mini_active == true) {
+            $('body').removeClass('sidebar-mini');
+            md.misc.sidebar_mini_active = false;
+
+            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+
+          } else {
+
+            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
+
+            setTimeout(function() {
+              $('body').addClass('sidebar-mini');
+
+              md.misc.sidebar_mini_active = true;
+            }, 300);
+          }
+
+          // we simulate the window Resize so the charts will get updated in realtime.
+          var simulateWindowResize = setInterval(function() {
+            window.dispatchEvent(new Event('resize'));
+          }, 180);
+
+          // we stop the simulation of Window Resize after the animations are completed
+          setTimeout(function() {
+            clearInterval(simulateWindowResize);
+          }, 1000);
+
+        });
+      });
+    });
+
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/js/demos.js
+      md.initDashboardPageCharts();
+
+    });
+
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/js/demos.js
+      demo.initGoogleMaps();
+    });
+
+    var temperature, humidity, lux, rpressure, apressure, altitude, current, voltage, power, lat, lon;
+    var chartColors = {
+			red: 'rgb(255, 99, 132)',
+			orange: 'rgb(255, 159, 64)',
+			yellow: 'rgb(255, 205, 86)',
+			green: 'rgb(75, 192, 192)',
+			blue: 'rgb(54, 162, 235)',
+			purple: 'rgb(153, 102, 255)',
+			grey: 'rgb(201, 203, 207)',
+      white: 'rgb(255, 255, 255)'
+		};
+
+    function updatePower(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("temperature").innerHTML = JSON.parse(xhttp.responseText).data;
+            temperature = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=9", true);
+      xhttp.send();
+    }
+
+    function updateLat(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("temperature").innerHTML = JSON.parse(xhttp.responseText).data;
+            temperature = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=10", true);
+      xhttp.send();
+    }
+
+    function updateLon(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("temperature").innerHTML = JSON.parse(xhttp.responseText).data;
+            temperature = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=11", true);
+      xhttp.send();
+    }
+    
+    function updateTemp(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("temperature").innerHTML = JSON.parse(xhttp.responseText).data;
+            temperature = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=1", true);
+      xhttp.send();
+    }
+
+    function updateHum(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("humidity").innerHTML = JSON.parse(xhttp.responseText).data;
+            humidity = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=2", true);
+      xhttp.send();
+    }
+
+    function updateLux(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("lux").innerHTML = JSON.parse(xhttp.responseText).data;
+            lux = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=3", true);
+      xhttp.send();
+    }
+
+    function updateRpres(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("rpressure").innerHTML = JSON.parse(xhttp.responseText).data;
+            rpressure = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=4", true);
+      xhttp.send();
+    }
+
+    function updateApres(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("apressure").innerHTML = JSON.parse(xhttp.responseText).data;
+            apressure = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=5", true);
+      xhttp.send();
+    }
+
+    function updateAlt(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("altitude").innerHTML = JSON.parse(xhttp.responseText).data;
+            altitude = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=6", true);
+      xhttp.send();
+    }
+
+    function updateCur(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("current").innerHTML = JSON.parse(xhttp.responseText).data;
+            current = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=7", true);
+      xhttp.send();
+    }
+
+    function updateVolt(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("voltage").innerHTML = JSON.parse(xhttp.responseText).data;
+            voltage = JSON.parse(xhttp.responseText).data;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/sensors?option=8", true);
+      xhttp.send();
+    }
+
+    setInterval(updateTemp, 1000);
+    setInterval(updateHum, 1000);
+    setInterval(updateLux, 1000);
+    setInterval(updateRpres, 1000);
+    setInterval(updateApres, 1000);
+    setInterval(updateAlt, 1000);
+    setInterval(updateCur, 1000);
+    setInterval(updateVolt, 1000);
+
+    
+function chartLivePressure(){
+  function onReceive(event) {
+      console.log("masuk");
+      console.log(event.timestamp);
+      console.log(event.value);
+			myChart.config.data.datasets[event.index].data.push({
+				x: event.timestamp,
+				y: event.value
+			});
+			myChart.update({
+				preservation: true
+			});
+		}
+
+		var timeoutIDs = [];
+
+		function startFeedRpressure(index) {
+
+			var receive = function() {
+				onReceive({
+					index: index,
+					timestamp: Date.now(),
+					value: rpressure
+				});
+				timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+			}
+			timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+		}
+
+    function startFeedApressure(index) {
+
+			var receive = function() {
+				onReceive({
+					index: index,
+					timestamp: Date.now(),
+					value: apressure
+				});
+				timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+			}
+			timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+		}
+
+		function stopFeed(index) {
+			clearTimeout(timeoutIDs[index]);
+		}
+
+		var color = Chart.helpers.color;
+		var config = {
+			type: 'line',
+			data: {
+				datasets: [{
+          scaleFontColor: "#FFFFFF",
+          fillColor : "rgba(255, 89, 114, 0.6)",
+          backgroundColor: ["red", "blue", "green", "blue", "red", "blue"], 
+					label: 'Relatif',
+					backgroundColor: color(chartColors.yellow).alpha(0.5).rgbString(),
+					borderColor: chartColors.yellow,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}, {
+					label: 'Absolut',
+					backgroundColor: color(chartColors.white).alpha(0.5).rgbString(),
+					borderColor: chartColors.white,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}]
+			},
+			options: {
+        plugins: {
+          datalabels: {
+            color: 'red'
+          }
+        },
+				scales: {
+					xAxes: [{
+						type: 'realtime',
+						realtime: {
+							duration: 20000,
+							delay: 2000,
+						}
+					}],
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
+						}
+					}]
+				},
+				tooltips: {
+					mode: 'nearest',
+					intersect: false
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: false
+				}
+			}
+		};
+    var ctx = document.getElementById('pressureLive').getContext('2d');
+
+    var myChart = new Chart(ctx,config);
+    startFeedRpressure(0);
+		startFeedApressure(1);
+}
+
+function chartLiveTemperature(){
+  function onReceive(event) {
+      console.log("masuk");
+      console.log(event.timestamp);
+      console.log(event.value);
+			myChart.config.data.datasets[event.index].data.push({
+				x: event.timestamp,
+				y: event.value
+			});
+			myChart.update({
+				preservation: true
+			});
+		}
+
+		var timeoutIDs = [];
+
+		function startFeedRpressure(index) {
+
+			var receive = function() {
+				onReceive({
+					index: index,
+					timestamp: Date.now(),
+					value: temperature
+				});
+				timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+			}
+			timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+		}
+
+    
+
+		function stopFeed(index) {
+			clearTimeout(timeoutIDs[index]);
+		}
+
+		var color = Chart.helpers.color;
+		var config = {
+			type: 'line',
+			data: {
+				datasets: [{
+					label: 'Temperatur',
+					backgroundColor: color(chartColors.white).alpha(0.5).rgbString(),
+					borderColor: chartColors.white,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}]
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						type: 'realtime',
+						realtime: {
+							duration: 20000,
+							delay: 2000,
+						}
+					}],
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
+						}
+					}]
+				},
+				tooltips: {
+					mode: 'nearest',
+					intersect: false
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: false
+				}
+			}
+		};
+    var ctx = document.getElementById('temperatureLive').getContext('2d');
+
+    var myChart = new Chart(ctx,config);
+    startFeedRpressure(0);
+}
+
+function chartLiveHumidity(){
+  function onReceive(event) {
+      console.log("masuk");
+      console.log(event.timestamp);
+      console.log(event.value);
+			myChart.config.data.datasets[event.index].data.push({
+				x: event.timestamp,
+				y: event.value
+			});
+			myChart.update({
+				preservation: true
+			});
+		}
+
+		var timeoutIDs = [];
+
+		function startFeedRpressure(index) {
+
+			var receive = function() {
+				onReceive({
+					index: index,
+					timestamp: Date.now(),
+					value: humidity
+				});
+				timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+			}
+			timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+		}
+
+    
+
+		function stopFeed(index) {
+			clearTimeout(timeoutIDs[index]);
+		}
+
+		var color = Chart.helpers.color;
+		var config = {
+			type: 'line',
+			data: {
+				datasets: [{
+					label: 'Kelembapan',
+					backgroundColor: color(chartColors.white).alpha(0.5).rgbString(),
+					borderColor: chartColors.white,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}]
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						type: 'realtime',
+						realtime: {
+							duration: 20000,
+							delay: 2000,
+						}
+					}],
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
+						}
+					}]
+				},
+				tooltips: {
+					mode: 'nearest',
+					intersect: false
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: false
+				}
+			}
+		};
+    var ctx = document.getElementById('humidityLive').getContext('2d');
+
+    var myChart = new Chart(ctx,config);
+    startFeedRpressure(0);
+}
+
+function chartLiveLux(){
+  function onReceive(event) {
+      console.log("masuk");
+      console.log(event.timestamp);
+      console.log(event.value);
+			myChart.config.data.datasets[event.index].data.push({
+				x: event.timestamp,
+				y: event.value
+			});
+			myChart.update({
+				preservation: true
+			});
+		}
+
+		var timeoutIDs = [];
+
+		function startFeedRpressure(index) {
+
+			var receive = function() {
+				onReceive({
+					index: index,
+					timestamp: Date.now(),
+					value: lux
+				});
+				timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+			}
+			timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+		}
+
+    
+
+		function stopFeed(index) {
+			clearTimeout(timeoutIDs[index]);
+		}
+
+		var color = Chart.helpers.color;
+		var config = {
+			type: 'line',
+			data: {
+				datasets: [{
+					label: 'Intensitas Cahaya',
+					backgroundColor: color(chartColors.white).alpha(0.5).rgbString(),
+					borderColor: chartColors.white,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}]
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						type: 'realtime',
+						realtime: {
+							duration: 20000,
+							delay: 2000,
+						}
+					}],
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
+						}
+					}]
+				},
+				tooltips: {
+					mode: 'nearest',
+					intersect: false
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: false
+				}
+			}
+		};
+    var ctx = document.getElementById('luxLive').getContext('2d');
+
+    var myChart = new Chart(ctx,config);
+    startFeedRpressure(0);
+}
+    
+function chartLiveCurrent(){
+  function onReceive(event) {
+      console.log("masuk");
+      console.log(event.timestamp);
+      console.log(event.value);
+			myChart.config.data.datasets[event.index].data.push({
+				x: event.timestamp,
+				y: event.value
+			});
+			myChart.update({
+				preservation: true
+			});
+		}
+
+		var timeoutIDs = [];
+
+		function startFeedRpressure(index) {
+
+			var receive = function() {
+				onReceive({
+					index: index,
+					timestamp: Date.now(),
+					value: current
+				});
+				timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+			}
+			timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+		}
+
+    
+
+		function stopFeed(index) {
+			clearTimeout(timeoutIDs[index]);
+		}
+
+		var color = Chart.helpers.color;
+		var config = {
+			type: 'line',
+			data: {
+				datasets: [{
+					label: 'Arus Sel Surya',
+					backgroundColor: color(chartColors.white).alpha(0.5).rgbString(),
+					borderColor: chartColors.white,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}]
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						type: 'realtime',
+						realtime: {
+							duration: 20000,
+							delay: 2000,
+						}
+					}],
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
+						}
+					}]
+				},
+				tooltips: {
+					mode: 'nearest',
+					intersect: false
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: false
+				}
+			}
+		};
+    var ctx = document.getElementById('currentLive').getContext('2d');
+
+    var myChart = new Chart(ctx,config);
+    startFeedRpressure(0);
+}
+
+function chartLiveVoltage(){
+  function onReceive(event) {
+      console.log("masuk");
+      console.log(event.timestamp);
+      console.log(event.value);
+			myChart.config.data.datasets[event.index].data.push({
+				x: event.timestamp,
+				y: event.value
+			});
+			myChart.update({
+				preservation: true
+			});
+		}
+
+		var timeoutIDs = [];
+
+		function startFeedRpressure(index) {
+
+			var receive = function() {
+				onReceive({
+					index: index,
+					timestamp: Date.now(),
+					value: voltage
+				});
+				timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+			}
+			timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+		}
+
+    
+
+		function stopFeed(index) {
+			clearTimeout(timeoutIDs[index]);
+		}
+
+		var color = Chart.helpers.color;
+		var config = {
+			type: 'line',
+			data: {
+				datasets: [{
+					label: 'Regangan Sel Surya',
+					backgroundColor: color(chartColors.white).alpha(0.5).rgbString(),
+					borderColor: chartColors.white,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}]
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						type: 'realtime',
+						realtime: {
+							duration: 20000,
+							delay: 2000,
+						}
+					}],
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
+						}
+					}]
+				},
+				tooltips: {
+					mode: 'nearest',
+					intersect: false
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: false
+				}
+			}
+		};
+    var ctx = document.getElementById('voltageLive').getContext('2d');
+
+    var myChart = new Chart(ctx,config);
+    startFeedRpressure(0);
+}
+
+function chartLivePower(){
+  function onReceive(event) {
+      console.log("masuk");
+      console.log(event.timestamp);
+      console.log(event.value);
+			myChart.config.data.datasets[event.index].data.push({
+				x: event.timestamp,
+				y: event.value
+			});
+			myChart.update({
+				preservation: true
+			});
+		}
+
+		var timeoutIDs = [];
+
+		function startFeedRpressure(index) {
+
+			var receive = function() {
+				onReceive({
+					index: index,
+					timestamp: Date.now(),
+					value: power
+				});
+				timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+			}
+			timeoutIDs[index] = setTimeout(receive, Math.random() * 1000 + 500);
+		}
+
+    
+
+		function stopFeed(index) {
+			clearTimeout(timeoutIDs[index]);
+		}
+
+		var color = Chart.helpers.color;
+		var config = {
+			type: 'line',
+			data: {
+				datasets: [{
+					label: 'Daya',
+					backgroundColor: color(chartColors.white).alpha(0.5).rgbString(),
+					borderColor: chartColors.white,
+					fill: false,
+					cubicInterpolationMode: 'monotone',
+					data: []
+				}]
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						type: 'realtime',
+						realtime: {
+							duration: 20000,
+							delay: 2000,
+						}
+					}],
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: 'value'
+						}
+					}]
+				},
+				tooltips: {
+					mode: 'nearest',
+					intersect: false
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: false
+				}
+			}
+		};
+    var ctx = document.getElementById('powerLive').getContext('2d');
+
+    var myChart = new Chart(ctx,config);
+    startFeedRpressure(0);
+}
+    function initGAS(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById('gas0').value = JSON.parse(xhttp.responseText).idData0;
+            document.getElementById('gas1').value = JSON.parse(xhttp.responseText).idData1;
+            document.getElementById('gas2').value = JSON.parse(xhttp.responseText).idData2;
+            document.getElementById('gas3').value = JSON.parse(xhttp.responseText).idData3;
+            document.getElementById('gas4').value = JSON.parse(xhttp.responseText).idData4;
+            document.getElementById('gas5').value = JSON.parse(xhttp.responseText).idData5;
+            document.getElementById('gas6').value = JSON.parse(xhttp.responseText).idData6;
+            document.getElementById('gas7').value = JSON.parse(xhttp.responseText).idData7;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/manage?option=90", true);
+      xhttp.send();
+    }
+
+    function initLog(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById('log0').value = JSON.parse(xhttp.responseText).delayData0;
+            document.getElementById('log1').value = JSON.parse(xhttp.responseText).delayData1;
+            document.getElementById('log2').value = JSON.parse(xhttp.responseText).delayData2;
+            document.getElementById('log3').value = JSON.parse(xhttp.responseText).delayData3;
+            document.getElementById('log4').value = JSON.parse(xhttp.responseText).delayData4;
+            document.getElementById('log5').value = JSON.parse(xhttp.responseText).delayData5;
+            document.getElementById('log6').value = JSON.parse(xhttp.responseText).delayData6;
+            document.getElementById('log7').value = JSON.parse(xhttp.responseText).delayData7;
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/manage?option=90", true);
+      xhttp.send();
+    }
+
+    function turnBool(value){
+      if(value == 0){
+        return true;
+      }else{
+        return false;
+      }
+    }
+
+    function initRelay(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById('relay0').checked = turnBool(JSON.parse(xhttp.responseText).relay0);
+            document.getElementById('relay1').checked = turnBool(JSON.parse(xhttp.responseText).relay1);
+            document.getElementById('relay2').checked = turnBool(JSON.parse(xhttp.responseText).relay2);
+            document.getElementById('relay3').checked = turnBool(JSON.parse(xhttp.responseText).relay3);
+            document.getElementById('relay4').checked = turnBool(JSON.parse(xhttp.responseText).relay4);
+            document.getElementById('relay5').checked = turnBool(JSON.parse(xhttp.responseText).relay5);
+            document.getElementById('relay6').checked = turnBool(JSON.parse(xhttp.responseText).relay6);
+            document.getElementById('relay7').checked = turnBool(JSON.parse(xhttp.responseText).relay7);
+            document.getElementById('relay8').checked = turnBool(JSON.parse(xhttp.responseText).relay8);
+            document.getElementById('relay9').checked = turnBool(JSON.parse(xhttp.responseText).relay9);
+            document.getElementById('relay10').checked = turnBool(JSON.parse(xhttp.responseText).relay10);
+            document.getElementById('relay11').checked = turnBool(JSON.parse(xhttp.responseText).relay11);
+          }
+      };
+      xhttp.open("GET", "https://s1.esmartws.com/index.php/manage?option=90", true);
+      xhttp.send();
+    }
+
+    
+
+
+
+    function gas(gasa, e){
+      var xhttp = new XMLHttpRequest();
+      var params = 'option=' + gasa + '&' +'data=' + document.getElementsByClassName('update')[gasa].value;
+      console.log(document.getElementsByClassName('update')[gasa]);
+      console.log(gasa);
+      xhttp.open("POST", "https://s1.esmartws.com/index.php/manage", true);
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            
+          }
+      };
+
+      xhttp.send(params);
+    }
+
+    function reseta(gasa, e){
+      var xhttp = new XMLHttpRequest();
+      var params = 'option=' + (gasa+10000) + '&' +'clear=2';
+      console.log(gasa);
+      console.log(params);
+      xhttp.open("POST", "https://s1.esmartws.com/index.php/manage", true);
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log(xhttp.responseText);
+          }
+      };
+
+      xhttp.send(params);
+    }
+
+    function logUpdate(log){
+      var xhttp = new XMLHttpRequest();
+      var params = 'option=' + (log+20) + '&' +'data=' + document.getElementsByClassName('updateLog')[log].value;
+      console.log(document.getElementsByClassName('updateLog')[log].value);
+      console.log(params);
+      xhttp.open("POST", "https://s1.esmartws.com/index.php/manage", true);
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log(xhttp.responseText);
+          }
+      };
+
+      xhttp.send(params);
+    }
+
+    function relay(index){
+      var xhttp = new XMLHttpRequest();
+      var value = 1;
+      if(document.getElementsByClassName('relay')[index].checked){
+        value = 0;
+      }else{
+        value = 1;
+      }
+
+      var params = 'option=' + (index+1000) + '&' +'data=' + value;
+      console.log(document.getElementsByClassName('relay')[index].checked);
+      console.log(params);
+      xhttp.open("POST", "https://s1.esmartws.com/index.php/manage", true);
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log(xhttp.responseText);
+          }
+      };
+
+      xhttp.send(params);
+    }
+
+    $(document).ready(function() {
+      initGAS();
+      initLog();
+      initRelay();
+
+      chartLivePressure();
+      chartLiveTemperature();
+      chartLivePower();
+      chartLiveHumidity();
+      chartLiveLux();
+      chartLiveCurrent();
+      chartLiveVoltage();
+    });
+  </script>
+</body>
+
+</html>

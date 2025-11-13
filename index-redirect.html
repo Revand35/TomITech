@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOMITECH - Redirecting...</title>
+    <meta name="theme-color" content="#10b981">
+    <meta name="description" content="Platform Digital Green Accounting untuk UMKM">
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://www.gstatic.com https://generativelanguage.googleapis.com https://apis.google.com;
+        style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https: blob:;
+        connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://generativelanguage.googleapis.com;
+        frame-src 'self' https://accounts.google.com https://*.firebaseapp.com https://*.google.com;
+        worker-src 'self' blob:;
+        manifest-src 'self';
+    ">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="./assets/icons/tittle.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #10b981;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="text-center fade-in">
+        <!-- Logo -->
+        <div class="mb-8">
+            <div class="flex justify-center mb-4">
+                <img src="./assets/icons/tittle.png" alt="TOMITECH" class="w-16 h-16">
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">TOMITECH</h1>
+            <p class="text-gray-600">Platform Digital Green Accounting untuk UMKM</p>
+        </div>
+        
+        <!-- Loading Spinner -->
+        <div class="flex justify-center mb-6">
+            <div class="spinner"></div>
+        </div>
+        
+        <!-- Status Message -->
+        <div class="text-gray-700">
+            <p class="text-lg font-medium mb-2">Memeriksa status autentikasi...</p>
+            <p class="text-sm text-gray-500">Mengarahkan ke halaman yang sesuai</p>
+        </div>
+        
+        <!-- Manual Links (fallback) -->
+        <div class="mt-8 space-y-2">
+            <p class="text-sm text-gray-500">Jika tidak otomatis redirect:</p>
+            <div class="flex justify-center space-x-4">
+                <a href="login.html" class="text-green-600 hover:text-green-700 underline text-sm">Login</a>
+                <a href="dashboard.html" class="text-blue-600 hover:text-blue-700 underline text-sm">Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyD43R9_h0qZc5TFTrBn_Zt76Il3jDKP7kw",
+            authDomain: "greenomics-id.firebaseapp.com",
+            projectId: "greenomics-id",
+            storageBucket: "greenomics-id.firebasestorage.app",
+            messagingSenderId: "5727343643",
+            appId: "1:5727343643:web:0b84a6197ee989aa5dd4be"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        // Update status message
+        function updateStatus(message) {
+            const statusElement = document.querySelector('.text-lg.font-medium');
+            if (statusElement) {
+                statusElement.textContent = message;
+            }
+        }
+        
+        // Check authentication and redirect
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log('✅ User authenticated, redirecting to dashboard...');
+                updateStatus('User terautentikasi, mengarahkan ke dashboard...');
+                
+                // Redirect to dashboard after short delay
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                console.log('❌ No user, redirecting to login...');
+                updateStatus('Belum login, mengarahkan ke halaman login...');
+                
+                // Redirect to login after short delay
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            }
+        });
+        
+        // Fallback redirect after 3 seconds if auth check fails
+        setTimeout(() => {
+            console.log('⏰ Fallback redirect to login...');
+            window.location.href = 'login.html';
+        }, 3000);
+        
+        console.log('🚀 Authentication check initialized');
+    </script>
+</body>
+</html>

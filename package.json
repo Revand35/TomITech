@@ -1,0 +1,49 @@
+{
+  "name": "tomitech",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "TOMITECH - Platform AI untuk Optimasi Greenhouse dan Tanaman",
+  "main": "index-redirect.html",
+  "scripts": {
+    "start": "live-server",
+    "start-login": "live-server --entry-file=login.html",
+    "start-dashboard": "live-server --entry-file=dashboard.html",
+    "build": "echo 'No build step required for static site'",
+    "deploy": ".\\node_modules\\.bin\\firebase deploy",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "technology",
+    "green-tech",
+    "sustainability",
+    "tomitech",
+    "greenhouse",
+    "ai-prediction",
+    "plant-management"
+  ],
+  "author": "TOMITECH Team",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "firebase-tools": "^14.17.0",
+    "live-server": "^1.2.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/tomitech.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/tomitech/issues"
+  },
+  "homepage": "https://tomitech.web.app",
+  "dependencies": {
+    "docx": "^8.5.0",
+    "dotenv": "^17.2.2",
+    "firebase": "^12.5.0"
+  }
+}

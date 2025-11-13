@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privasi & Keamanan - Moral Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4f46e5;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        .loading-spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script type="module" src="../../assets/js/auth/auth-guard.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-100">
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-b-3xl shadow-xl">
+        <div class="flex items-center space-x-4">
+            <button onclick="history.back()" class="bg-white/20 hover:bg-white/30 p-2 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+            </button>
+            <h1 class="text-xl font-bold">Privasi & Keamanan</h1>
+        </div>
+    </div>
+
+    <div class="p-6 space-y-6">
+        <!-- Account Security -->
+        <div class="bg-white rounded-2xl p-6 shadow-lg">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-indigo-600"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Keamanan Akun
+            </h2>
+            <div class="space-y-4">
+                <button onclick="changePassword()" class="w-full flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors border border-gray-200">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-600"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <div class="text-left">
+                            <p class="font-medium text-gray-800">Ubah Password</p>
+                            <p class="text-sm text-gray-500">Perbarui password akun Anda</p>
+                        </div>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+                
+                <button onclick="viewLoginHistory()" class="w-full flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors border border-gray-200">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-600"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <div class="text-left">
+                            <p class="font-medium text-gray-800">Riwayat Login</p>
+                            <p class="text-sm text-gray-500">Lihat aktivitas login akun</p>
+                        </div>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Data Management -->
+        <div class="bg-white rounded-2xl p-6 shadow-lg">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-indigo-600"><cylinder cx="12" cy="12" r="3"/><path d="M5 12h14"/><path d="M5 8h14"/><path d="M5 16h14"/></svg>
+                Manajemen Data
+            </h2>
+            <div class="space-y-4">
+                <button onclick="exportData()" class="w-full flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors border border-gray-200">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-600"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <div class="text-left">
+                            <p class="font-medium text-gray-800">Unduh Data Saya</p>
+                            <p class="text-sm text-gray-500">Dapatkan salinan data pribadi Anda</p>
+                        </div>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+                
+                <button onclick="deleteAllData()" class="w-full flex items-center justify-between p-4 rounded-lg hover:bg-red-50 transition-colors border border-red-200 text-red-600">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        <div class="text-left">
+                            <p class="font-medium">Hapus Semua Data</p>
+                            <p class="text-sm text-red-400">Hapus akun dan semua data permanen</p>
+                        </div>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Ubah Password</h3>
+            <form id="changePasswordForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password Lama</label>
+                    <input type="password" id="currentPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
+                    <input type="password" id="newPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password Baru</label>
+                    <input type="password" id="confirmNewPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="flex space-x-3 mt-6">
+                    <button type="button" onclick="closeChangePasswordModal()" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" id="savePasswordBtn" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center">
+                        <span id="savePasswordText">Simpan</span>
+                        <div id="savePasswordSpinner" class="loading-spinner ml-2 hidden"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login History Modal -->
+    <div id="loginHistoryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Riwayat Login</h3>
+                <button onclick="closeLoginHistoryModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div id="loginHistoryContent" class="space-y-3">
+                <!-- Login history will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Privacy settings management
+        let privacySettings = {
+            publicProfile: true,
+            activityStats: true,
+            emailNotifications: false,
+            analytics: true
+        };
+
+        // Load saved settings
+        function loadPrivacySettings() {
+            const saved = localStorage.getItem('privacySettings');
+            if (saved) {
+                privacySettings = { ...privacySettings, ...JSON.parse(saved) };
+            }
+            
+            // Apply settings to UI
+            Object.keys(privacySettings).forEach(key => {
+                const checkbox = document.getElementById(key);
+                if (checkbox) {
+                    checkbox.checked = privacySettings[key];
+                }
+            });
+        }
+
+        function togglePrivacySetting(setting, value) {
+            privacySettings[setting] = value;
+            localStorage.setItem('privacySettings', JSON.stringify(privacySettings));
+            showNotification(`Pengaturan ${setting} ${value ? 'diaktifkan' : 'dinonaktifkan'}`);
+        }
+
+        // Change password functionality
+        function changePassword() {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+        }
+
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.add('hidden');
+            document.getElementById('changePasswordForm').reset();
+        }
+
+        async function handleChangePassword(event) {
+            event.preventDefault();
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmNewPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showNotification('Password baru tidak cocok', 'error');
+                return;
+            }
+
+            if (newPassword.length < 8) {
+                showNotification('Password baru minimal 8 karakter', 'error');
+                return;
+            }
+
+            setLoadingState(true, 'savePasswordBtn');
+
+            try {
+                // Import Firebase auth functions
+                const { auth } = await import('../../config/firebase-init.js');
+                const {
+                    EmailAuthProvider,
+                    reauthenticateWithCredential,
+                    updatePassword
+                } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+
+                const user = auth.currentUser;
+
+                if (!user || !user.email) {
+                    showNotification('User tidak ditemukan atau login dengan provider lain', 'error');
+                    return;
+                }
+
+                // Re-authenticate user with current password
+                const credential = EmailAuthProvider.credential(user.email, currentPassword);
+
+                try {
+                    await reauthenticateWithCredential(user, credential);
+                } catch (reauthError) {
+                    console.error('Re-authentication failed:', reauthError);
+                    showNotification('Password lama salah!', 'error');
+                    setLoadingState(false, 'savePasswordBtn');
+                    return;
+                }
+
+                // Update to new password
+                await updatePassword(user, newPassword);
+
+                showNotification('Password berhasil diubah!', 'success');
+                closeChangePasswordModal();
+            } catch (error) {
+                console.error('Error changing password:', error);
+
+                // Handle specific error codes
+                if (error.code === 'auth/wrong-password') {
+                    showNotification('Password lama salah!', 'error');
+                } else if (error.code === 'auth/weak-password') {
+                    showNotification('Password baru terlalu lemah!', 'error');
+                } else if (error.code === 'auth/requires-recent-login') {
+                    showNotification('Silakan login ulang untuk mengubah password', 'error');
+                } else {
+                    showNotification('Gagal mengubah password: ' + error.message, 'error');
+                }
+            } finally {
+                setLoadingState(false, 'savePasswordBtn');
+            }
+        }
+
+        // Login history functionality
+        function viewLoginHistory() {
+            const historyContent = document.getElementById('loginHistoryContent');
+            
+            // Mock login history data
+            const loginHistory = [
+                { date: new Date(), device: 'Chrome di Windows', location: 'Semarang, Indonesia', current: true },
+                { date: new Date(Date.now() - 86400000), device: 'Mobile Safari di iPhone', location: 'Semarang, Indonesia' },
+                { date: new Date(Date.now() - 172800000), device: 'Chrome di Windows', location: 'Semarang, Indonesia' },
+                { date: new Date(Date.now() - 259200000), device: 'Firefox di Windows', location: 'Jakarta, Indonesia' }
+            ];
+            
+            historyContent.innerHTML = loginHistory.map(session => `
+                <div class="p-4 border border-gray-200 rounded-lg ${session.current ? 'bg-green-50 border-green-200' : ''}">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="font-medium text-gray-800">${session.device}</p>
+                            <p class="text-sm text-gray-500">${session.location}</p>
+                            <p class="text-xs text-gray-400">${session.date.toLocaleString('id-ID')}</p>
+                        </div>
+                        ${session.current ? '<span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">Sesi Saat Ini</span>' : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('loginHistoryModal').classList.remove('hidden');
+        }
+
+        function closeLoginHistoryModal() {
+            document.getElementById('loginHistoryModal').classList.add('hidden');
+        }
+
+        // Data management functions
+        async function exportData() {
+            showNotification('Memproses permintaan ekspor data...', 'info');
+            
+            // Simulate data export
+            setTimeout(() => {
+                const data = {
+                    profile: { name: 'User', email: 'user@example.com' },
+                    exportDate: new Date().toISOString(),
+                    forums: [],
+                    materials: []
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'my-data-export.json';
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                showNotification('Data berhasil diekspor', 'success');
+            }, 2000);
+        }
+
+        function deleteAllData() {
+            if (confirm('Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan.')) {
+                if (confirm('Ketik "HAPUS" untuk mengonfirmasi penghapusan:') === 'HAPUS') {
+                    showNotification('Permintaan penghapusan data telah diproses', 'info');
+                    // Redirect to account deletion flow
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 3000);
+                }
+            }
+        }
+
+        function showTwoFactorAuth() {
+            showNotification('Fitur autentikasi dua faktor akan segera hadir', 'info');
+        }
+
+        // Utility functions
+        function setLoadingState(loading, buttonId) {
+            const button = document.getElementById(buttonId);
+            const text = button.querySelector('span');
+            const spinner = button.querySelector('.loading-spinner');
+            
+            if (loading) {
+                button.disabled = true;
+                text.textContent = 'Memproses...';
+                spinner.classList.remove('hidden');
+                button.classList.add('opacity-75');
+            } else {
+                button.disabled = false;
+                text.textContent = 'Simpan';
+                spinner.classList.add('hidden');
+                button.classList.remove('opacity-75');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+            
+            const notification = document.createElement('div');
+            notification.className = `fixed top-20 right-4 z-50 px-6 py-3 ${colors[type]} text-white rounded-lg shadow-lg`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPrivacySettings();
+            document.getElementById('changePasswordForm').addEventListener('submit', handleChangePassword);
+        });
+    </script>
+</body>
+</html>
