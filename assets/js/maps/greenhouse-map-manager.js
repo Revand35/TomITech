@@ -30,6 +30,9 @@ export class GreenhouseMapManager {
         this.drawnItems = null;
         this.drawControl = null;
         this.areaListElement = null;
+
+        // Event target for emitting cross-file events
+        this.eventTarget = document;
     }
 
     /**
@@ -200,7 +203,9 @@ export class GreenhouseMapManager {
                 polyline: false,
                 circle: false,
                 circlemarker: false,
-                marker: false
+                marker: {
+                    repeatMode: false
+                }
             },
             edit: {
                 featureGroup: this.drawnItems,
@@ -224,17 +229,44 @@ export class GreenhouseMapManager {
                 });
             }
 
-            const areaName = this._promptAreaName();
-            layer.areaName = areaName;
+            if (layerType === 'marker' && layer.getLatLng) {
+                // Default greenhouse name
+                const defaultName = 'Green House 1';
+                const latLng = layer.getLatLng();
 
-            const infoHtml = this._buildAreaPopupContent(layer, areaName);
-            if (layer.bindPopup && infoHtml) {
-                layer.bindPopup(infoHtml);
-                layer.openPopup();
+                // Emit a custom event so the page can persist to Firestore
+                this._emitLocationAdded({
+                    name: defaultName,
+                    lat: latLng.lat,
+                    lng: latLng.lng
+                });
+
+                // Show a simple popup on the placed marker
+                const popupHtml = `
+                    <div style="min-width:160px;">
+                        <strong style="color:#2e7d32;">${defaultName}</strong><br>
+                        <span style="font-size:12px;color:#4b5563;">Lat: ${latLng.lat.toFixed(5)}, Lng: ${latLng.lng.toFixed(5)}</span>
+                    </div>
+                `;
+                if (layer.bindPopup) {
+                    layer.bindPopup(popupHtml);
+                    layer.openPopup();
+                }
+
+                this.drawnItems.addLayer(layer);
+            } else {
+                const areaName = this._promptAreaName();
+                layer.areaName = areaName;
+
+                const infoHtml = this._buildAreaPopupContent(layer, areaName);
+                if (layer.bindPopup && infoHtml) {
+                    layer.bindPopup(infoHtml);
+                    layer.openPopup();
+                }
+
+                this.drawnItems.addLayer(layer);
+                this._updateAreaList();
             }
-
-            this.drawnItems.addLayer(layer);
-            this._updateAreaList();
         });
 
         this.map.on(L.Draw.Event.EDITED, (event) => {
@@ -457,6 +489,21 @@ export class GreenhouseMapManager {
     }
 
     /**
+     * Emit custom event saat lokasi greenhouse ditambahkan melalui map
+     * @param {{name:string, lat:number, lng:number}} detail
+     * @private
+     */
+    _emitLocationAdded(detail) {
+        try {
+            const event = new CustomEvent('greenhouse:locationAdded', { detail });
+            (this.eventTarget || document).dispatchEvent(event);
+            console.log('📍 Emitted locationAdded event:', detail);
+        } catch (err) {
+            console.warn('⚠️ Failed to emit locationAdded event', err);
+        }
+    }
+
+    /**
      * Hapus semua area yang ditandai
      */
     clearMarkedAreas() {
@@ -489,9 +536,6 @@ export class GreenhouseMapManager {
                     </p>
                     <p style="margin: 4px 0; font-size: 11px; color: #333;">
                         <strong>Humidity:</strong> ${sensorData.humidity?.toFixed(1) || 'N/A'} %
-                    </p>
-                    <p style="margin: 4px 0; font-size: 11px; color: #333;">
-                        <strong>Light:</strong> ${sensorData.lightLevel?.toFixed(0) || 'N/A'} lux
                     </p>
                     <p style="margin: 4px 0; font-size: 11px; color: #333;">
                         <strong>Soil:</strong> ${sensorData.soilMoisture?.toFixed(1) || 'N/A'} %

@@ -82,6 +82,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
         
         .logo {
@@ -161,17 +162,16 @@
             display: none;
         }
         
-        /* Hero Section - Modern Gradient Background with Animated Images */
+        /* Hero Section - Split Layout Design */
         .hero {
-            padding: 10rem 0 6rem;
-            text-align: center;
+            padding: 8rem 0 0;
             position: relative;
             overflow: hidden;
             background: linear-gradient(135deg, var(--primary-green) 0%, var(--accent-teal) 100%);
             min-height: 90vh;
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             align-items: center;
-            justify-content: center;
         }
         
         /* Background Image Container */
@@ -236,42 +236,116 @@
         }
         
         .hero-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 4rem;
+            position: relative;
+            z-index: 3;
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-content {
             position: relative;
             z-index: 3;
         }
         
         .hero h1 {
-            font-size: 4rem;
+            font-size: 4.5rem;
             font-weight: 800;
             color: var(--white);
             margin-bottom: 1.5rem;
-            line-height: 1.2;
+            line-height: 1.1;
             font-family: 'Poppins', sans-serif;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             animation: fadeInUp 0.8s ease-out;
+            text-align: left;
         }
         
         .hero-subtitle {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: rgba(255, 255, 255, 0.95);
             margin-bottom: 2.5rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
             font-weight: 400;
-            line-height: 1.7;
+            line-height: 1.8;
             animation: fadeInUp 0.8s ease-out 0.2s both;
+            text-align: left;
         }
         
         .hero-buttons {
             display: flex;
             gap: 1.5rem;
-            justify-content: center;
+            justify-content: flex-start;
             flex-wrap: wrap;
             animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+        
+        .hero-visual {
+            position: relative;
+            z-index: 3;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-visual-content {
+            width: 100%;
+            height: 500px;
+            background: var(--white);
+            backdrop-filter: none;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero-visual-content::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            top: -50px;
+            right: -50px;
+        }
+        
+        .hero-visual-content::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            bottom: -30px;
+            left: -30px;
+        }
+        
+        .hero-logo {
+            width: 450px;
+            height: 450px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
+            animation: floatLogo 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes floatLogo {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.05);
+            }
         }
         
         .cta-button {
@@ -348,44 +422,60 @@
         }
         
         .section-title {
-            text-align: center;
-            font-size: 3rem;
+            text-align: left;
+            font-size: 3.5rem;
             font-weight: 700;
             color: var(--primary-green);
             margin-bottom: 1rem;
             font-family: 'Poppins', sans-serif;
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(180deg, var(--primary-green), var(--accent-teal));
+            border-radius: 3px;
         }
         
         .section-subtitle {
-            text-align: center;
-            font-size: 1.2rem;
+            text-align: left;
+            font-size: 1.25rem;
             color: var(--text-gray);
             margin-bottom: 4rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.7;
+            max-width: 800px;
+            line-height: 1.8;
+            padding-left: 2rem;
         }
         
-        /* Features Grid - Modern Card Design */
+        /* Features Grid - Clean 3 Column Layout */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: 4rem;
         }
         
         .feature-card {
             background: var(--white);
             padding: 2.5rem;
-            border-radius: 20px;
+            border-radius: 24px;
             box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 1px solid var(--medium-gray);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
+        /* Top border animation */
         .feature-card::before {
             content: '';
             position: absolute;
@@ -396,12 +486,27 @@
             background: linear-gradient(90deg, var(--primary-green), var(--accent-teal));
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 0.4s ease;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1;
+        }
+        
+        /* Shine/glow effect background */
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(45, 90, 39, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
         }
         
         .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-xl);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(45, 90, 39, 0.2), 0 0 30px rgba(13, 148, 136, 0.15);
             border-color: var(--primary-green);
         }
         
@@ -409,14 +514,76 @@
             transform: scaleX(1);
         }
         
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+        
         .feature-icon {
-            font-size: 3rem;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--soft-green), var(--light-green));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Pulse animation on icon */
+        .feature-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--primary-green), var(--accent-teal));
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.15) rotate(8deg);
+            background: linear-gradient(135deg, var(--primary-green), var(--accent-teal));
+            box-shadow: 0 8px 20px rgba(45, 90, 39, 0.3);
+        }
+        
+        .feature-card:hover .feature-icon::before {
+            opacity: 0.3;
+            transform: scale(1.3);
+            animation: pulseIcon 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulseIcon {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1.3);
+            }
+            50% {
+                opacity: 0.1;
+                transform: scale(1.5);
+            }
+        }
+        
+        .feature-icon i {
             background: linear-gradient(135deg, var(--primary-green), var(--accent-teal));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 1.5rem;
-            display: inline-block;
+            font-size: 2.2rem;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-card:hover .feature-icon i {
+            -webkit-text-fill-color: var(--white);
+            background: none;
+            transform: scale(1.1);
         }
         
         .feature-title {
@@ -425,23 +592,65 @@
             color: var(--primary-green);
             margin-bottom: 1rem;
             font-family: 'Poppins', sans-serif;
+            line-height: 1.3;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature-card:hover .feature-title {
+            color: var(--primary-green-dark);
+            transform: translateX(5px);
         }
         
         .feature-description {
             color: var(--text-gray);
             margin-bottom: 1.5rem;
             line-height: 1.7;
+            font-size: 0.95rem;
+            flex-grow: 1;
+            transition: all 0.4s ease 0.1s;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature-card:hover .feature-description {
+            color: var(--dark-gray);
+            transform: translateX(5px);
         }
         
         .feature-example {
             background: linear-gradient(135deg, var(--soft-green), var(--light-green));
-            padding: 1.2rem;
+            padding: 1.25rem;
             border-radius: 12px;
-            font-style: italic;
             color: var(--primary-green-dark);
             font-size: 0.9rem;
             line-height: 1.6;
             border-left: 3px solid var(--accent-teal);
+            position: relative;
+            margin-top: auto;
+            transition: all 0.4s ease 0.2s;
+            z-index: 2;
+        }
+        
+        .feature-card:hover .feature-example {
+            transform: translateX(8px) translateY(-3px);
+            box-shadow: 0 4px 12px rgba(45, 90, 39, 0.15);
+            border-left-width: 5px;
+            background: linear-gradient(135deg, var(--light-green), var(--soft-green));
+        }
+        
+        .feature-example strong {
+            color: var(--primary-green);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-example strong {
+            color: var(--primary-green-dark);
+            transform: scale(1.05);
         }
         
         /* About Section - Modern Design */
@@ -464,64 +673,178 @@
         }
         
         .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 4rem;
-            align-items: center;
             position: relative;
             z-index: 1;
         }
         
+        .about-text {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
         .about-text h2 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 700;
             color: var(--primary-green);
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             font-family: 'Poppins', sans-serif;
+            transition: all 0.4s ease;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .about-text h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-teal));
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+        
+        .about-text:hover h2::after {
+            width: 80%;
         }
         
         .about-text p {
             color: var(--text-gray);
             margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            line-height: 1.8;
+            font-size: 1.15rem;
+            line-height: 1.9;
+            transition: all 0.3s ease;
+        }
+        
+        .about-text:hover p {
+            color: var(--dark-gray);
         }
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
         }
         
         .stat-item {
             text-align: center;
-            padding: 2rem;
+            padding: 2.5rem;
             background: var(--white);
-            border-radius: 16px;
+            border-radius: 20px;
             box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+        
+        /* Decorative circle icon */
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--soft-green), var(--light-green));
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1;
+        }
+        
+        /* Glow effect background */
+        .stat-item::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(45, 90, 39, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            pointer-events: none;
+            z-index: 0;
         }
         
         .stat-item:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-12px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(45, 90, 39, 0.2), 0 0 25px rgba(13, 148, 136, 0.15);
+            border-color: var(--primary-green);
+        }
+        
+        .stat-item:hover::before {
+            opacity: 0.3;
+            transform: scale(1);
+        }
+        
+        .stat-item:hover::after {
+            width: 300px;
+            height: 300px;
         }
         
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
+            font-size: 3rem;
+            font-weight: 900;
             background: linear-gradient(135deg, var(--primary-green), var(--accent-teal));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-family: 'Poppins', sans-serif;
             margin-bottom: 0.5rem;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 2;
+            display: inline-block;
+        }
+        
+        .stat-item:hover .stat-number {
+            transform: scale(1.2);
+            filter: drop-shadow(0 4px 8px rgba(45, 90, 39, 0.3));
+        }
+        
+        /* Animated underline for number */
+        .stat-number::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-teal));
+            border-radius: 2px;
+            transition: transform 0.5s ease;
+        }
+        
+        .stat-item:hover .stat-number::after {
+            transform: translateX(-50%) scaleX(1);
         }
         
         .stat-label {
             color: var(--text-gray);
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 500;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .stat-item:hover .stat-label {
+            color: var(--primary-green-dark);
+            font-weight: 600;
+            transform: translateY(-3px);
         }
         
         /* Footer - Modern Footer */
@@ -568,49 +891,337 @@
             color: rgba(255, 255, 255, 0.8);
         }
         
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 8rem 0 4rem;
             }
             
-            .hero {
-                padding: 8rem 0 4rem;
-                min-height: 80vh;
+            .hero-container {
+                grid-template-columns: 1fr;
+                padding: 0 2rem;
+            }
+            
+            .hero-content {
+                text-align: center;
             }
             
             .hero h1 {
-                font-size: 2.5rem;
+                text-align: center;
             }
             
             .hero-subtitle {
-                font-size: 1.1rem;
+                text-align: center;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-visual {
+                display: none;
+            }
+            
+            .hero-logo {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .section-title {
+                text-align: center;
+                padding-left: 0;
+            }
+            
+            .section-title::before {
+                display: none;
+            }
+            
+            .section-subtitle {
+                text-align: center;
+                padding-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .logo-img {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: var(--shadow-lg);
+                gap: 1rem;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .nav-menu li {
+                width: 100%;
+            }
+            
+            .nav-menu a {
+                display: block;
+                padding: 0.75rem 0;
+                width: 100%;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .hero {
+                min-height: 70vh;
+                padding: 7rem 0 3rem;
+            }
+            
+            .hero-container {
+                padding: 0 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
             }
             
             .hero-buttons {
                 flex-direction: column;
-                align-items: center;
+                align-items: stretch;
+                gap: 1rem;
             }
             
             .cta-button {
                 width: 100%;
-                max-width: 300px;
+                max-width: 100%;
                 text-align: center;
+                padding: 1rem 2rem;
+            }
+            
+            .main-content {
+                padding: 4rem 0;
+            }
+            
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .section {
+                margin-bottom: 4rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 0.75rem;
+                padding-left: 0;
+            }
+            
+            .section-title::before {
+                display: none;
+            }
+            
+            .section-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2.5rem;
+                padding-left: 0;
             }
             
             .features-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin-top: 2.5rem;
             }
             
-            .about-content {
-                grid-template-columns: 1fr;
+            .feature-card {
+                padding: 2rem;
+            }
+            
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 1.25rem;
+            }
+            
+            .feature-icon i {
+                font-size: 2rem;
+            }
+            
+            .feature-title {
+                font-size: 1.3rem;
+            }
+            
+            .feature-description {
+                font-size: 0.9rem;
+            }
+            
+            .feature-example {
+                padding: 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .about-section {
+                padding: 4rem 0;
+            }
+            
+            .about-text h2 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .about-text p {
+                font-size: 1rem;
+                margin-bottom: 1.25rem;
             }
             
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .stat-item {
+                padding: 2rem;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+            
+            .stat-label {
+                font-size: 0.95rem;
+            }
+            
+            .footer {
+                padding: 3rem 0 1.5rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            .logo-img {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .header {
+                padding: 1rem 0;
+            }
+            
+            .hero {
+                min-height: 60vh;
+                padding: 6rem 0 2rem;
+            }
+            
+            .hero-container {
+                padding: 0 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+            
+            .cta-button {
+                padding: 0.9rem 1.5rem;
+                font-size: 0.95rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
             }
             
             .section-title {
+                font-size: 1.75rem;
+            }
+            
+            .section-subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+                border-radius: 16px;
+            }
+            
+            .feature-icon {
+                width: 55px;
+                height: 55px;
+            }
+            
+            .feature-icon i {
+                font-size: 1.8rem;
+            }
+            
+            .feature-title {
+                font-size: 1.2rem;
+            }
+            
+            .about-text h2 {
+                font-size: 1.75rem;
+            }
+            
+            .stat-item {
+                padding: 1.5rem;
+            }
+            
+            .stat-number {
                 font-size: 2rem;
             }
         }
@@ -656,10 +1267,13 @@
     <header class="header" id="header">
         <nav class="nav-container">
             <a href="/" class="logo">
-                <img src="./assets/icons/tittle.png" alt="TOMITECH" class="logo-img" id="logo-img">
+                <img src="./assets/icons/tomitech-logo.png" alt="TOMITECH" class="logo-img" id="logo-img">
                 <span>TOMITECH</span>
             </a>
-            <ul class="nav-menu">
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
                 <li><a href="#home">Beranda</a></li>
                 <li><a href="#features">Fitur</a></li>
                 <li><a href="#about">Tentang</a></li>
@@ -680,18 +1294,25 @@
         </div>
         
         <div class="hero-container">
-            <h1 class="fade-in-up">TOMITECH</h1>
-            <p class="hero-subtitle fade-in-up">
-                Platform AI cerdas untuk optimasi greenhouse dan manajemen tanaman. 
-                Prediksi mikroklimat real-time, optimasi hasil panen, dan deteksi dini risiko penyakit dengan teknologi LSTM dan Random Forest.
-            </p>
-            <div class="hero-buttons fade-in-up">
-                <a href="login.html" class="cta-button primary">
-                    <span>Mulai Sekarang</span>
-                </a>
-                <a href="#features" class="cta-button secondary">
-                    <span>Pelajari Lebih Lanjut</span>
-                </a>
+            <div class="hero-content">
+                <h1 class="fade-in-up">TOMITECH</h1>
+                <p class="hero-subtitle fade-in-up">
+                    Platform AI cerdas untuk optimasi greenhouse dan manajemen tanaman. 
+                    Prediksi mikroklimat real-time, optimasi hasil panen, dan deteksi dini risiko penyakit dengan teknologi LSTM dan Random Forest.
+                </p>
+                <div class="hero-buttons fade-in-up">
+                    <a href="login.html" class="cta-button primary">
+                        <span>Mulai Sekarang</span>
+                    </a>
+                    <a href="#features" class="cta-button secondary">
+                        <span>Pelajari Lebih Lanjut</span>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-visual-content">
+                    <img src="./assets/icons/tomitech-logo.png" alt="TOMITECH Logo" class="hero-logo">
+                </div>
             </div>
         </div>
     </section>
@@ -719,8 +1340,8 @@
                             Sistem memberikan rekomendasi proaktif sebelum kondisi tidak optimal terjadi.
                         </p>
                         <div class="feature-example">
-                            <strong>Contoh:</strong> Prediksi suhu akan melebihi ambang batas dalam 1 jam, 
-                            sistem otomatis merekomendasikan "Nyalakan Kipas dan Ventilasi" secara proaktif.
+                            <strong>Contoh:</strong>
+                            Prediksi suhu akan melebihi ambang batas dalam 1 jam, sistem otomatis merekomendasikan "Nyalakan Kipas dan Ventilasi" secara proaktif.
                         </div>
                     </div>
 
@@ -735,8 +1356,8 @@
                             Analisis faktor-faktor seperti suhu, cahaya, dan air irigasi untuk prediksi akurat.
                         </p>
                         <div class="feature-example">
-                            <strong>Contoh:</strong> Estimasi panen 25 kg untuk tanaman tomat berdasarkan 
-                            rata-rata suhu harian, total paparan cahaya, dan jumlah air irigasi selama siklus tanam.
+                            <strong>Contoh:</strong>
+                            Estimasi panen 25 kg untuk tanaman tomat berdasarkan rata-rata suhu harian, total paparan cahaya, dan jumlah air irigasi selama siklus tanam.
                         </div>
                     </div>
 
@@ -751,8 +1372,8 @@
                             Mengenali pola mikroklimat yang berkorelasi dengan munculnya hama atau penyakit tertentu.
                         </p>
                         <div class="feature-example">
-                            <strong>Contoh:</strong> Deteksi risiko tinggi serangan jamur ketika 
-                            kelembaban > 90% selama 6 jam berturut-turut, dengan rekomendasi pencegahan proaktif.
+                            <strong>Contoh:</strong>
+                            Deteksi risiko tinggi serangan jamur ketika kelembaban > 90% selama 6 jam berturut-turut, dengan rekomendasi pencegahan proaktif.
                         </div>
                     </div>
 
@@ -767,8 +1388,8 @@
                             level cahaya, dan kelembaban tanah. Visualisasi data historis 24 jam terakhir.
                         </p>
                         <div class="feature-example">
-                            <strong>Contoh:</strong> Grafik time-series suhu dan kelembaban, 
-                            overlay prediksi AI untuk 1-3 jam ke depan, dan alert otomatis saat ambang batas terlewati.
+                            <strong>Contoh:</strong>
+                            Grafik time-series suhu dan kelembaban, overlay prediksi AI untuk 1-3 jam ke depan, dan alert otomatis saat ambang batas terlewati.
                         </div>
                     </div>
 
@@ -783,8 +1404,8 @@
                             troubleshooting masalah, dan memberikan rekomendasi berdasarkan data sensor real-time.
                         </p>
                         <div class="feature-example">
-                            <strong>Contoh:</strong> Konsultasi tentang jadwal penyiraman optimal, 
-                            identifikasi masalah tanaman, tips budidaya organik, dan analisis kondisi greenhouse.
+                            <strong>Contoh:</strong>
+                            Konsultasi tentang jadwal penyiraman optimal, identifikasi masalah tanaman, tips budidaya organik, dan analisis kondisi greenhouse.
                         </div>
                     </div>
 
@@ -799,8 +1420,8 @@
                             Berdasarkan prediksi AI, sistem mengeluarkan alert dan saran tindakan preventif.
                         </p>
                         <div class="feature-example">
-                            <strong>Contoh:</strong> Rekomendasi "Nyalakan Kipas" 1 jam sebelum suhu diprediksi 
-                            melebihi ambang batas, atau alert risiko penyakit dengan langkah pencegahan yang tepat.
+                            <strong>Contoh:</strong>
+                            Rekomendasi "Nyalakan Kipas" 1 jam sebelum suhu diprediksi melebihi ambang batas, atau alert risiko penyakit dengan langkah pencegahan yang tepat.
                         </div>
                     </div>
                 </div>
@@ -939,6 +1560,33 @@
             observer.observe(item);
         });
 
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        
+        if (mobileMenuToggle && navMenu) {
+            mobileMenuToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                }
+            });
+            
+            // Close menu when clicking on a link
+            navMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
+                });
+            });
+        }
+        
         // Hero Background Image Slider dengan Fade Effect
         (function() {
             const backgroundImages = document.querySelectorAll('.hero-background-image');

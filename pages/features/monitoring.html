@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Real-time Monitoring - TOMITECH</title>
-    <link rel="icon" href="../../assets/icons/logo.png">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com https://*.gstatic.com https://*.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net data: blob: https:; img-src 'self' data: https: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org; connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://esm.run https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://apis.google.com https://*.google.com https://*.googleapis.com http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; frame-src 'self' https://accounts.google.com https://*.firebaseapp.com; worker-src 'self' blob:; manifest-src 'self';">
+    <link rel="icon" href="../../assets/icons/tomitech-logo-64.png">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com https://*.gstatic.com https://*.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net data: blob: https:; img-src 'self' data: https: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org; connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://esm.run https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://apis.google.com https://*.google.com https://*.googleapis.com http://127.0.0.1:* http://localhost:* http://esp32-greenhouse.local http://*.local http://*:* ws://127.0.0.1:* ws://localhost:*; frame-src 'self' https://accounts.google.com https://*.firebaseapp.com; worker-src 'self' blob:; manifest-src 'self';">
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -76,7 +76,7 @@
         /* Stat Cards */
         .stats-grid-monitoring {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: var(--spacing-md);
             margin-bottom: var(--spacing-lg);
         }
@@ -115,7 +115,6 @@
         
         .stat-card-icon.temperature { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
         .stat-card-icon.humidity { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-        .stat-card-icon.light { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         .stat-card-icon.soil { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
         
         .stat-card-value-container {
@@ -390,7 +389,7 @@
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo-icon">
-                    <img src="../../assets/icons/tittle.png" alt="TOMITECH" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <img src="../../assets/icons/tomitech-logo.png" alt="TOMITECH" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <i class="fas fa-leaf" style="display:none; color: white; font-size: 1.5rem;"></i>
                 </div>
                 <div class="logo-text">
@@ -442,11 +441,11 @@
                     <canvas id="mini-chart-temperature"></canvas>
                 </div>
             </div>
-            
+
             <div class="stat-card-monitoring">
                 <div class="stat-card-header">
                     <div class="stat-card-icon humidity">
-                        <i class="fas fa-tint"></i>
+                        <i class="fas fa-droplet"></i>
                     </div>
                     <div class="stat-card-label">Humidity</div>
                 </div>
@@ -456,22 +455,6 @@
                 </div>
                 <div class="stat-card-mini-chart">
                     <canvas id="mini-chart-humidity"></canvas>
-                </div>
-            </div>
-            
-            <div class="stat-card-monitoring">
-                <div class="stat-card-header">
-                    <div class="stat-card-icon light">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                    <div class="stat-card-label">Light Level</div>
-                </div>
-                <div class="stat-card-value-container">
-                    <div class="stat-card-value" id="stat-light">--</div>
-                    <div class="stat-card-unit">lux</div>
-                </div>
-                <div class="stat-card-mini-chart">
-                    <canvas id="mini-chart-light"></canvas>
                 </div>
             </div>
             
@@ -562,14 +545,31 @@
         import { RealtimeSensorMonitor } from '../../assets/js/monitoring/realtime-sensor-monitor.js';
         import { GreenhouseMapManager } from '../../assets/js/maps/greenhouse-map-manager.js';
         import { GreenhouseSelector } from '../../assets/js/monitoring/greenhouse-selector.js';
-        import { getGreenhousesWithLocation } from '../../assets/js/greenhouse/greenhouse-service.js';
+        import { getGreenhousesWithLocation, createGreenhouse } from '../../assets/js/greenhouse/greenhouse-service.js';
 
         // Global variables
+        // Konfigurasi ESP32 endpoint
+        // Opsi 1: Gunakan mDNS (multicast DNS) - default
+        const ESP32_MDNS_HOST = 'esp32-greenhouse.local';
+        // Opsi 2: Gunakan IP address langsung jika mDNS tidak bekerja
+        // Contoh: '192.168.1.100' - ganti dengan IP ESP32 Anda
+        const ESP32_IP_ADDRESS = '192.168.1.11'; // Set ke IP address jika mDNS gagal, contoh: '192.168.1.100'
+        
+        // Tentukan endpoint yang akan digunakan
+        const LOCAL_SENSOR_ENDPOINT_URL = ESP32_IP_ADDRESS 
+            ? `http://${ESP32_IP_ADDRESS}/api`
+            : `http://${ESP32_MDNS_HOST}/api`;
+        
+        let currentEndpoint = LOCAL_SENSOR_ENDPOINT_URL;
+        let endpointRetryCount = 0;
+        const MAX_ENDPOINT_RETRIES = 3;
         let sensorMonitor = null;
         let miniCharts = {};
         let mapManager = null;
         let greenhouseSelector = null;
         let currentUserId = null;
+        let localSensorInterval = null;
+        let lastLocalSensorErrorAt = 0;
 
         // No callback needed for Leaflet (loads synchronously)
 
@@ -674,15 +674,7 @@
                 'Humidity',
                 '%',
                 '#3b82f6',
-                'rgba(59, 130, 246, 0.1)'
-            );
-
-            miniCharts.lightLevel = createMiniChart(
-                'mini-chart-light',
-                'Light Level',
-                'lux',
-                '#f59e0b',
-                'rgba(245, 158, 11, 0.1)'
+                'rgba(59, 130, 246, 0.12)'
             );
 
             miniCharts.soilMoisture = createMiniChart(
@@ -725,6 +717,160 @@
         }
 
         /**
+         * Fetch sensor data langsung dari perangkat ESP32
+         */
+        async function fetchLocalSensorData() {
+            try {
+                const response = await fetch(`${currentEndpoint}?ts=${Date.now()}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    cache: 'no-store',
+                    mode: 'cors'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const rawData = await response.json();
+                console.log('📡 Raw data from ESP32:', rawData);
+                
+                const temperature =
+                    rawData.temperature ?? rawData.temp ?? rawData.temperatureC ?? rawData.t;
+                const humidity =
+                    rawData.humidity ?? rawData.hum ?? rawData.humidityPercent ?? rawData.h;
+                const soilMoisture =
+                    rawData.soilMoisture ?? rawData.soil_moisture ?? rawData.soilMoisturePercent ?? 
+                    rawData.soil_percent ?? rawData.soil ?? rawData.moisture;
+
+                const parsedData = {};
+
+                if (!Number.isNaN(parseFloat(temperature))) {
+                    parsedData.temperature = parseFloat(temperature);
+                }
+                if (!Number.isNaN(parseFloat(humidity))) {
+                    parsedData.humidity = parseFloat(humidity);
+                }
+                if (!Number.isNaN(parseFloat(soilMoisture))) {
+                    parsedData.soilMoisture = parseFloat(soilMoisture);
+                    console.log('✅ Soil moisture parsed:', parsedData.soilMoisture);
+                } else {
+                    console.warn('⚠️ Soil moisture not found or invalid in ESP32 response');
+                }
+
+                if (Object.keys(parsedData).length > 0) {
+                    updateStatCards(parsedData);
+                    // Reset error flag on success
+                    if (lastLocalSensorErrorAt > 0) {
+                        console.log('✅ ESP32 connection restored');
+                        lastLocalSensorErrorAt = 0;
+                        endpointRetryCount = 0;
+                    }
+                }
+            } catch (error) {
+                const now = Date.now();
+                if (now - lastLocalSensorErrorAt > 30000) { // Show error every 30 seconds
+                    const errorMsg = error.message || String(error);
+                    const errorName = error.name || '';
+                    const errorStack = error.stack || '';
+                    
+                    // Detect DNS resolution errors
+                    const isDnsError = errorMsg.includes('ERR_NAME_NOT_RESOLVED') ||
+                                      errorMsg.includes('Failed to fetch') && currentEndpoint.includes('.local');
+                    
+                    // Detect CORS errors
+                    const isCorsError = errorMsg.includes('CORS') || 
+                                       errorMsg.includes('Access-Control-Allow-Origin') ||
+                                       (errorName === 'TypeError' && !isDnsError) ||
+                                       (errorMsg.includes('blocked') && errorMsg.includes('policy')) ||
+                                       errorStack.includes('CORS');
+                    
+                    if (isDnsError && !ESP32_IP_ADDRESS) {
+                        console.error('❌ DNS Error: Tidak dapat menemukan ESP32');
+                        console.error('📍 Endpoint:', currentEndpoint);
+                        console.info('');
+                        console.info('🔧 SOLUSI: Gunakan IP address langsung');
+                        console.info('');
+                        console.info('   1. Cari IP address ESP32 Anda:');
+                        console.info('      - Cek di Serial Monitor ESP32');
+                        console.info('      - Atau cek di router admin panel');
+                        console.info('      - Atau gunakan: ping esp32-greenhouse.local');
+                        console.info('');
+                        console.info('   2. Update konfigurasi di monitoring.html (baris ~556):');
+                        console.info('      const ESP32_IP_ADDRESS = "192.168.1.100"; // Ganti dengan IP ESP32 Anda');
+                        console.info('');
+                        console.info('   3. Refresh halaman ini');
+                        console.info('');
+                        console.info('💡 Alternatif: Pastikan ESP32 dan komputer dalam jaringan WiFi yang sama');
+                    } else if (isCorsError) {
+                        console.error('❌ CORS Error: ESP32 tidak mengirim CORS headers');
+                        console.error('📍 Endpoint:', currentEndpoint);
+                        console.info('');
+                        console.info('📋 SOLUSI: Tambahkan header berikut di kode ESP32 Anda:');
+                        console.info('');
+                        console.info('   // Untuk ESP8266WebServer atau WebServer (ESP32)');
+                        console.info('   server.sendHeader("Access-Control-Allow-Origin", "*");');
+                        console.info('   server.sendHeader("Access-Control-Allow-Methods", "GET, OPTIONS");');
+                        console.info('   server.sendHeader("Access-Control-Allow-Headers", "Content-Type");');
+                        console.info('');
+                        console.info('   // Juga handle OPTIONS request (preflight):');
+                        console.info('   if (server.method() == HTTP_OPTIONS) {');
+                        console.info('       server.send(200, "text/plain", "");');
+                        console.info('       return;');
+                        console.info('   }');
+                        console.info('');
+                        console.info('💡 Contoh lengkap handler di ESP32:');
+                        console.info('   void handleApi() {');
+                        console.info('       server.sendHeader("Access-Control-Allow-Origin", "*");');
+                        console.info('       server.sendHeader("Access-Control-Allow-Methods", "GET, OPTIONS");');
+                        console.info('       server.sendHeader("Access-Control-Allow-Headers", "Content-Type");');
+                        console.info('       ');
+                        console.info('       if (server.method() == HTTP_OPTIONS) {');
+                        console.info('           server.send(200, "text/plain", "");');
+                        console.info('           return;');
+                        console.info('       }');
+                        console.info('       ');
+                        console.info('       String json = "{";');
+                        console.info('       json += "\\"temperature\\":" + String(temp) + ",";');
+                        console.info('       json += "\\"humidity\\":" + String(hum);');
+                        console.info('       json += "}";');
+                        console.info('       server.send(200, "application/json", json);');
+                        console.info('   }');
+                        console.info('');
+                        console.info('   server.on("/api", handleApi);');
+                    } else {
+                        console.warn('⚠️ Gagal mengambil data dari ESP32:', errorMsg);
+                        console.warn('📍 Endpoint:', currentEndpoint);
+                    }
+                    lastLocalSensorErrorAt = now;
+                }
+            }
+        }
+
+        /**
+         * Mulai polling sensor lokal
+         */
+        function startLocalSensorPolling() {
+            if (localSensorInterval) {
+                return;
+            }
+
+            fetchLocalSensorData();
+            localSensorInterval = setInterval(fetchLocalSensorData, 5000);
+        }
+
+        /**
+         * Hentikan polling sensor lokal
+         */
+        function stopLocalSensorPolling() {
+            if (localSensorInterval) {
+                clearInterval(localSensorInterval);
+                localSensorInterval = null;
+            }
+        }
+
+        /**
          * Reset mini charts
          */
         function resetMiniCharts() {
@@ -740,21 +886,49 @@
 
         // Update stat cards
         function updateStatCards(sensorData) {
-            if (sensorData.temperature !== undefined) {
+            console.log('📊 Updating stat cards with data:', sensorData);
+            console.log('📊 Data keys:', Object.keys(sensorData));
+            console.log('📊 Soil moisture check:', {
+                soilMoisture: sensorData.soilMoisture,
+                soil_moisture: sensorData.soil_moisture,
+                soilMoisturePercent: sensorData.soilMoisturePercent,
+                soil_percent: sensorData.soil_percent,
+                soil: sensorData.soil,
+                moisture: sensorData.moisture
+            });
+            
+            if (sensorData.temperature !== undefined && sensorData.temperature !== null) {
                 document.getElementById('stat-temperature').textContent = sensorData.temperature.toFixed(1);
                 updateMiniChart('temperature', sensorData.temperature);
             }
-            if (sensorData.humidity !== undefined) {
+            if (sensorData.humidity !== undefined && sensorData.humidity !== null) {
                 document.getElementById('stat-humidity').textContent = sensorData.humidity.toFixed(1);
                 updateMiniChart('humidity', sensorData.humidity);
             }
-            if (sensorData.lightLevel !== undefined) {
-                document.getElementById('stat-light').textContent = sensorData.lightLevel.toFixed(0);
-                updateMiniChart('lightLevel', sensorData.lightLevel);
-            }
-            if (sensorData.soilMoisture !== undefined) {
-                document.getElementById('stat-soil').textContent = sensorData.soilMoisture.toFixed(1);
-                updateMiniChart('soilMoisture', sensorData.soilMoisture);
+            
+            // Try multiple field names for soil moisture
+            const soilMoistureValue = sensorData.soilMoisture ?? 
+                                     sensorData.soil_moisture ?? 
+                                     sensorData.soilMoisturePercent ?? 
+                                     sensorData.soil_percent ?? 
+                                     sensorData.soil ?? 
+                                     sensorData.moisture;
+            
+            if (soilMoistureValue !== undefined && soilMoistureValue !== null && !isNaN(parseFloat(soilMoistureValue))) {
+                const value = parseFloat(soilMoistureValue);
+                document.getElementById('stat-soil').textContent = value.toFixed(1);
+                updateMiniChart('soilMoisture', value);
+                console.log('✅ Soil moisture updated:', value);
+            } else {
+                console.warn('⚠️ Soil moisture not available in sensorData. Available fields:', Object.keys(sensorData));
+                console.warn('⚠️ Soil moisture values:', {
+                    soilMoisture: sensorData.soilMoisture,
+                    soil_moisture: sensorData.soil_moisture,
+                    soilMoisturePercent: sensorData.soilMoisturePercent,
+                    soil_percent: sensorData.soil_percent,
+                    soil: sensorData.soil,
+                    moisture: sensorData.moisture
+                });
             }
         }
 
@@ -801,6 +975,9 @@
 
             // Initialize mini charts untuk stat cards
             initializeMiniCharts();
+
+            // Mulai polling langsung ke perangkat ESP32
+            startLocalSensorPolling();
 
             // Initialize map manager (OpenStreetMap dengan Leaflet)
             mapManager = new GreenhouseMapManager('greenhouse-map', {
@@ -873,6 +1050,60 @@
                 }
             });
         }
+
+        window.addEventListener('beforeunload', () => {
+            stopLocalSensorPolling();
+        });
+
+        // Dengarkan event dari peta saat user menambahkan lokasi (marker)
+        document.addEventListener('greenhouse:locationAdded', async (e) => {
+            try {
+                if (!currentUserId) {
+                    console.warn('⚠️ Tidak ada user login, batal menyimpan lokasi.');
+                    return;
+                }
+                const { name, lat, lng } = e.detail || {};
+                if (lat === undefined || lng === undefined) return;
+
+                // Simpan ke Firestore
+                const saveResult = await createGreenhouse(currentUserId, {
+                    name: name || 'Green House 1',
+                    location: '',
+                    latitude: lat,
+                    longitude: lng
+                });
+
+                if (saveResult.success) {
+                    const newGreenhouse = {
+                        id: saveResult.id,
+                        name: name || 'Green House 1',
+                        location: '',
+                        latitude: lat,
+                        longitude: lng
+                    };
+
+                    // Tambahkan marker ke peta
+                    if (mapManager) {
+                        mapManager.addGreenhouseMarker(newGreenhouse, null, (greenhouseId) => {
+                            if (greenhouseSelector) {
+                                greenhouseSelector.selectGreenhouse(greenhouseId);
+                            }
+                        });
+                    }
+
+                    // Refresh dropdown greenhouse
+                    if (greenhouseSelector && currentUserId) {
+                        await greenhouseSelector.loadGreenhouses(currentUserId);
+                    }
+
+                    console.log('✅ Lokasi greenhouse tersimpan & marker ditambahkan:', saveResult.id);
+                } else {
+                    console.error('❌ Gagal menyimpan lokasi greenhouse:', saveResult.error);
+                }
+            } catch (err) {
+                console.error('❌ Error saat menyimpan lokasi dari map:', err);
+            }
+        });
     </script>
     <!-- Navigation Indicator -->
     <script type="module">

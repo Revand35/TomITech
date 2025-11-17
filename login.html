@@ -423,7 +423,7 @@
         <!-- Logo & Title -->
         <div class="login-logo">
             <div class="login-logo-icon">
-                <img src="./assets/icons/tittle.png" alt="TOMITECH" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <img src="./assets/icons/tomitech-logo.png" alt="TOMITECH" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                 <i class="fas fa-leaf" style="display:none;"></i>
             </div>
             <div class="login-logo-title">TOMITECH</div>
@@ -519,7 +519,9 @@
         import { 
             getAuth, 
             GoogleAuthProvider, 
-            signInWithPopup, 
+            signInWithPopup,
+            signInWithRedirect,
+            getRedirectResult,
             onAuthStateChanged,
             createUserWithEmailAndPassword,
             signInWithEmailAndPassword,
@@ -799,29 +801,13 @@
             }
         }
         
-        // Check if user is already logged in (but don't auto-redirect)
-        // User harus login manual, tidak ada auto-redirect
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log('ℹ️ User already logged in:', user.email);
-                // Tidak auto-redirect - biarkan user memilih untuk login lagi atau tidak
-                // User bisa tetap di halaman login jika ingin login dengan akun lain
-            } else {
-                console.log('ℹ️ No user logged in');
-            }
-        });
-        
-        // Google Login Handler
-        googleLoginBtn.addEventListener('click', async () => {
-            setLoadingState(true);
-            hideMessages();
-            
-            try {
-                console.log('🚀 Starting Google Login...');
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                
-                console.log('✅ Login successful:', user.email);
+        // Handle redirect result (if user was redirected back from Google login)
+        let isRedirectHandled = false;
+        try {
+            const redirectResult = await getRedirectResult(auth);
+            if (redirectResult) {
+                const user = redirectResult.user;
+                console.log('✅ Login successful via redirect:', user.email);
                 
                 // Create or update user document in Firestore
                 await createOrUpdateUser(user);
@@ -832,30 +818,90 @@
                 setTimeout(() => {
                     window.location.href = './dashboard.html';
                 }, 2000);
-                
-            } catch (error) {
-                console.error('❌ Login error:', error);
-                
-                let errorMsg = 'Terjadi kesalahan saat login';
-                
-                if (error.code === 'auth/popup-blocked') {
-                    errorMsg = 'Popup diblokir oleh browser. Silakan izinkan popup untuk situs ini.';
-                } else if (error.code === 'auth/popup-closed-by-user') {
-                    errorMsg = 'Login dibatalkan oleh pengguna.';
-                } else if (error.code === 'auth/operation-not-allowed') {
-                    errorMsg = 'Google Sign-in tidak diaktifkan. Hubungi administrator.';
-                } else if (error.code === 'auth/unauthorized-domain') {
-                    errorMsg = 'Domain tidak diizinkan. Silakan tambahkan localhost dan 127.0.0.1 di Firebase Console.';
-                } else if (error.message) {
-                    errorMsg = error.message;
-                }
-                
-                showError(errorMsg);
-                setLoadingState(false);
+                isRedirectHandled = true;
             }
-        });
+        } catch (error) {
+            console.error('❌ Error handling redirect result:', error);
+            // Continue with normal flow if redirect failed
+        }
         
-        console.log('✅ Login page loaded successfully');
+        // Only set up listeners if redirect was not handled
+        if (!isRedirectHandled) {
+            // Check if user is already logged in (but don't auto-redirect)
+            // User harus login manual, tidak ada auto-redirect
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    console.log('ℹ️ User already logged in:', user.email);
+                    // Tidak auto-redirect - biarkan user memilih untuk login lagi atau tidak
+                    // User bisa tetap di halaman login jika ingin login dengan akun lain
+                } else {
+                    console.log('ℹ️ No user logged in');
+                }
+            });
+            
+            // Google Login Handler
+            googleLoginBtn.addEventListener('click', async () => {
+                setLoadingState(true);
+                hideMessages();
+                
+                try {
+                    console.log('🚀 Starting Google Login...');
+                    
+                    // Try popup first, fallback to redirect if blocked
+                    try {
+                        const result = await signInWithPopup(auth, provider);
+                        const user = result.user;
+                        
+                        console.log('✅ Login successful:', user.email);
+                        
+                        // Create or update user document in Firestore
+                        await createOrUpdateUser(user);
+                        
+                        showSuccess('Login berhasil! Mengarahkan ke dashboard...');
+                        
+                        // Redirect to dashboard after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = './dashboard.html';
+                        }, 2000);
+                        
+                    } catch (popupError) {
+                        // If popup is blocked, use redirect instead
+                        if (popupError.code === 'auth/popup-blocked' || popupError.code === 'auth/popup-closed-by-user') {
+                            console.log('⚠️ Popup blocked or closed, switching to redirect method...');
+                            showSuccess('Mengarahkan ke halaman login Google...');
+                            
+                            // Use redirect method
+                            await signInWithRedirect(auth, provider);
+                            // Note: Page will redirect, so code below won't execute
+                            return;
+                        } else {
+                            // Re-throw other errors to be handled below
+                            throw popupError;
+                        }
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Login error:', error);
+                    
+                    let errorMsg = 'Terjadi kesalahan saat login';
+                    
+                    if (error.code === 'auth/operation-not-allowed') {
+                        errorMsg = 'Google Sign-in tidak diaktifkan. Hubungi administrator.';
+                    } else if (error.code === 'auth/unauthorized-domain') {
+                        errorMsg = 'Domain tidak diizinkan. Silakan tambahkan localhost dan 127.0.0.1 di Firebase Console.';
+                    } else if (error.message) {
+                        errorMsg = error.message;
+                    }
+                    
+                    showError(errorMsg);
+                    setLoadingState(false);
+                }
+            });
+            
+            console.log('✅ Login page loaded successfully');
+        } else {
+            console.log('✅ Redirect handled, skipping normal initialization');
+        }
     </script>
 </body>
 </html>

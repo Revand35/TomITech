@@ -12,13 +12,13 @@
   "lang": "id",
   "icons": [
     {
-      "src": "/assets/icons/tittle.png",
+      "src": "/assets/icons/tomitech-logo-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/assets/icons/tittle.png",
+      "src": "/assets/icons/tomitech-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
@@ -30,21 +30,21 @@
       "short_name": "Login",
       "description": "Masuk ke akun Anda",
       "url": "/login.html",
-      "icons": [{ "src": "/assets/icons/tittle.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/assets/icons/tomitech-logo-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Dashboard",
       "short_name": "Dashboard",
       "description": "Lihat dashboard utama",
       "url": "/dashboard.html",
-      "icons": [{ "src": "/assets/icons/tittle.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/assets/icons/tomitech-logo-192.png", "sizes": "192x192" }]
     },
     {
       "name": "AI Assistant",
       "short_name": "AI Assistant",
       "description": "Konsultan AI Greenhouse dan Tanaman",
       "url": "/pages/features/chat.html",
-      "icons": [{ "src": "/assets/icons/tittle.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/assets/icons/tomitech-logo-192.png", "sizes": "192x192" }]
     }
   ]
 }

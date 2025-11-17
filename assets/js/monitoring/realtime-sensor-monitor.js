@@ -62,14 +62,28 @@ export class RealtimeSensorMonitor {
                 (snapshot) => {
                     if (!snapshot.empty) {
                         const doc = snapshot.docs[0];
+                        const rawData = doc.data();
+                        
+                        // Normalize field names untuk kompatibilitas
                         const sensorData = {
                             id: doc.id,
-                            ...doc.data(),
+                            // Temperature
+                            temperature: rawData.temperature ?? rawData.temp ?? rawData.temperatureC ?? rawData.t ?? null,
+                            // Humidity
+                            humidity: rawData.humidity ?? rawData.hum ?? rawData.humidityPercent ?? rawData.h ?? null,
+                            // Soil Moisture - support multiple field names
+                            soilMoisture: rawData.soilMoisture ?? rawData.soil_moisture ?? rawData.soilMoisturePercent ?? 
+                                         rawData.soil_percent ?? rawData.soil ?? rawData.moisture ?? null,
+                            // Light Level (if exists)
+                            lightLevel: rawData.lightLevel ?? rawData.light ?? rawData.light_level ?? null,
+                            // Other fields
+                            ...rawData,
                             // Convert Firestore Timestamp to Date jika perlu
-                            timestamp: doc.data().timestamp?.toDate ? doc.data().timestamp.toDate() : doc.data().timestamp
+                            timestamp: rawData.timestamp?.toDate ? rawData.timestamp.toDate() : rawData.timestamp
                         };
                         
-                        console.log('📊 New sensor data:', sensorData);
+                        console.log('📊 New sensor data from Firestore:', sensorData);
+                        console.log('📊 Soil moisture value:', sensorData.soilMoisture);
                         
                         if (this.callbacks.onDataUpdate) {
                             this.callbacks.onDataUpdate(sensorData);

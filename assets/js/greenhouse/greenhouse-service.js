@@ -75,6 +75,9 @@ export async function createGreenhouse(userId, greenhouseData) {
             userId: userId,
             name: greenhouseData.name || 'Greenhouse Saya',
             location: greenhouseData.location || '',
+            // Optional coordinates if provided
+            latitude: greenhouseData.latitude !== undefined ? greenhouseData.latitude : undefined,
+            longitude: greenhouseData.longitude !== undefined ? greenhouseData.longitude : undefined,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now(),
             // Metadata greenhouse
