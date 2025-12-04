@@ -1,4 +1,4 @@
-// config.js - Firebase Configuration untuk TOMITECH Greenhouse Monitoring
+// config.js - Firebase Configuration untuk AgriHouse Greenhouse Monitoring
 // Updated: 2025-01-XX
 export const firebaseConfig = {
     apiKey: "AIzaSyDpGCx73WhbOqW7hbo3jOPPdMSko6e2DMw",
@@ -9,10 +9,19 @@ export const firebaseConfig = {
     appId: "1:755011279325:web:c00587f50e985528047e34"
 };
 
-// Gemini API Key
-export const geminiApiKey = "AIzaSyBKCLB3d6ucJOMjnShtQogMFh6OHVL2Mck";
+// Gemini API Keys - Multiple keys untuk rotation dan fallback
+// Tambahkan beberapa API key di sini untuk rotasi otomatis
+export const geminiApiKeys = [
+    "AIzaSyB_LrfNSRdHRarokIAjEsOahfSkshSeWXM", // Primary key
+    "AIzaSyC3ehYqIqaYtOVxIIIEHY3pBfGm1Xe-NWE", // Key 2
+    // Tambahkan API key lain di bawah ini:
+    // "AIzaSy...", // Key 3
+];
 
-// App Configuration untuk TOMITECH
+// Backward compatibility - gunakan key pertama sebagai default
+export const geminiApiKey = geminiApiKeys[0] || "";
+
+// App Configuration untuk AgriHouse
 export const appConfig = {
     maxRetries: 3,
     retryDelay: 1000,

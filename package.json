@@ -1,8 +1,8 @@
 {
-  "name": "tomitech",
+  "name": "agrihouse",
   "version": "1.0.0",
   "type": "module",
-  "description": "TOMITECH - Platform AI untuk Optimasi Greenhouse dan Tanaman",
+  "description": "AgriHouse - Platform AI untuk Optimasi Greenhouse dan Tanaman",
   "main": "index-redirect.html",
   "scripts": {
     "start": "live-server",
@@ -16,12 +16,12 @@
     "technology",
     "green-tech",
     "sustainability",
-    "tomitech",
+    "agrihouse",
     "greenhouse",
     "ai-prediction",
     "plant-management"
   ],
-  "author": "TOMITECH Team",
+  "author": "AgriHouse Team",
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^10.4.21",
@@ -35,12 +35,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/tomitech.git"
+    "url": "https://github.com/your-username/agrihouse.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/tomitech/issues"
+    "url": "https://github.com/your-username/agrihouse/issues"
   },
-  "homepage": "https://tomitech.web.app",
+  "homepage": "https://agrihouse.web.app",
   "dependencies": {
     "docx": "^8.5.0",
     "dotenv": "^17.2.2",

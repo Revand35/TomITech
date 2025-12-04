@@ -168,7 +168,7 @@ class AIAutoNotificationService {
      * @returns {string} - Prompt untuk AI
      */
     createAnalysisPrompt(formattedData, contextData) {
-        return `Anda adalah AI asisten TOMITECH yang ahli dalam analisis aktivitas lingkungan dan green accounting. 
+        return `Anda adalah AI asisten AgriHouse yang ahli dalam analisis aktivitas lingkungan dan green accounting. 
 
 **DATA AKTIVITAS TERBARU USER:**
 - Jenis Aktivitas: ${formattedData.jenisAktivitas}

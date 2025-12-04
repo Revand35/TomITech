@@ -25,141 +25,43 @@
             padding-bottom: 100px;
         }
         
-        .plant-type-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
-        }
-        
-        .plant-type-card {
-            background: var(--bg-card);
-            border: 2px solid var(--tomitech-green-muted);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-lg);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .plant-type-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .plant-type-card.selected {
-            border-color: var(--tomitech-green-accent);
-            background: var(--tomitech-green-bg);
-        }
-        
-        .plant-type-card .icon {
-            font-size: 2.5rem;
-            margin-bottom: var(--spacing-sm);
-        }
-        
-        .plant-type-card.sayur .icon {
-            color: var(--tomitech-green-accent);
-        }
-        
-        .plant-type-card.buah .icon {
-            color: var(--orange);
-        }
-        
-        .plant-type-card .title {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-xs);
-        }
-        
-        .plant-type-card .subtitle {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-        
-        .watering-check {
-            background: var(--tomitech-green-bg);
-            border-radius: var(--radius-md);
-            padding: var(--spacing-md);
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-md);
-        }
-        
-        .watering-check input[type="checkbox"] {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            accent-color: var(--tomitech-green-accent);
-        }
-        
-        .watering-check label {
-            flex: 1;
-            cursor: pointer;
-        }
-        
-        .watering-check .label-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-xs);
-        }
-        
-        .watering-check .label-subtitle {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-        
-        /* Tab Navigation Styles */
-        .tab-navigation {
-            display: flex;
-            gap: var(--spacing-xs);
-            margin-bottom: var(--spacing-lg);
-            border-bottom: 2px solid var(--tomitech-green-muted);
-            overflow-x: auto;
-        }
-        
-        .tab-btn {
-            flex: 1;
-            padding: var(--spacing-sm) var(--spacing-md);
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-xs);
-            white-space: nowrap;
-        }
-        
-        .tab-btn:hover {
-            color: var(--tomitech-green-accent);
-            background: var(--tomitech-green-bg);
-        }
-        
-        .tab-btn.active {
-            color: var(--tomitech-green-accent);
-            border-bottom-color: var(--tomitech-green-accent);
-            font-weight: 600;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
         .info-box {
             border-left: 4px solid;
             padding: var(--spacing-md);
             border-radius: var(--radius-md);
             margin-bottom: var(--spacing-md);
+        }
+        
+        /* ============================================
+           RESPONSIVE DESIGN - Mobile, Tablet, Desktop
+           ============================================ */
+        
+        /* Tablet (max-width: 1024px) */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: var(--spacing-md);
+            }
+        }
+        
+        /* Mobile Large (max-width: 768px) */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: var(--spacing-sm);
+            }
+        }
+        
+        /* Mobile Small (max-width: 480px) */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: var(--spacing-xs);
+            }
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            button {
+                min-height: 44px; /* Minimum touch target size */
+            }
         }
     </style>
     <!-- auth.js removed - using firebase-init.js instead to avoid conflicts -->
@@ -170,7 +72,7 @@
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo-icon">
-                    <img src="../../assets/icons/tomitech-logo.png" alt="TOMITECH" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <img src="../../assets/icons/AgriHouse.png" alt="AgriHouse" style="width: 32px; height: 32px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <i class="fas fa-leaf" style="display:none; color: white; font-size: 1.5rem;"></i>
                 </div>
                 <div class="logo-text">
@@ -198,21 +100,10 @@
                 Input Data Greenhouse untuk AI Prediction
             </h2>
             
-            <!-- Tab Navigation -->
-            <div class="tab-navigation" style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-lg); border-bottom: 2px solid var(--tomitech-green-muted);">
-                <button class="tab-btn active" data-tab="sensor" onclick="switchTab('sensor')">
-                    <i class="fas fa-thermometer-half"></i> Data Sensor
-                </button>
-                <button class="tab-btn" data-tab="plant" onclick="switchTab('plant')">
-                    <i class="fas fa-seedling"></i> Data Tanaman
-                </button>
-                <button class="tab-btn" data-tab="aggregate" onclick="switchTab('aggregate')">
-                    <i class="fas fa-chart-line"></i> Data Agregat
-                </button>
-            </div>
+            <!-- Tab Navigation - Removed, only Sensor Data needed -->
             
-            <!-- Tab Content: Sensor Data (untuk LSTM) -->
-            <div id="sensor-tab" class="tab-content active">
+            <!-- Sensor Data Form (untuk LSTM) -->
+            <div id="sensor-tab">
                 <form id="sensor-form" class="space-y-6">
                     <div class="info-box" style="background: #e3f2fd; padding: var(--spacing-md); border-radius: var(--radius-md); margin-bottom: var(--spacing-md);">
                         <p style="font-size: 0.875rem; color: #1976d2;">
@@ -318,271 +209,6 @@
                     </button>
                 </form>
             </div>
-            
-            <!-- Tab Content: Plant Data -->
-            <div id="plant-tab" class="tab-content" style="display: none;">
-                <form id="plant-form" class="space-y-6">
-                    <!-- Pilih Jenis Tanaman -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            Pilih Jenis Tanaman <span style="color: var(--red);">*</span>
-                        </label>
-                        <div class="plant-type-grid">
-                            <div class="plant-type-card sayur" data-type="sayur">
-                                <div class="icon"><i class="fas fa-leaf"></i></div>
-                                <div class="title">Sayur</div>
-                                <div class="subtitle">Sayuran</div>
-                            </div>
-                            <div class="plant-type-card buah" data-type="buah">
-                                <div class="icon"><i class="fas fa-apple-alt"></i></div>
-                                <div class="title">Buah</div>
-                                <div class="subtitle">Buah-buahan</div>
-                            </div>
-                        </div>
-                        <input type="hidden" id="plant-type" name="plantType" required>
-                    </div>
-                    
-                    <!-- Pilih Nama Tanaman -->
-                    <div id="plant-name-container" class="tomitech-form-group" style="display: none;">
-                        <label class="tomitech-form-label">
-                            Pilih Nama Tanaman <span style="color: var(--red);">*</span>
-                        </label>
-                        <select id="plant-name" name="plantName" class="tomitech-form-select" required>
-                            <option value="">-- Pilih Tanaman --</option>
-                        </select>
-                    </div>
-
-                    <!-- Tanggal Tanam -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-calendar-alt" style="color: var(--purple); margin-right: var(--spacing-xs);"></i>
-                            Tanggal Tanam <span style="color: var(--red);">*</span>
-                        </label>
-                        <input 
-                            type="date" 
-                            id="planting-date" 
-                            name="plantingDate" 
-                            class="tomitech-form-input" 
-                            required
-                        >
-                    </div>
-
-                    <!-- Lokasi Penanaman -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-map-marker-alt" style="color: var(--blue); margin-right: var(--spacing-xs);"></i>
-                            Lokasi Penanaman (Contoh: Bed A, Baris 3)
-                        </label>
-                        <input 
-                            type="text" 
-                            id="planting-location" 
-                            name="plantingLocation" 
-                            class="tomitech-form-input" 
-                            placeholder="Contoh: Bed A, Baris 3"
-                        >
-                    </div>
-
-                    <!-- Status Kesehatan -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-heartbeat" style="color: var(--red); margin-right: var(--spacing-xs);"></i>
-                            Status Kesehatan <span style="color: var(--red);">*</span>
-                        </label>
-                        <select id="health-status" name="healthStatus" class="tomitech-form-select" required>
-                            <option value="">-- Pilih Status --</option>
-                            <option value="Sehat">Sehat</option>
-                            <option value="Sedang">Sedang</option>
-                            <option value="Sakit">Sakit</option>
-                        </select>
-                    </div>
-
-                    <!-- Tahap Pertumbuhan -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-chart-line" style="color: var(--tomitech-green-accent); margin-right: var(--spacing-xs);"></i>
-                            Tahap Pertumbuhan <span style="color: var(--red);">*</span>
-                        </label>
-                        <select id="growth-stage" name="growthStage" class="tomitech-form-select" required>
-                            <option value="">-- Pilih Tahap --</option>
-                            <option value="Pembibitan">Pembibitan</option>
-                            <option value="Vegetatif">Vegetatif</option>
-                            <option value="Generatif">Generatif (Berbunga/Berbuah)</option>
-                            <option value="Panen">Panen</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Catatan (Opsional) -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            Catatan (Opsional)
-                        </label>
-                        <textarea 
-                            id="plant-notes" 
-                            name="notes" 
-                            class="tomitech-form-textarea" 
-                            placeholder="Tambahkan catatan tentang tanaman ini..."
-                        ></textarea>
-                    </div>
-                    
-                    <!-- Status Penyiraman -->
-                    <div class="watering-check">
-                        <input 
-                            type="checkbox" 
-                            id="watered-check" 
-                            name="wateredAt7AM"
-                        >
-                        <label for="watered-check">
-                            <div class="label-title">Sudah menyiram tanaman pada pukul 7 pagi?</div>
-                            <div class="label-subtitle">Centang jika sudah melakukan penyiraman pagi hari</div>
-                        </label>
-                    </div>
-                    
-                    <button type="submit" class="tomitech-btn primary full-width">
-                        <i class="fas fa-save"></i>
-                        Simpan Data Tanaman
-                    </button>
-                </form>
-            </div>
-            
-            <!-- Tab Content: Aggregate Data (untuk Random Forest) -->
-            <div id="aggregate-tab" class="tab-content" style="display: none;">
-                <form id="aggregate-form" class="space-y-6">
-                    <div class="info-box" style="background: #fff3e0; padding: var(--spacing-md); border-radius: var(--radius-md); margin-bottom: var(--spacing-md);">
-                        <p style="font-size: 0.875rem; color: #e65100;">
-                            <strong>🌾 Untuk Prediksi Hasil Panen & Deteksi Penyakit:</strong> Input data agregat selama satu siklus tanam untuk analisis Random Forest.
-                        </p>
-                    </div>
-                    
-                    <!-- Rata-rata Suhu Harian -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-thermometer-half" style="color: var(--red); margin-right: var(--spacing-xs);"></i>
-                            Rata-rata Suhu Harian (°C) <span style="color: var(--red);">*</span>
-                        </label>
-                        <input 
-                            type="number" 
-                            id="avg-daily-temp" 
-                            name="avgDailyTemp" 
-                            class="tomitech-form-input" 
-                            placeholder="Contoh: 25.5"
-                            step="0.1"
-                            required
-                        >
-                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Rata-rata suhu selama satu siklus tanam</small>
-                    </div>
-                    
-                    <!-- Total Paparan Cahaya -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-sun" style="color: var(--orange); margin-right: var(--spacing-xs);"></i>
-                            Total Paparan Cahaya (lux-hours) <span style="color: var(--red);">*</span>
-                        </label>
-                        <input 
-                            type="number" 
-                            id="total-light-exposure" 
-                            name="totalLightExposure" 
-                            class="tomitech-form-input" 
-                            placeholder="Contoh: 120000"
-                            min="0"
-                            required
-                        >
-                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Total paparan cahaya selama siklus tanam</small>
-                    </div>
-                    
-                    <!-- Jumlah Total Air Irigasi -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-tint" style="color: var(--blue); margin-right: var(--spacing-xs);"></i>
-                            Jumlah Total Air Irigasi (liter) <span style="color: var(--red);">*</span>
-                        </label>
-                        <input 
-                            type="number" 
-                            id="total-water-irrigation" 
-                            name="totalWaterIrrigation" 
-                            class="tomitech-form-input" 
-                            placeholder="Contoh: 500"
-                            step="0.1"
-                            min="0"
-                            required
-                        >
-                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Total air yang digunakan untuk irigasi selama siklus tanam</small>
-                    </div>
-                    
-                    <!-- Durasi Siklus Tanam -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-calendar-alt" style="color: var(--purple); margin-right: var(--spacing-xs);"></i>
-                            Durasi Siklus Tanam (hari) <span style="color: var(--red);">*</span>
-                        </label>
-                        <input 
-                            type="number" 
-                            id="cycle-duration" 
-                            name="cycleDuration" 
-                            class="tomitech-form-input" 
-                            placeholder="Contoh: 60"
-                            min="1"
-                            required
-                        >
-                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Lama siklus tanam dalam hari</small>
-                    </div>
-                    
-                    <!-- Data untuk Deteksi Penyakit: Pola Kelembaban Tinggi -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-exclamation-triangle" style="color: var(--orange); margin-right: var(--spacing-xs);"></i>
-                            Durasi Kelembaban > 90% (jam) <span style="color: var(--red);">*</span>
-                        </label>
-                        <input 
-                            type="number" 
-                            id="high-humidity-duration" 
-                            name="highHumidityDuration" 
-                            class="tomitech-form-input" 
-                            placeholder="Contoh: 6"
-                            step="0.1"
-                            min="0"
-                            required
-                        >
-                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Total jam kelembaban > 90% (untuk deteksi risiko jamur)</small>
-                    </div>
-                    
-                    <!-- Estimasi Hasil Panen (untuk training model) -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            <i class="fas fa-weight" style="color: var(--tomitech-green-accent); margin-right: var(--spacing-xs);"></i>
-                            Estimasi Hasil Panen (kg) - Opsional
-                        </label>
-                        <input 
-                            type="number" 
-                            id="harvest-yield" 
-                            name="harvestYield" 
-                            class="tomitech-form-input" 
-                            placeholder="Contoh: 150"
-                            step="0.1"
-                            min="0"
-                        >
-                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Jika sudah panen, masukkan hasil untuk training model</small>
-                    </div>
-                    
-                    <!-- Catatan Agregat -->
-                    <div class="tomitech-form-group">
-                        <label class="tomitech-form-label">
-                            Catatan Siklus Tanam (Opsional)
-                        </label>
-                        <textarea 
-                            id="aggregate-notes" 
-                            name="aggregateNotes" 
-                            class="tomitech-form-textarea" 
-                            placeholder="Tambahkan catatan tentang siklus tanam ini..."
-                            rows="3"
-                        ></textarea>
-                    </div>
-                    
-                    <button type="submit" class="tomitech-btn primary full-width">
-                        <i class="fas fa-save"></i>
-                        Simpan Data Agregat
-                    </button>
-                </form>
-            </div>
         </div>
         
         <!-- Info Box -->
@@ -590,11 +216,9 @@
             <div style="display: flex; align-items: start; gap: var(--spacing-md);">
                 <i class="fas fa-info-circle" style="color: var(--blue); font-size: 1.25rem; margin-top: 2px;"></i>
                 <div>
-                    <h3 style="font-weight: 600; color: #1565c0; margin-bottom: var(--spacing-xs);">💡 Informasi AI Models</h3>
+                    <h3 style="font-weight: 600; color: #1565c0; margin-bottom: var(--spacing-xs);">💡 Informasi Data Sensor</h3>
                     <div style="font-size: 0.875rem; color: #1976d2; line-height: 1.6;">
-                        <p style="margin-bottom: var(--spacing-xs);"><strong>📊 Data Sensor:</strong> Digunakan untuk prediksi LSTM (mikroklimat 1-3 jam ke depan)</p>
-                        <p style="margin-bottom: var(--spacing-xs);"><strong>🌾 Data Agregat:</strong> Digunakan untuk Random Forest (prediksi hasil panen & deteksi penyakit)</p>
-                        <p><strong>🌱 Data Tanaman:</strong> Informasi tanaman untuk tracking dan monitoring</p>
+                        <p><strong>📊 Data Sensor:</strong> Digunakan untuk prediksi LSTM (mikroklimat 1-3 jam ke depan). Data akan disimpan sebagai time-series untuk analisis pola.</p>
                     </div>
                 </div>
             </div>
@@ -633,98 +257,24 @@
             <i class="fas fa-chart-line"></i>
             <span>Monitoring</span>
         </a>
-        <a href="forum.html" class="tomitech-nav-item">
-            <i class="fas fa-chart-bar"></i>
-            <span>Reports</span>
-        </a>
         <a href="profil.html" class="tomitech-nav-item">
             <i class="fas fa-user"></i>
             <span>Profil</span>
         </a>
     </nav>
     
-    <script>
-        // Tab switching function
-        function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-                tab.style.display = 'none';
-            });
-            
-            // Remove active class from all buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected tab
-            const selectedTab = document.getElementById(tabName + '-tab');
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-                selectedTab.style.display = 'block';
-            }
-            
-            // Add active class to selected button
-            const selectedBtn = document.querySelector(`[data-tab="${tabName}"]`);
-            if (selectedBtn) {
-                selectedBtn.classList.add('active');
-            }
-        }
-    </script>
-    
     <script type="module">
         // Import services
         import { auth } from '../../config/firebase-init.js';
         import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
         import { 
-            addPlant, 
-            createDailyLog,
             saveSensorData,
-            saveAggregateData,
             getUserGreenhouses,
-            createGreenhouse,
-            PLANT_TYPES, 
-            SAYUR_OPTIONS, 
-            BUAH_OPTIONS 
+            createGreenhouse
         } from '../../assets/js/greenhouse/greenhouse-service.js';
         import { showNotification } from '../../config/config.js';
         
-        // Plant type selection
-        const plantTypeCards = document.querySelectorAll('.plant-type-card');
-        const plantTypeInput = document.getElementById('plant-type');
-        const plantNameContainer = document.getElementById('plant-name-container');
-        const plantNameSelect = document.getElementById('plant-name');
-        
-        plantTypeCards.forEach(card => {
-            card.addEventListener('click', () => {
-                // Remove previous selection
-                plantTypeCards.forEach(c => c.classList.remove('selected'));
-                
-                // Add selection to clicked card
-                card.classList.add('selected');
-                
-                // Set plant type
-                const type = card.dataset.type;
-                plantTypeInput.value = type;
-                
-                // Show plant name selection
-                plantNameContainer.style.display = 'block';
-                
-                // Populate options based on type
-                plantNameSelect.innerHTML = '<option value="">-- Pilih Tanaman --</option>';
-                const options = type === 'sayur' ? SAYUR_OPTIONS : BUAH_OPTIONS;
-                
-                options.forEach(plant => {
-                    const option = document.createElement('option');
-                    option.value = plant;
-                    option.textContent = plant;
-                    plantNameSelect.appendChild(option);
-                });
-            });
-        });
-        
         // Form submission
-        const plantForm = document.getElementById('plant-form');
         const loadingOverlay = document.getElementById('loading-overlay');
         
         let currentUser = null;
@@ -893,173 +443,6 @@
             });
         }
         
-        // Aggregate Form Handler
-        const aggregateForm = document.getElementById('aggregate-form');
-        if (aggregateForm) {
-            aggregateForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                if (!currentUser) {
-                    showNotification('Silakan login terlebih dahulu', 'error');
-                    return;
-                }
-                
-                if (!currentGreenhouseId) {
-                    showNotification('Sedang memuat data greenhouse. Silakan tunggu sebentar...', 'error');
-                    return;
-                }
-                
-                loadingOverlay.style.display = 'flex';
-                
-                try {
-                    console.log('💾 Saving aggregate data...', {
-                        userId: currentUser.uid,
-                        greenhouseId: currentGreenhouseId
-                    });
-                    
-                    const aggregateData = {
-                        avgDailyTemp: document.getElementById('avg-daily-temp').value,
-                        totalLightExposure: document.getElementById('total-light-exposure').value,
-                        totalWaterIrrigation: document.getElementById('total-water-irrigation').value,
-                        cycleDuration: document.getElementById('cycle-duration').value,
-                        highHumidityDuration: document.getElementById('high-humidity-duration').value,
-                        harvestYield: document.getElementById('harvest-yield').value || null,
-                        notes: document.getElementById('aggregate-notes').value
-                    };
-                    
-                    console.log('📊 Aggregate data to save:', aggregateData);
-                    
-                    const result = await saveAggregateData(
-                        currentUser.uid,
-                        currentGreenhouseId,
-                        aggregateData
-                    );
-                    
-                    console.log('📥 Save result:', result);
-                    
-                    if (!result.success) {
-                        throw new Error(result.error);
-                    }
-                    
-                    // Simpan info data terbaru untuk notifikasi di chat
-                    sessionStorage.setItem('latestDataInput', JSON.stringify({
-                        type: 'aggregate',
-                        data: aggregateData,
-                        timestamp: new Date().toISOString()
-                    }));
-                    
-                    showNotification('Data agregat berhasil disimpan! Akan digunakan untuk prediksi Random Forest.', 'success');
-                    
-                    // Reset form
-                    setTimeout(() => {
-                        aggregateForm.reset();
-                        loadingOverlay.style.display = 'none';
-                    }, 1500);
-                    
-                } catch (error) {
-                    console.error('Error saving aggregate data:', error);
-                    showNotification('Gagal menyimpan data agregat: ' + error.message, 'error');
-                    loadingOverlay.style.display = 'none';
-                }
-            });
-        }
-        
-        // Plant Form Handler
-        plantForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (!currentUser) {
-                showNotification('Silakan login terlebih dahulu', 'error');
-                return;
-            }
-            
-            if (!currentGreenhouseId) {
-                showNotification('Sedang memuat data greenhouse. Silakan tunggu sebentar...', 'error');
-                return;
-            }
-            
-            // Validate form
-            if (!plantTypeInput.value || !plantNameSelect.value) {
-                showNotification('Harap lengkapi semua field yang wajib diisi', 'error');
-                return;
-            }
-            
-            loadingOverlay.style.display = 'flex';
-            
-            try {
-                console.log('💾 Saving plant data...', {
-                    userId: currentUser.uid,
-                    greenhouseId: currentGreenhouseId
-                });
-                
-                const formData = {
-                    plantType: plantTypeInput.value,
-                    plantName: plantNameSelect.value,
-                    plantingDate: document.getElementById('planting-date').value,
-                    plantingLocation: document.getElementById('planting-location').value,
-                    healthStatus: document.getElementById('health-status').value,
-                    growthStage: document.getElementById('growth-stage').value,
-                    notes: document.getElementById('plant-notes').value
-                };
-                
-                console.log('📊 Plant data to save:', formData);
-                
-                // Add plant
-                const plantResult = await addPlant(
-                    currentUser.uid,
-                    currentGreenhouseId,
-                    formData
-                );
-                
-                if (!plantResult.success) {
-                    throw new Error(plantResult.error);
-                }
-                
-                // Create daily log if watered
-                const wateredAt7AM = document.getElementById('watered-check').checked;
-                if (wateredAt7AM) {
-                    const today = new Date();
-                    const wateringTime = new Date(today);
-                    wateringTime.setHours(7, 0, 0, 0);
-                    
-                    await createDailyLog(currentUser.uid, currentGreenhouseId, {
-                        wateredAt7AM: true,
-                        wateringTime: wateringTime,
-                        plantsWatered: [plantResult.id]
-                    });
-                }
-                
-                // Simpan info data terbaru untuk notifikasi di chat
-                sessionStorage.setItem('latestDataInput', JSON.stringify({
-                    type: 'plant',
-                    data: {
-                        plantType: formData.plantType,
-                        plantName: formData.plantName,
-                        plantingDate: formData.plantingDate,
-                        plantingLocation: formData.plantingLocation,
-                        healthStatus: formData.healthStatus,
-                        growthStage: formData.growthStage,
-                        wateredAt7AM: wateredAt7AM
-                    },
-                    timestamp: new Date().toISOString()
-                }));
-                
-                showNotification('Data tanaman berhasil disimpan!', 'success');
-                
-                // Reset form
-                setTimeout(() => {
-                    plantForm.reset();
-                    plantTypeCards.forEach(c => c.classList.remove('selected'));
-                    plantNameContainer.style.display = 'none';
-                    loadingOverlay.style.display = 'none';
-                }, 1500);
-                
-            } catch (error) {
-                console.error('Error saving plant:', error);
-                showNotification('Gagal menyimpan data: ' + error.message, 'error');
-                loadingOverlay.style.display = 'none';
-            }
-        });
     </script>
     <!-- Navigation Indicator -->
     <script type="module">

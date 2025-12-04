@@ -1,5 +1,5 @@
 // gemini-service.js - Prioritize gemini-2.0-flash with safe fallbacks
-import { geminiApiKey, appConfig } from "../../../config/config.js";
+import { geminiApiKeys, geminiApiKey, appConfig } from "../../../config/config.js";
 import { getUserActivities, getActivityStats } from './environmental-activity-service.js';
 import { getUserGreenhouseDataForAI } from '../greenhouse/greenhouse-service.js';
 import { auth } from '../../../config/firebase-init.js';
@@ -10,6 +10,94 @@ let GoogleGenerativeAI = null;
 let availableModels = null;
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
+
+// API Key rotation state
+let currentApiKeyIndex = 0;
+let failedApiKeys = new Set(); // Track keys yang sudah gagal
+const API_KEY_STORAGE_KEY = 'gemini_current_api_key_index';
+const FAILED_KEYS_STORAGE_KEY = 'gemini_failed_api_keys';
+
+// Initialize API key rotation
+function initializeApiKeyRotation() {
+    // Load saved index from localStorage
+    const savedIndex = parseInt(localStorage.getItem(API_KEY_STORAGE_KEY) || '0');
+    currentApiKeyIndex = savedIndex < geminiApiKeys.length ? savedIndex : 0;
+    
+    // Load failed keys from localStorage
+    const savedFailedKeys = localStorage.getItem(FAILED_KEYS_STORAGE_KEY);
+    if (savedFailedKeys) {
+        try {
+            failedApiKeys = new Set(JSON.parse(savedFailedKeys));
+        } catch (e) {
+            failedApiKeys = new Set();
+        }
+    }
+    
+    console.log(`🔑 API Key Rotation initialized. Using key ${currentApiKeyIndex + 1}/${geminiApiKeys.length}`);
+}
+
+// Get current API key
+function getCurrentApiKey() {
+    if (geminiApiKeys.length === 0) {
+        console.error('❌ No API keys configured');
+        return geminiApiKey || '';
+    }
+    return geminiApiKeys[currentApiKeyIndex] || geminiApiKeys[0] || geminiApiKey || '';
+}
+
+// Switch to next API key
+function switchToNextApiKey() {
+    const previousIndex = currentApiKeyIndex;
+    
+    // Mark current key as failed
+    failedApiKeys.add(currentApiKeyIndex);
+    localStorage.setItem(FAILED_KEYS_STORAGE_KEY, JSON.stringify(Array.from(failedApiKeys)));
+    
+    // Find next available key
+    let attempts = 0;
+    while (attempts < geminiApiKeys.length) {
+        currentApiKeyIndex = (currentApiKeyIndex + 1) % geminiApiKeys.length;
+        
+        if (!failedApiKeys.has(currentApiKeyIndex)) {
+            localStorage.setItem(API_KEY_STORAGE_KEY, currentApiKeyIndex.toString());
+            console.log(`🔄 Switched to API key ${currentApiKeyIndex + 1}/${geminiApiKeys.length}`);
+            
+            // Reset genAI instance untuk menggunakan key baru
+            genAI = null;
+            return true;
+        }
+        
+        attempts++;
+    }
+    
+    // All keys failed
+    console.error('❌ All API keys have failed. Please check your API keys.');
+    currentApiKeyIndex = previousIndex;
+    return false;
+}
+
+// Reset failed keys (bisa dipanggil setelah beberapa waktu)
+function resetFailedKeys() {
+    failedApiKeys.clear();
+    localStorage.removeItem(FAILED_KEYS_STORAGE_KEY);
+    console.log('🔄 Reset failed API keys list');
+}
+
+// Auto-reset failed keys daily
+function checkAndResetFailedKeys() {
+    const lastReset = localStorage.getItem('gemini_failed_keys_reset_date');
+    const today = new Date().toDateString();
+    
+    if (lastReset !== today) {
+        resetFailedKeys();
+        localStorage.setItem('gemini_failed_keys_reset_date', today);
+        console.log('🔄 Daily reset: Failed API keys list cleared');
+    }
+}
+
+// Initialize on module load
+initializeApiKeyRotation();
+checkAndResetFailedKeys();
 
 // Rate limiting (existing logic)
 let lastRequestTime = 0;
@@ -35,8 +123,12 @@ async function initializeGemini() {
                 const module = await import('https://esm.run/@google/generative-ai');
                 GoogleGenerativeAI = module.GoogleGenerativeAI;
             }
-            genAI = new GoogleGenerativeAI(geminiApiKey);
-            console.log('✅ Gemini AI initialized successfully');
+            const currentKey = getCurrentApiKey();
+            if (!currentKey) {
+                throw new Error('No API key available');
+            }
+            genAI = new GoogleGenerativeAI(currentKey);
+            console.log(`✅ Gemini AI initialized successfully with API key ${currentApiKeyIndex + 1}/${geminiApiKeys.length}`);
         } catch (error) {
             console.error('❌ Failed to initialize Gemini AI:', error);
             genAI = null;
@@ -68,12 +160,30 @@ async function checkRateLimit() {
 async function getAvailableModels() {
     if (availableModels) return availableModels;
 
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+    let lastError = null;
+    const maxAttempts = geminiApiKeys.length || 1;
+    
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        try {
+            const currentKey = getCurrentApiKey();
+            if (!currentKey) {
+                throw new Error('No API key available');
+            }
+            
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${currentKey}`);
+            if (!response.ok) {
+                // Check if it's an API key error
+                if (response.status === 401 || response.status === 403) {
+                    console.warn(`⚠️ API key ${currentApiKeyIndex + 1} failed (${response.status}), trying next key...`);
+                    if (switchToNextApiKey()) {
+                        continue; // Try with next key
+                    } else {
+                        throw new Error(`All API keys failed. HTTP status: ${response.status}`);
+                    }
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
 
         // All model names (normalize)
         const modelsFromApi = (data.models || []).map(m => m.name.replace('models/', ''));
@@ -107,21 +217,33 @@ async function getAvailableModels() {
             if (!prioritized.includes(m)) prioritized.push(m);
         }
 
-        availableModels = prioritized;
-        console.log('✅ Available models (prioritized):', availableModels);
-        return availableModels;
+            availableModels = prioritized;
+            console.log(`✅ Available models (prioritized) with API key ${currentApiKeyIndex + 1}/${geminiApiKeys.length}:`, availableModels);
+            return availableModels;
 
-    } catch (error) {
-        console.error('❌ Failed to fetch available models:', error);
-        // Provide robust fallback list including gemini-2.0-flash names
-        return [
-            'gemini-2.0-flash',
-            'gemini-2.0-flash-latest',
-            'gemini-1.5-flash-latest',
-            'gemini-1.5-flash',
-            'gemini-pro'
-        ];
+        } catch (error) {
+            lastError = error;
+            console.error(`❌ Failed to fetch models with API key ${currentApiKeyIndex + 1}:`, error);
+            
+            // If API key error and we have more keys, try next
+            if ((error.message.includes('401') || error.message.includes('403') || error.message.includes('API key')) && attempt < maxAttempts - 1) {
+                if (switchToNextApiKey()) {
+                    continue; // Try with next key
+                }
+            }
+        }
     }
+    
+    // All attempts failed, return fallback
+    console.warn('⚠️ All API keys failed, using fallback model list');
+    // Provide robust fallback list including gemini-2.0-flash names
+    return [
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-latest',
+        'gemini-1.5-flash-latest',
+        'gemini-1.5-flash',
+        'gemini-pro'
+    ];
 }
 
 // Try to get model instance with explicit preference for gemini-2.0-flash
@@ -361,7 +483,7 @@ export async function getChatResponse(prompt, chatHistory = [], retryCount = 0) 
         // Fetch user data context from Firestore
         const userContext = await getUserDataContext();
         
-        let systemPrompt = `Anda adalah AI Assistant TOMITECH, konsultan ahli Greenhouse dan Tanaman. Anda membantu pengguna dalam:
+        let systemPrompt = `Anda adalah AI Assistant AgriHouse, konsultan ahli Greenhouse dan Tanaman. Anda membantu pengguna dalam:
 
 1. **Konsultasi Greenhouse:**
    - Manajemen kondisi udara di dalam greenhouse (kelembaban, suhu, cahaya)
@@ -490,16 +612,47 @@ Pastikan setiap kolom terpisah dengan jelas menggunakan pipe (|) dan data tersus
             stack: error.stack
         });
         
-        // Check for specific API key errors
-        if (error.message.includes('API_KEY') || error.message.includes('403')) {
-            console.error('❌ API Key Error - Check your Gemini API key');
-            return "❌ Error: API Key tidak valid atau tidak aktif. Silakan periksa konfigurasi API key di config.js";
+        // Check for specific API key errors - try next key if available
+        if (error.message.includes('API_KEY') || error.message.includes('API key expired') || error.message.includes('API_KEY_INVALID') || error.message.includes('403') || error.message.includes('401')) {
+            console.warn(`⚠️ API Key ${currentApiKeyIndex + 1} failed: ${error.message}`);
+            
+            // Try switching to next API key
+            if (switchToNextApiKey() && retryCount < MAX_RETRIES) {
+                console.log(`🔄 Retrying with API key ${currentApiKeyIndex + 1}...`);
+                // Reset genAI and availableModels to force re-initialization
+                genAI = null;
+                availableModels = null;
+                // Retry the request
+                return getChatResponse(prompt, chatHistory, retryCount + 1);
+            }
+            
+            // All keys failed
+            console.error('❌ All API keys have failed');
+            console.error('📋 Solusi:');
+            console.error('   1. Buka https://aistudio.google.com/app/apikey');
+            console.error('   2. Buat API key baru');
+            console.error('   3. Tambahkan ke array geminiApiKeys di config/config.js');
+            console.error('   4. Refresh halaman');
+            return "❌ **Semua API Key Expired atau Tidak Valid**\n\n🔧 **Cara Memperbaiki:**\n\n1. Buka: https://aistudio.google.com/app/apikey\n2. Buat beberapa API key baru\n3. Tambahkan ke array `geminiApiKeys` di file `config/config.js`:\n   ```javascript\n   export const geminiApiKeys = [\n       \"API_KEY_1\",\n       \"API_KEY_2\",\n       \"API_KEY_3\"\n   ];\n   ```\n4. Refresh halaman (F5)\n\n📖 Sistem akan otomatis menggunakan API key yang tersedia.";
         }
         
-        // Check for quota errors
+        // Check for quota errors - try next key if available
         if (error.message.includes('quota') || error.message.includes('429')) {
-            console.error('❌ Quota Error - Daily limit exceeded');
-            return "❌ Error: Kuota harian AI telah habis. Silakan coba lagi besok atau upgrade ke paket berbayar.";
+            console.warn(`⚠️ Quota exceeded for API key ${currentApiKeyIndex + 1}, trying next key...`);
+            
+            // Try switching to next API key
+            if (switchToNextApiKey() && retryCount < MAX_RETRIES) {
+                console.log(`🔄 Retrying with API key ${currentApiKeyIndex + 1}...`);
+                // Reset genAI and availableModels to force re-initialization
+                genAI = null;
+                availableModels = null;
+                // Retry the request
+                return getChatResponse(prompt, chatHistory, retryCount + 1);
+            }
+            
+            // All keys quota exceeded
+            console.error('❌ All API keys quota exceeded');
+            return "❌ Error: Kuota harian AI telah habis untuk semua API key. Silakan coba lagi besok atau tambahkan API key baru di `config/config.js`.";
         }
         
         const errorInfo = getErrorMessage(error);

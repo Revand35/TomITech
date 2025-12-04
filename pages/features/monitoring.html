@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>Real-time Monitoring - TOMITECH</title>
-    <link rel="icon" href="../../assets/icons/tomitech-logo-64.png">
+    <link rel="icon" href="../../assets/icons/AgriHouse.png">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com https://*.gstatic.com https://*.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net data: blob: https:; img-src 'self' data: https: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org; connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://esm.run https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://apis.google.com https://*.google.com https://*.googleapis.com http://127.0.0.1:* http://localhost:* http://esp32-greenhouse.local http://*.local http://*:* ws://127.0.0.1:* ws://localhost:*; frame-src 'self' https://accounts.google.com https://*.firebaseapp.com; worker-src 'self' blob:; manifest-src 'self';">
     
     <!-- Fonts -->
@@ -73,6 +73,239 @@
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
         }
         
+        /* Mode Selector */
+        .mode-selector-container {
+            margin-bottom: var(--spacing-lg);
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mode-selector-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mode-toggle {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid rgba(76, 175, 80, 0.2);
+            border-radius: 8px;
+            background: #ffffff;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .mode-btn:hover {
+            border-color: var(--tomitech-green-accent);
+            background: rgba(76, 175, 80, 0.05);
+        }
+        
+        .mode-btn.active {
+            background: var(--tomitech-green-accent);
+            border-color: var(--tomitech-green-accent);
+            color: #ffffff;
+        }
+        
+        .mode-btn i {
+            font-size: 1rem;
+        }
+        
+        .mode-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            background: rgba(76, 175, 80, 0.08);
+            border-radius: 6px;
+        }
+        
+        .mode-status i {
+            color: var(--tomitech-green-accent);
+        }
+        
+        .mode-status strong {
+            color: var(--tomitech-green-accent);
+            font-weight: 600;
+        }
+        
+        /* Relay Control Container */
+        .relay-control-container {
+            margin-bottom: var(--spacing-lg);
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .relay-control-header {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .relay-control-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .relay-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .relay-btn {
+            padding: 16px;
+            border: 2px solid rgba(76, 175, 80, 0.2);
+            border-radius: 10px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+        
+        .relay-btn:hover {
+            border-color: var(--tomitech-green-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+        }
+        
+        .relay-btn.active {
+            background: var(--tomitech-green-accent);
+            border-color: var(--tomitech-green-accent);
+            color: #ffffff;
+        }
+        
+        .relay-btn.loading {
+            opacity: 0.6;
+            cursor: wait;
+            pointer-events: none;
+        }
+        
+        .relay-btn i {
+            font-size: 1.5rem;
+            color: var(--tomitech-green-accent);
+        }
+        
+        .relay-btn.active i {
+            color: #ffffff;
+        }
+        
+        .relay-btn span {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .relay-btn.active span {
+            color: #ffffff;
+        }
+        
+        .relay-btn.irrigation-btn {
+            grid-column: 1 / -1;
+        }
+        
+        .relay-status {
+            margin-top: 4px;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-badge.on {
+            background: #10b981;
+            color: #ffffff;
+        }
+        
+        .status-badge.off {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .relay-status-details {
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(76, 175, 80, 0.1);
+        }
+        
+        .relay-status-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .relay-status-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .relay-status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(76, 175, 80, 0.05);
+            border-radius: 6px;
+            font-size: 0.8125rem;
+        }
+        
+        .relay-name {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .relay-state {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .relay-state.on {
+            color: #10b981;
+        }
+        
+        .relay-state.off {
+            color: #6b7280;
+        }
+        
         /* Stat Cards */
         .stats-grid-monitoring {
             display: grid;
@@ -116,6 +349,7 @@
         .stat-card-icon.temperature { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
         .stat-card-icon.humidity { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
         .stat-card-icon.soil { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .stat-card-icon.clock { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
         
         .stat-card-value-container {
             display: flex;
@@ -152,6 +386,138 @@
         
         .stat-card-mini-chart canvas {
             max-height: 80px;
+        }
+        
+        .stat-card-time-info {
+            margin-top: var(--spacing-sm);
+            text-align: center;
+        }
+        
+        .time-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        /* Conditions Card */
+        .conditions-card-container {
+            margin-bottom: var(--spacing-lg);
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .conditions-card-header {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .conditions-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .conditions-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .condition-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .condition-loading i {
+            color: var(--tomitech-green-accent);
+        }
+        
+        .condition-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(76, 175, 80, 0.05);
+            border-left: 4px solid var(--tomitech-green-accent);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .condition-item:hover {
+            background: rgba(76, 175, 80, 0.1);
+            transform: translateX(4px);
+        }
+        
+        .condition-item.active {
+            background: rgba(16, 185, 129, 0.15);
+            border-left-color: #10b981;
+        }
+        
+        .condition-item.inactive {
+            background: rgba(107, 114, 128, 0.05);
+            border-left-color: #6b7280;
+            opacity: 0.7;
+        }
+        
+        .condition-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+        
+        .condition-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .condition-name i {
+            font-size: 0.875rem;
+            color: var(--tomitech-green-accent);
+        }
+        
+        .condition-schedule {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+        
+        .condition-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .condition-status.active {
+            background: #10b981;
+            color: #ffffff;
+        }
+        
+        .condition-status.inactive {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .condition-status.soon {
+            background: #f59e0b;
+            color: #ffffff;
         }
         
         /* Charts Grid */
@@ -367,18 +733,207 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* ============================================
+           RESPONSIVE DESIGN - Mobile, Tablet, Desktop
+           ============================================ */
+        
+        /* Tablet (max-width: 1024px) */
+        @media (max-width: 1024px) {
             .stats-grid-monitoring {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--spacing-md);
             }
             
             .charts-grid {
                 grid-template-columns: 1fr;
             }
             
+            .mode-selector-container {
+                padding: var(--spacing-md);
+            }
+            
+            .manual-control-section {
+                padding: var(--spacing-md);
+            }
+            
+            .relay-buttons-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .relay-status-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Mobile Large (max-width: 768px) */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: var(--spacing-sm);
+            }
+            
+            .stats-grid-monitoring {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+            }
+            
+            .stats-card {
+                padding: var(--spacing-sm);
+            }
+            
+            .stats-card .stats-value {
+                font-size: 1.5rem;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
             #greenhouse-map {
                 height: 300px;
+            }
+            
+            .mode-selector-container {
+                padding: var(--spacing-sm);
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+            
+            .mode-toggle-wrapper {
+                width: 100%;
+            }
+            
+            .manual-control-section {
+                padding: var(--spacing-sm);
+            }
+            
+            .relay-buttons-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+            }
+            
+            .relay-btn {
+                padding: var(--spacing-sm);
+                font-size: 0.875rem;
+            }
+            
+            .relay-btn.irrigation-btn {
+                grid-column: 1;
+            }
+            
+            .relay-status-list {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+            }
+            
+            .relay-status-item {
+                padding: var(--spacing-sm);
+            }
+            
+            .clock-card,
+            .conditions-card {
+                padding: var(--spacing-sm);
+            }
+            
+            .clock-time {
+                font-size: 2rem;
+            }
+            
+            .clock-date {
+                font-size: 0.875rem;
+            }
+        }
+        
+        /* Mobile Small (max-width: 480px) */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: var(--spacing-xs);
+            }
+            
+            .stats-card {
+                padding: var(--spacing-xs);
+            }
+            
+            .stats-card .stats-value {
+                font-size: 1.25rem;
+            }
+            
+            .stats-card .stats-label {
+                font-size: 0.75rem;
+            }
+            
+            .chart-container {
+                height: 180px;
+            }
+            
+            #greenhouse-map {
+                height: 250px;
+            }
+            
+            .mode-selector-container {
+                padding: var(--spacing-xs);
+            }
+            
+            .mode-label {
+                font-size: 0.875rem;
+            }
+            
+            .manual-control-section {
+                padding: var(--spacing-xs);
+            }
+            
+            .section-title {
+                font-size: 1rem;
+            }
+            
+            .relay-btn {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                font-size: 0.8rem;
+            }
+            
+            .relay-status-item {
+                padding: var(--spacing-xs);
+                font-size: 0.875rem;
+            }
+            
+            .clock-time {
+                font-size: 1.75rem;
+            }
+            
+            .clock-date {
+                font-size: 0.8rem;
+            }
+            
+            .conditions-item {
+                font-size: 0.875rem;
+                padding: var(--spacing-xs);
+            }
+        }
+        
+        /* Landscape Mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .stats-grid-monitoring {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            #greenhouse-map {
+                height: 250px;
+            }
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .relay-btn,
+            .mode-toggle-switch {
+                min-height: 44px; /* Minimum touch target size */
             }
         }
     </style>
@@ -389,7 +944,7 @@
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo-icon">
-                    <img src="../../assets/icons/tomitech-logo.png" alt="TOMITECH" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <img src="../../assets/icons/AgriHouse.png" alt="AgriHouse" style="width: 32px; height: 32px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <i class="fas fa-leaf" style="display:none; color: white; font-size: 1.5rem;"></i>
                 </div>
                 <div class="logo-text">
@@ -424,6 +979,28 @@
             </select>
         </div>
 
+        <!-- Mode Selector -->
+        <div class="mode-selector-container">
+            <div class="mode-selector-label">
+                <i class="fas fa-cog"></i>
+                Mode Operasi
+            </div>
+            <div class="mode-toggle">
+                <button type="button" class="mode-btn" id="mode-auto" data-mode="auto">
+                    <i class="fas fa-robot"></i>
+                    <span>Otomatis</span>
+                </button>
+                <button type="button" class="mode-btn" id="mode-manual" data-mode="manual">
+                    <i class="fas fa-hand-pointer"></i>
+                    <span>Manual</span>
+                </button>
+            </div>
+            <div class="mode-status" id="mode-status">
+                <i class="fas fa-info-circle"></i>
+                <span>Mode: <strong>Otomatis</strong></span>
+            </div>
+        </div>
+
         <!-- Stat Cards -->
         <div class="stats-grid-monitoring">
             <div class="stat-card-monitoring">
@@ -447,7 +1024,7 @@
                     <div class="stat-card-icon humidity">
                         <i class="fas fa-droplet"></i>
                     </div>
-                    <div class="stat-card-label">Humidity</div>
+                    <div class="stat-card-label">Air Humidity</div>
                 </div>
                 <div class="stat-card-value-container">
                     <div class="stat-card-value" id="stat-humidity">--</div>
@@ -471,6 +1048,105 @@
                 </div>
                 <div class="stat-card-mini-chart">
                     <canvas id="mini-chart-soil"></canvas>
+                </div>
+            </div>
+            
+            <div class="stat-card-monitoring">
+                <div class="stat-card-header">
+                    <div class="stat-card-icon clock">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-card-label">Time</div>
+                </div>
+                <div class="stat-card-value-container">
+                    <div class="stat-card-value" id="stat-time">--:--</div>
+                    <div class="stat-card-unit" id="stat-date">--/--/----</div>
+                </div>
+                <div class="stat-card-time-info">
+                    <div class="time-label" id="stat-timezone">WIB</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relay Control Section (Only visible in Manual Mode) -->
+        <div class="relay-control-container" id="relay-control-container" style="display: none;">
+            <div class="relay-control-header">
+                <div class="relay-control-title">
+                    <i class="fas fa-sliders-h"></i>
+                    Kontrol Relay Manual
+                </div>
+            </div>
+            
+            <!-- Relay Control Buttons -->
+            <div class="relay-buttons-grid">
+                <button type="button" class="relay-btn" id="btn-fan1" data-relay="fan1">
+                    <i class="fas fa-fan"></i>
+                    <span>Kipas (1 & 2)</span>
+                    <div class="relay-status" id="status-fan1">
+                        <span class="status-badge off">OFF</span>
+                    </div>
+                </button>
+                
+                <button type="button" class="relay-btn" id="btn-exhaust1" data-relay="exhaust1">
+                    <i class="fas fa-wind"></i>
+                    <span>Exhaust (1 & 2)</span>
+                    <div class="relay-status" id="status-exhaust1">
+                        <span class="status-badge off">OFF</span>
+                    </div>
+                </button>
+                
+                <button type="button" class="relay-btn irrigation-btn" id="btn-irrigation" data-relay="irrigation">
+                    <i class="fas fa-tint"></i>
+                    <span>Sistem Irigasi</span>
+                    <div class="relay-status" id="status-irrigation">
+                        <span class="status-badge off">OFF</span>
+                    </div>
+                </button>
+            </div>
+            
+            <!-- Relay Status Details -->
+            <div class="relay-status-details">
+                <div class="relay-status-title">
+                    <i class="fas fa-info-circle"></i>
+                    Status Relay
+                </div>
+                <div class="relay-status-list" id="relay-status-list">
+                    <div class="relay-status-item">
+                        <span class="relay-name">Kipas 1 & 2:</span>
+                        <span class="relay-state" id="detail-fan1">OFF</span>
+                    </div>
+                    <div class="relay-status-item">
+                        <span class="relay-name">Exhaust 1 & 2:</span>
+                        <span class="relay-state" id="detail-exhaust1">OFF</span>
+                    </div>
+                    <div class="relay-status-item">
+                        <span class="relay-name">Pompa:</span>
+                        <span class="relay-state" id="detail-pump">OFF</span>
+                    </div>
+                    <div class="relay-status-item">
+                        <span class="relay-name">Valve A:</span>
+                        <span class="relay-state" id="detail-valveA">OFF</span>
+                    </div>
+                    <div class="relay-status-item">
+                        <span class="relay-name">Valve B:</span>
+                        <span class="relay-state" id="detail-valveB">OFF</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ketentuan Kondisi Card -->
+        <div class="conditions-card-container">
+            <div class="conditions-card-header">
+                <div class="conditions-card-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    Ketentuan Kondisi Operasi
+                </div>
+            </div>
+            <div class="conditions-content" id="conditions-content">
+                <div class="condition-loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Memuat ketentuan kondisi...</span>
                 </div>
             </div>
         </div>
@@ -528,10 +1204,6 @@
             <i class="fas fa-chart-line"></i>
             <span>Monitoring</span>
         </a>
-        <a href="forum.html" class="tomitech-nav-item">
-            <i class="fas fa-chart-bar"></i>
-            <span>Reports</span>
-        </a>
         <a href="profil.html" class="tomitech-nav-item">
             <i class="fas fa-user"></i>
             <span>Profil</span>
@@ -546,14 +1218,22 @@
         import { GreenhouseMapManager } from '../../assets/js/maps/greenhouse-map-manager.js';
         import { GreenhouseSelector } from '../../assets/js/monitoring/greenhouse-selector.js';
         import { getGreenhousesWithLocation, createGreenhouse } from '../../assets/js/greenhouse/greenhouse-service.js';
+        import { 
+            setEsp32Mode, 
+            getEsp32Mode, 
+            controlRelay, 
+            getRelayStatus, 
+            controlIrrigationSystem,
+            toggleRelay
+        } from '../../assets/js/monitoring/relay-control-service.js';
 
         // Global variables
         // Konfigurasi ESP32 endpoint
         // Opsi 1: Gunakan mDNS (multicast DNS) - default
-        const ESP32_MDNS_HOST = 'esp32-greenhouse.local';
+        const ESP32_MDNS_HOST = 'greenhouse.local';
         // Opsi 2: Gunakan IP address langsung jika mDNS tidak bekerja
-        // Contoh: '192.168.1.100' - ganti dengan IP ESP32 Anda
-        const ESP32_IP_ADDRESS = '192.168.1.11'; // Set ke IP address jika mDNS gagal, contoh: '192.168.1.100'
+        // Contoh: '192.168.1.4' - ganti dengan IP ESP32 Anda
+        const ESP32_IP_ADDRESS = null; // Set ke IP address jika mDNS gagal, contoh: '192.168.1.4'
         
         // Tentukan endpoint yang akan digunakan
         const LOCAL_SENSOR_ENDPOINT_URL = ESP32_IP_ADDRESS 
@@ -570,6 +1250,20 @@
         let currentUserId = null;
         let localSensorInterval = null;
         let lastLocalSensorErrorAt = 0;
+        
+        // Relay control variables
+        let currentMode = 'auto'; // 'auto' or 'manual'
+        let relayStatus = {
+            fan1: false,
+            fan2: false, // Controlled by fan1 button
+            exhaust1: false,
+            exhaust2: false, // Controlled by exhaust1 button
+            pump: false,
+            valveA: false,
+            valveB: false
+        };
+        let relayStatusInterval = null;
+        let modeCheckInterval = null;
 
         // No callback needed for Leaflet (loads synchronously)
 
@@ -759,6 +1453,16 @@
                     console.warn('⚠️ Soil moisture not found or invalid in ESP32 response');
                 }
 
+                // Parse time data dari ESP32
+                if (rawData.time || rawData.currentTime || rawData.datetime) {
+                    updateTimeCard(rawData.time || rawData.currentTime || rawData.datetime);
+                }
+                
+                // Parse schedule/conditions data dari ESP32
+                if (rawData.schedule || rawData.conditions || rawData.rules) {
+                    updateConditionsCard(rawData.schedule || rawData.conditions || rawData.rules);
+                }
+
                 if (Object.keys(parsedData).length > 0) {
                     updateStatCards(parsedData);
                     // Reset error flag on success
@@ -932,6 +1636,563 @@
             }
         }
 
+        /**
+         * Update time card dengan data dari ESP32
+         * @param {string|Object} timeData - Data waktu dari ESP32 (bisa string atau object)
+         */
+        function updateTimeCard(timeData) {
+            try {
+                const timeElement = document.getElementById('stat-time');
+                const dateElement = document.getElementById('stat-date');
+                const timezoneElement = document.getElementById('stat-timezone');
+                
+                if (!timeElement || !dateElement) return;
+                
+                let timeString = '';
+                let dateString = '';
+                
+                // Handle berbagai format time dari ESP32
+                if (typeof timeData === 'string') {
+                    // Format: "HH:MM:SS" atau "HH:MM" atau ISO string
+                    if (timeData.includes('T') || timeData.includes('-')) {
+                        // ISO format
+                        const date = new Date(timeData);
+                        timeString = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                        dateString = date.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    } else {
+                        // Format "HH:MM:SS" atau "HH:MM"
+                        timeString = timeData;
+                        const now = new Date();
+                        dateString = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    }
+                } else if (typeof timeData === 'object') {
+                    // Object dengan field hour, minute, second, dll
+                    const hour = String(timeData.hour || timeData.h || 0).padStart(2, '0');
+                    const minute = String(timeData.minute || timeData.m || 0).padStart(2, '0');
+                    const second = String(timeData.second || timeData.s || 0).padStart(2, '0');
+                    timeString = `${hour}:${minute}:${second}`;
+                    
+                    if (timeData.day && timeData.month && timeData.year) {
+                        dateString = `${String(timeData.day).padStart(2, '0')}/${String(timeData.month).padStart(2, '0')}/${timeData.year}`;
+                    } else {
+                        const now = new Date();
+                        dateString = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    }
+                } else {
+                    // Fallback: gunakan waktu lokal
+                    const now = new Date();
+                    timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    dateString = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                }
+                
+                timeElement.textContent = timeString;
+                dateElement.textContent = dateString;
+                
+                if (timezoneElement) {
+                    timezoneElement.textContent = timeData.timezone || 'WIB';
+                }
+            } catch (error) {
+                console.warn('⚠️ Error updating time card:', error);
+            }
+        }
+
+        /**
+         * Update conditions card dengan schedule/conditions dari ESP32
+         * @param {Object|Array} conditionsData - Data ketentuan kondisi dari ESP32
+         */
+        function updateConditionsCard(conditionsData) {
+            try {
+                const conditionsContent = document.getElementById('conditions-content');
+                if (!conditionsContent) return;
+                
+                // Clear loading state
+                conditionsContent.innerHTML = '';
+                
+                // Handle berbagai format data
+                let conditions = [];
+                
+                if (Array.isArray(conditionsData)) {
+                    conditions = conditionsData;
+                } else if (typeof conditionsData === 'object') {
+                    // Convert object ke array
+                    if (conditionsData.irrigation || conditionsData.watering) {
+                        // Format dengan key irrigation/watering
+                        const irrigation = conditionsData.irrigation || conditionsData.watering;
+                        if (irrigation.startTime && irrigation.endTime) {
+                            conditions.push({
+                                name: 'Waktu Siram',
+                                icon: 'fa-tint',
+                                startTime: irrigation.startTime,
+                                endTime: irrigation.endTime,
+                                active: checkIfActive(irrigation.startTime, irrigation.endTime)
+                            });
+                        }
+                    }
+                    
+                    if (conditionsData.fan || conditionsData.ventilation) {
+                        const fan = conditionsData.fan || conditionsData.ventilation;
+                        if (fan.startTime && fan.endTime) {
+                            conditions.push({
+                                name: 'Waktu Kipas',
+                                icon: 'fa-fan',
+                                startTime: fan.startTime,
+                                endTime: fan.endTime,
+                                active: checkIfActive(fan.startTime, fan.endTime)
+                            });
+                        }
+                    }
+                    
+                    // Generic conditions
+                    Object.keys(conditionsData).forEach(key => {
+                        if (key !== 'irrigation' && key !== 'watering' && key !== 'fan' && key !== 'ventilation') {
+                            const condition = conditionsData[key];
+                            if (condition && condition.startTime && condition.endTime) {
+                                conditions.push({
+                                    name: condition.name || key,
+                                    icon: condition.icon || 'fa-clock',
+                                    startTime: condition.startTime,
+                                    endTime: condition.endTime,
+                                    active: checkIfActive(condition.startTime, condition.endTime)
+                                });
+                            }
+                        }
+                    });
+                }
+                
+                // Render conditions
+                if (conditions.length === 0) {
+                    conditionsContent.innerHTML = `
+                        <div class="condition-loading">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Tidak ada jadwal untuk saat ini</span>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                conditions.forEach(condition => {
+                    const conditionItem = document.createElement('div');
+                    conditionItem.className = `condition-item ${condition.active ? 'active' : 'inactive'}`;
+                    
+                    const statusClass = condition.active ? 'active' : 'inactive';
+                    const statusText = condition.active ? 'Aktif' : 'Tidak Aktif';
+                    
+                    conditionItem.innerHTML = `
+                        <div class="condition-info">
+                            <div class="condition-name">
+                                <i class="fas ${condition.icon}"></i>
+                                ${condition.name}
+                            </div>
+                            <div class="condition-schedule">
+                                ${formatTime(condition.startTime)} - ${formatTime(condition.endTime)}
+                            </div>
+                        </div>
+                        <div class="condition-status ${statusClass}">
+                            ${statusText}
+                        </div>
+                    `;
+                    
+                    conditionsContent.appendChild(conditionItem);
+                });
+                
+            } catch (error) {
+                console.warn('⚠️ Error updating conditions card:', error);
+                const conditionsContent = document.getElementById('conditions-content');
+                if (conditionsContent) {
+                    conditionsContent.innerHTML = `
+                        <div class="condition-loading">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Gagal memuat ketentuan kondisi</span>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        /**
+         * Check jika kondisi sedang aktif berdasarkan waktu
+         * @param {string|number} startTime - Waktu mulai (format "HH:MM" atau hour number)
+         * @param {string|number} endTime - Waktu selesai (format "HH:MM" atau hour number)
+         * @returns {boolean} - true jika sedang aktif
+         */
+        function checkIfActive(startTime, endTime) {
+            try {
+                const now = new Date();
+                const currentHour = now.getHours();
+                const currentMinute = now.getMinutes();
+                const currentTime = currentHour * 60 + currentMinute; // Convert ke menit
+                
+                // Parse start time
+                let startMinutes = 0;
+                if (typeof startTime === 'string') {
+                    const [hour, minute] = startTime.split(':').map(Number);
+                    startMinutes = hour * 60 + (minute || 0);
+                } else if (typeof startTime === 'number') {
+                    startMinutes = startTime * 60; // Assume hour
+                }
+                
+                // Parse end time
+                let endMinutes = 0;
+                if (typeof endTime === 'string') {
+                    const [hour, minute] = endTime.split(':').map(Number);
+                    endMinutes = hour * 60 + (minute || 0);
+                } else if (typeof endTime === 'number') {
+                    endMinutes = endTime * 60; // Assume hour
+                }
+                
+                // Handle case dimana end time < start time (cross midnight)
+                if (endMinutes < startMinutes) {
+                    // Schedule melewati tengah malam
+                    return currentTime >= startMinutes || currentTime <= endMinutes;
+                } else {
+                    // Schedule normal
+                    return currentTime >= startMinutes && currentTime <= endMinutes;
+                }
+            } catch (error) {
+                console.warn('⚠️ Error checking if active:', error);
+                return false;
+            }
+        }
+
+        /**
+         * Format time untuk display
+         * @param {string|number} time - Waktu (format "HH:MM" atau hour number)
+         * @returns {string} - Formatted time string
+         */
+        function formatTime(time) {
+            try {
+                if (typeof time === 'string') {
+                    // Format "HH:MM" atau "H:MM"
+                    if (time.includes(':')) {
+                        return time;
+                    }
+                } else if (typeof time === 'number') {
+                    // Assume hour number (0-23)
+                    return `${String(time).padStart(2, '0')}:00`;
+                }
+                return String(time);
+            } catch (error) {
+                return String(time);
+            }
+        }
+
+        /**
+         * Start time update interval (update setiap detik)
+         */
+        function startTimeUpdate() {
+            // Update time setiap detik
+            setInterval(() => {
+                const now = new Date();
+                const timeElement = document.getElementById('stat-time');
+                const dateElement = document.getElementById('stat-date');
+                
+                if (timeElement) {
+                    timeElement.textContent = now.toLocaleTimeString('id-ID', { 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        second: '2-digit' 
+                    });
+                }
+                
+                if (dateElement && dateElement.textContent === '--/--/----') {
+                    // Only update date if not set from ESP32
+                    dateElement.textContent = now.toLocaleDateString('id-ID', { 
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric' 
+                    });
+                }
+            }, 1000);
+        }
+
+        /**
+         * Update UI mode selector
+         */
+        function updateModeUI(mode) {
+            const modeAutoBtn = document.getElementById('mode-auto');
+            const modeManualBtn = document.getElementById('mode-manual');
+            const modeStatus = document.getElementById('mode-status');
+            const relayControlContainer = document.getElementById('relay-control-container');
+            
+            // Update button states
+            if (mode === 'auto') {
+                modeAutoBtn.classList.add('active');
+                modeManualBtn.classList.remove('active');
+                relayControlContainer.style.display = 'none';
+                modeStatus.innerHTML = '<i class="fas fa-info-circle"></i><span>Mode: <strong>Otomatis</strong> - ESP32 mengikuti sensor</span>';
+            } else {
+                modeAutoBtn.classList.remove('active');
+                modeManualBtn.classList.add('active');
+                relayControlContainer.style.display = 'block';
+                modeStatus.innerHTML = '<i class="fas fa-info-circle"></i><span>Mode: <strong>Manual</strong> - Kontrol relay dari web</span>';
+            }
+        }
+
+        /**
+         * Switch mode (auto/manual)
+         */
+        async function switchMode(newMode) {
+            try {
+                if (newMode === currentMode) {
+                    return; // Already in this mode
+                }
+
+                console.log(`🔄 Switching mode: ${currentMode} → ${newMode}`);
+                
+                // Update UI immediately for better UX
+                updateModeUI(newMode);
+                
+                // Send command to ESP32
+                await setEsp32Mode(newMode);
+                
+                currentMode = newMode;
+                
+                // Start/stop polling based on mode
+                if (newMode === 'manual') {
+                    startRelayStatusPolling();
+                    startModeCheckPolling();
+                } else {
+                    stopRelayStatusPolling();
+                    stopModeCheckPolling();
+                }
+                
+                console.log(`✅ Mode switched to: ${newMode}`);
+            } catch (error) {
+                console.error('❌ Error switching mode:', error);
+                // Revert UI on error
+                updateModeUI(currentMode);
+                alert(`Gagal mengubah mode: ${error.message}`);
+            }
+        }
+
+        /**
+         * Update relay status UI
+         */
+        function updateRelayStatusUI(status) {
+            relayStatus = status.relays || relayStatus;
+            
+            // Update button states (fan1 controls both fan1 and fan2, exhaust1 controls both exhaust1 and exhaust2)
+            const relayButtons = {
+                'fan1': 'btn-fan1',
+                'exhaust1': 'btn-exhaust1'
+            };
+            
+            Object.entries(relayButtons).forEach(([relayName, btnId]) => {
+                const btn = document.getElementById(btnId);
+                const statusBadge = document.getElementById(`status-${relayName}`);
+                const detailState = document.getElementById(`detail-${relayName}`);
+                
+                if (btn && statusBadge && detailState) {
+                    // For fan1, check if either fan1 or fan2 is on
+                    // For exhaust1, check if either exhaust1 or exhaust2 is on
+                    let isOn = false;
+                    if (relayName === 'fan1') {
+                        isOn = (relayStatus.fan1 || relayStatus.fan2) || false;
+                    } else if (relayName === 'exhaust1') {
+                        isOn = (relayStatus.exhaust1 || relayStatus.exhaust2) || false;
+                    } else {
+                        isOn = relayStatus[relayName] || false;
+                    }
+                    
+                    if (isOn) {
+                        btn.classList.add('active');
+                        statusBadge.innerHTML = '<span class="status-badge on">ON</span>';
+                        detailState.textContent = 'ON';
+                        detailState.classList.add('on');
+                        detailState.classList.remove('off');
+                    } else {
+                        btn.classList.remove('active');
+                        statusBadge.innerHTML = '<span class="status-badge off">OFF</span>';
+                        detailState.textContent = 'OFF';
+                        detailState.classList.add('off');
+                        detailState.classList.remove('on');
+                    }
+                }
+            });
+            
+            // Update irrigation system status
+            const irrigationBtn = document.getElementById('btn-irrigation');
+            const irrigationStatus = document.getElementById('status-irrigation');
+            const pumpState = document.getElementById('detail-pump');
+            const valveAState = document.getElementById('detail-valveA');
+            const valveBState = document.getElementById('detail-valveB');
+            
+            const irrigationOn = relayStatus.pump && relayStatus.valveA && relayStatus.valveB;
+            
+            if (irrigationBtn && irrigationStatus) {
+                if (irrigationOn) {
+                    irrigationBtn.classList.add('active');
+                    irrigationStatus.innerHTML = '<span class="status-badge on">ON</span>';
+                } else {
+                    irrigationBtn.classList.remove('active');
+                    irrigationStatus.innerHTML = '<span class="status-badge off">OFF</span>';
+                }
+            }
+            
+            // Update detail states
+            if (pumpState) {
+                pumpState.textContent = relayStatus.pump ? 'ON' : 'OFF';
+                pumpState.classList.toggle('on', relayStatus.pump);
+                pumpState.classList.toggle('off', !relayStatus.pump);
+            }
+            if (valveAState) {
+                valveAState.textContent = relayStatus.valveA ? 'ON' : 'OFF';
+                valveAState.classList.toggle('on', relayStatus.valveA);
+                valveAState.classList.toggle('off', !relayStatus.valveA);
+            }
+            if (valveBState) {
+                valveBState.textContent = relayStatus.valveB ? 'ON' : 'OFF';
+                valveBState.classList.toggle('on', relayStatus.valveB);
+                valveBState.classList.toggle('off', !relayStatus.valveB);
+            }
+        }
+
+        /**
+         * Control relay button click handler
+         */
+        async function handleRelayButtonClick(relayName) {
+            try {
+                const btn = document.getElementById(`btn-${relayName}`);
+                if (!btn) return;
+                
+                // Disable button during request
+                btn.classList.add('loading');
+                btn.disabled = true;
+                
+                if (relayName === 'irrigation') {
+                    // Control irrigation system (3 relays)
+                    const currentState = relayStatus.pump && relayStatus.valveA && relayStatus.valveB;
+                    await controlIrrigationSystem(!currentState);
+                } else {
+                    // Control individual relay
+                    await toggleRelay(relayName, { relays: relayStatus });
+                }
+                
+                // Refresh status
+                await refreshRelayStatus();
+                
+            } catch (error) {
+                console.error(`❌ Error controlling relay ${relayName}:`, error);
+                alert(`Gagal mengontrol relay: ${error.message}`);
+            } finally {
+                // Re-enable button
+                const btn = document.getElementById(`btn-${relayName}`);
+                if (btn) {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        /**
+         * Refresh relay status from ESP32
+         */
+        async function refreshRelayStatus() {
+            try {
+                const status = await getRelayStatus();
+                updateRelayStatusUI(status);
+                
+                // Sync mode if different
+                if (status.mode && status.mode !== currentMode) {
+                    console.warn(`⚠️ Mode mismatch: UI=${currentMode}, ESP32=${status.mode}`);
+                    currentMode = status.mode;
+                    updateModeUI(currentMode);
+                }
+            } catch (error) {
+                console.warn('⚠️ Error refreshing relay status:', error);
+            }
+        }
+
+        /**
+         * Start polling relay status
+         */
+        function startRelayStatusPolling() {
+            if (relayStatusInterval) {
+                return;
+            }
+            
+            refreshRelayStatus(); // Initial fetch
+            relayStatusInterval = setInterval(refreshRelayStatus, 3000); // Every 3 seconds
+            console.log('✅ Started relay status polling');
+        }
+
+        /**
+         * Stop polling relay status
+         */
+        function stopRelayStatusPolling() {
+            if (relayStatusInterval) {
+                clearInterval(relayStatusInterval);
+                relayStatusInterval = null;
+                console.log('🛑 Stopped relay status polling');
+            }
+        }
+
+        /**
+         * Start polling mode check
+         */
+        function startModeCheckPolling() {
+            if (modeCheckInterval) {
+                return;
+            }
+            
+            modeCheckInterval = setInterval(async () => {
+                try {
+                    const modeData = await getEsp32Mode();
+                    if (modeData.mode && modeData.mode !== currentMode) {
+                        console.warn(`⚠️ Mode changed on ESP32: ${currentMode} → ${modeData.mode}`);
+                        currentMode = modeData.mode;
+                        updateModeUI(currentMode);
+                        
+                        if (currentMode === 'auto') {
+                            stopRelayStatusPolling();
+                        }
+                    }
+                } catch (error) {
+                    console.warn('⚠️ Error checking mode:', error);
+                }
+            }, 5000); // Every 5 seconds
+        }
+
+        /**
+         * Stop polling mode check
+         */
+        function stopModeCheckPolling() {
+            if (modeCheckInterval) {
+                clearInterval(modeCheckInterval);
+                modeCheckInterval = null;
+            }
+        }
+
+        /**
+         * Setup mode selector event listeners
+         */
+        function setupModeSelector() {
+            const modeAutoBtn = document.getElementById('mode-auto');
+            const modeManualBtn = document.getElementById('mode-manual');
+            
+            if (modeAutoBtn) {
+                modeAutoBtn.addEventListener('click', () => switchMode('auto'));
+            }
+            
+            if (modeManualBtn) {
+                modeManualBtn.addEventListener('click', () => switchMode('manual'));
+            }
+        }
+
+        /**
+         * Setup relay button event listeners
+         */
+        function setupRelayButtons() {
+            const relayButtons = ['fan1', 'exhaust1', 'irrigation'];
+            
+            relayButtons.forEach(relayName => {
+                const btn = document.getElementById(`btn-${relayName}`);
+                if (btn) {
+                    btn.addEventListener('click', () => handleRelayButtonClick(relayName));
+                }
+            });
+        }
+
         // Handle greenhouse selection
         async function handleGreenhouseSelect(greenhouseId, greenhouse) {
             console.log('🔄 Switching to greenhouse:', greenhouseId);
@@ -975,6 +2236,27 @@
 
             // Initialize mini charts untuk stat cards
             initializeMiniCharts();
+
+            // Setup mode selector and relay buttons
+            setupModeSelector();
+            setupRelayButtons();
+            
+            // Initialize mode UI (default: auto)
+            updateModeUI(currentMode);
+            
+            // Start time update interval
+            startTimeUpdate();
+            
+            // Try to get current mode from ESP32
+            try {
+                const modeData = await getEsp32Mode();
+                if (modeData.mode) {
+                    currentMode = modeData.mode;
+                    updateModeUI(currentMode);
+                }
+            } catch (error) {
+                console.warn('⚠️ Could not get ESP32 mode, using default:', error);
+            }
 
             // Mulai polling langsung ke perangkat ESP32
             startLocalSensorPolling();

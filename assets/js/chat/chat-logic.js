@@ -17,6 +17,86 @@ let chatHistory = [];
 let isProcessing = false;
 
 // =============================
+// API Key Error Banner
+// =============================
+function showApiKeyErrorBanner() {
+  // Remove existing banner if any
+  const existingBanner = document.getElementById('api-key-error-banner');
+  if (existingBanner) {
+    existingBanner.remove();
+  }
+
+  const banner = document.createElement('div');
+  banner.id = 'api-key-error-banner';
+  banner.style.cssText = `
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+    max-width: 90%;
+    width: 600px;
+    animation: slideDown 0.3s ease-out;
+  `;
+  
+  banner.innerHTML = `
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+      <div style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+          <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
+          <strong style="font-size: 1.1rem;">API Key Expired</strong>
+        </div>
+        <p style="margin: 0; font-size: 0.9rem; opacity: 0.95; line-height: 1.5;">
+          Gemini API key Anda sudah expired. Silakan update API key baru di <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">config/config.js</code>
+        </p>
+        <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" style="background: white; color: #ef4444; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="fas fa-key"></i> Buat API Key Baru
+          </a>
+          <button onclick="document.getElementById('api-key-error-banner').remove()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.875rem;">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Add animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+  `;
+  if (!document.getElementById('api-key-error-banner-style')) {
+    style.id = 'api-key-error-banner-style';
+    document.head.appendChild(style);
+  }
+
+  document.body.appendChild(banner);
+
+  // Auto remove after 30 seconds
+  setTimeout(() => {
+    if (banner.parentElement) {
+      banner.style.animation = 'slideDown 0.3s ease-out reverse';
+      setTimeout(() => banner.remove(), 300);
+    }
+  }, 30000);
+}
+
+// =============================
 // Helpers: waktu & format
 // =============================
 function _timeValue(item) {
@@ -137,25 +217,35 @@ export function setupChatListeners() {
   });
 
   // Listen for visibility change - reload chat when tab becomes visible
+  // Hanya reload jika sudah ada pesan di chat (tidak reload saat pertama kali masuk)
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
       const chatContainer = document.getElementById('chat-messages');
-      // Only reload if chat container exists and is visible (in chat mode)
+      // Only reload if chat container exists, is visible, and already has messages
       if (chatContainer && document.body.classList.contains('chat-mode')) {
+        const hasMessages = chatContainer.children.length > 1; // > 1 karena ada welcome message
+        if (hasMessages) {
         reloadChatHistory();
+        }
       }
     }
   });
 
   // Listen for page focus - reload chat when window regains focus
+  // Hanya reload jika sudah ada pesan di chat (tidak reload saat pertama kali masuk)
   window.addEventListener('focus', () => {
     const chatContainer = document.getElementById('chat-messages');
     if (chatContainer && document.body.classList.contains('chat-mode')) {
+      const hasMessages = chatContainer.children.length > 1; // > 1 karena ada welcome message
+      if (hasMessages) {
       reloadChatHistory();
+      }
     }
   });
 
-  loadChatHistoryOnStartup();
+  // Jangan load history otomatis saat pertama kali masuk
+  // History akan dimuat melalui tombol history panel jika user membutuhkan
+  // loadChatHistoryOnStartup();
 }
 
 // =============================
@@ -165,8 +255,14 @@ async function reloadChatHistory() {
   const chatContainer = document.getElementById('chat-messages');
   if (!chatContainer) return;
 
-  // Get current messages count
-  const currentMessagesCount = chatContainer.children.length;
+  // Get current messages count (exclude welcome message and data summary)
+  const welcomeMessage = chatContainer.querySelector('.chat-message:not(.user) .message-content')?.textContent?.includes('Halo! Saya AI Assistant');
+  const currentMessagesCount = Array.from(chatContainer.children).filter(child => {
+    const messageContent = child.querySelector('.message-content')?.textContent || '';
+    // Exclude welcome message and data summary
+    return !messageContent.includes('Halo! Saya AI Assistant') && 
+           !messageContent.includes('Ringkasan Data Aktivitas');
+  }).length;
 
   let chats = [];
   try {
@@ -181,29 +277,27 @@ async function reloadChatHistory() {
   }
 
   // Only reload if there are new messages or messages are missing
-  if (chats.length !== currentMessagesCount) {
+  // Dan hanya jika sudah ada pesan sebelumnya (bukan pertama kali masuk)
+  // currentMessagesCount > 0 berarti sudah ada pesan user sebelumnya (selain welcome message)
+  if (chats.length > 0 && currentMessagesCount > 0 && chats.length !== currentMessagesCount) {
     console.log('🔄 Reloading chat history...');
-
-    // Clear container
-    chatContainer.innerHTML = '';
 
     // Sort by time
     chats.sort((a, b) => _timeValue(a) - _timeValue(b));
 
-    // Rebuild chatHistory for AI context
+    // Rebuild chatHistory for AI context (hanya untuk konteks, tidak untuk ditampilkan)
     chatHistory = chats.map(c => ({
       role: c.role === 'user' ? 'user' : 'model',
       parts: [{ text: c.message }]
     }));
 
-    // Re-render all messages
-    chats.forEach((c) => {
-      const role = (c.role === 'user') ? 'user' : 'ai';
-      const text = c.message ?? (c.parts ? c.parts.map(p => p.text).join(' ') : '');
-      addMessageToChat(text, role, false, _formatTimestampForBubble(c));
-    });
-
-    scrollToBottom();
+    // Jangan clear dan re-render semua messages
+    // Hanya update chatHistory untuk konteks AI
+    // Messages akan tetap seperti yang sudah ada di UI
+    console.log(`✅ Updated chatHistory context with ${chatHistory.length} messages (not displayed)`);
+  } else if (chats.length === 0 && currentMessagesCount === 0) {
+    // First time chat - tidak ada history, tidak perlu reload
+    console.log('ℹ️ First time chat, no history to reload');
   }
 }
 
@@ -517,54 +611,80 @@ async function handleChatInteraction(prompt, context = null) {
   isProcessing = true;
 
   try {
-    addMessageToChat(prompt, 'user');
-    persistMessage(prompt, 'user');
+  addMessageToChat(prompt, 'user');
+  persistMessage(prompt, 'user');
 
     // Pastikan chatHistory sudah ada (untuk melanjutkan chat dari history)
+    // Hanya load history jika user sudah pernah chat sebelumnya (ada di Firestore)
+    // Jangan load semua history otomatis saat pertama kali chat
     if (chatHistory.length === 0) {
       console.log('⚠️ chatHistory is empty, loading recent history...');
-      await reloadChatHistory();
+      // Hanya load history terbaru (5 pesan terakhir) untuk konteks, bukan semua
+      try {
+        if (auth?.currentUser) {
+          const recentChats = await getChatHistoryFromFirestore(5);
+          if (recentChats.length > 0) {
+            chatHistory = recentChats.map(c => ({
+              role: c.role === 'user' ? 'user' : 'model',
+              parts: [{ text: c.message }]
+            }));
+            console.log(`✅ Loaded ${chatHistory.length} recent messages for context`);
+          }
+        }
+      } catch (err) {
+        console.error('❌ Error loading recent history:', err);
+      }
     }
 
     console.log(`💬 Sending message with ${chatHistory.length} previous messages in context`);
 
-    const loadingId = addMessageToChat('Sedang berpikir...', 'ai', true);
+  const loadingId = addMessageToChat('Sedang berpikir...', 'ai', true);
 
-    try {
-      let responseText = '';
-      
-      // Cek apakah ini request analisis limbah
-      if (isWasteAnalysisRequest(prompt)) {
+  try {
+    let responseText = '';
+    
+    // Cek apakah ini request analisis limbah
+    if (isWasteAnalysisRequest(prompt)) {
         console.log('📊 Detected waste analysis request');
-        responseText = await generateWasteAnalysisResponse(prompt);
-      } else if (context) {
+      responseText = await generateWasteAnalysisResponse(prompt);
+    } else if (context) {
         console.log('📄 Using file context');
-        responseText = await getResponseWithContext(context, prompt, chatHistory);
-      } else {
+      responseText = await getResponseWithContext(context, prompt, chatHistory);
+    } else {
         console.log('💬 Sending to Gemini API');
-        responseText = await getChatResponse(prompt, chatHistory);
-      }
-      
+      responseText = await getChatResponse(prompt, chatHistory);
+    }
+    
       if (!responseText) {
         console.warn('⚠️ Empty response from API');
         responseText = 'Maaf, saya tidak dapat memberikan respons saat ini.';
       }
 
+      // Check if response contains API key error message
+      if (responseText.includes('API Key Expired') || responseText.includes('API key expired') || responseText.includes('API_KEY_INVALID')) {
+        showApiKeyErrorBanner();
+      }
+
       console.log('✅ Received response, length:', responseText.length);
-      updateMessage(loadingId, responseText);
-      persistMessage(responseText, 'ai');
+    updateMessage(loadingId, responseText);
+    persistMessage(responseText, 'ai');
 
       // Update chatHistory untuk konteks berikutnya
-      chatHistory.push({ role: 'user', parts: [{ text: prompt }] });
-      chatHistory.push({ role: 'model', parts: [{ text: responseText }] });
+    chatHistory.push({ role: 'user', parts: [{ text: prompt }] });
+    chatHistory.push({ role: 'model', parts: [{ text: responseText }] });
       
       console.log(`✅ Updated chatHistory: ${chatHistory.length} messages`);
       
       // Pastikan scroll ke bottom setelah response selesai
       scrollToBottom(true); // Force scroll setelah response selesai
-    } catch (err) {
+  } catch (err) {
       console.error('❌ Error in handleChatInteraction:', err);
       console.error('Error details:', err.message, err.stack);
+      
+      // Check if it's an API key error
+      if (err.message && (err.message.includes('API_KEY') || err.message.includes('API key expired') || err.message.includes('API_KEY_INVALID'))) {
+        showApiKeyErrorBanner();
+      }
       
       // Try to update loading message with error
       const loadingMessages = document.querySelectorAll('.chat-message:not(.user) .message-bubble');

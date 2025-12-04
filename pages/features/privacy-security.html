@@ -59,6 +59,39 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* ============================================
+           RESPONSIVE DESIGN - Mobile, Tablet, Desktop
+           ============================================ */
+        
+        /* Tablet (max-width: 1024px) */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: var(--spacing-md);
+            }
+        }
+        
+        /* Mobile Large (max-width: 768px) */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: var(--spacing-sm);
+            }
+        }
+        
+        /* Mobile Small (max-width: 480px) */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: var(--spacing-xs);
+            }
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            button,
+            a.button {
+                min-height: 44px; /* Minimum touch target size */
+            }
+        }
     </style>
     <script type="module" src="../../assets/js/auth/auth-guard.js"></script>
 </head>

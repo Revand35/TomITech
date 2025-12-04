@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover, minimal-ui">
     <title>AI Assistant - TOMITECH</title>
     <link rel="icon" href="../../assets/icons/ai.png">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://generativelanguage.googleapis.com https://esm.run https://apis.google.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com https://*.gstatic.com https://*.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net data: blob: https:; img-src 'self' data: https: blob:; connect-src 'self' https://firestore.googleapis.com https://firebase.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://generativelanguage.googleapis.com https://content-firebaseappcheck.googleapis.com https://www.gstatic.com https://apis.google.com https://esm.run https://cdn.jsdelivr.net https://cdnjs.cloudflare.com http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; frame-src 'self' https://accounts.google.com https://*.firebaseapp.com; worker-src 'self' blob:; manifest-src 'self';">
@@ -17,8 +17,15 @@
     
     <style>
         /* Full Screen Layout - Fix untuk tampilan full */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         html {
             height: 100%;
+            width: 100%;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -26,34 +33,51 @@
         
         body {
             height: 100vh;
+            width: 100vw;
             margin: 0;
             padding: 0;
             overflow: hidden;
             background: var(--tomitech-green-bg);
             position: fixed;
-            width: 100%;
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
         }
         
         #app-container {
             height: 100vh;
-            width: 100%;
+            width: 100vw;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
+            margin: 0;
+            padding: 0;
         }
         
         .nav-button.active { 
             color: var(--tomitech-green-accent); 
         }
         
-        /* Header Fixed */
+        /* Header Fixed - Full Width */
         .tomitech-header {
             flex-shrink: 0;
             position: relative;
             z-index: 100;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: var(--spacing-md) var(--spacing-md);
+            box-sizing: border-box;
+        }
+        
+        .tomitech-header .header-content {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
         }
         
         /* Chat Container - Full Height */
@@ -64,17 +88,24 @@
             overflow: hidden;
             min-height: 0;
             position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
         }
         
         #chat-messages {
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: var(--spacing-md) 0;
+            padding: var(--spacing-md) var(--spacing-md);
             padding-bottom: 200px; /* Space for large input + quick actions + nav */
             min-height: 0;
             -webkit-overflow-scrolling: touch;
             width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            margin: 0;
         }
         
         /* Chat Input - Large Input Field Design (like Copilot) */
@@ -84,14 +115,16 @@
             left: 0;
             right: 0;
             z-index: 100;
-            padding: 16px;
+            padding: 16px var(--spacing-md);
             background: linear-gradient(to top, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid rgba(76, 175, 80, 0.1);
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
             width: 100%;
+            max-width: 100%;
             box-sizing: border-box;
+            margin: 0;
         }
         
         /* Large Input Wrapper - Like Copilot */
@@ -228,9 +261,9 @@
         /* Quick Action Buttons - Below Input */
         .quick-action-buttons {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             overflow-x: auto;
-            padding: 4px 0;
+            padding: 8px 0 4px 0;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -241,38 +274,44 @@
         
         .quick-action-btn {
             flex: 1;
-            min-width: 120px;
-            padding: 10px 16px;
+            min-width: 100px;
+            padding: 12px 18px;
             background: rgba(76, 175, 80, 0.08);
-            border: 1px solid rgba(76, 175, 80, 0.2);
-            border-radius: 12px;
+            border: 1.5px solid rgba(76, 175, 80, 0.25);
+            border-radius: 14px;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
             color: #2d5016;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
             text-align: center;
+            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
         }
         
         .quick-action-btn:hover {
             background: rgba(76, 175, 80, 0.15);
             border-color: var(--tomitech-green-accent);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
         }
         
         .quick-action-btn:active {
             transform: scale(0.98);
         }
         
-        /* Bottom Nav - Fixed */
+        /* Bottom Nav - Fixed Full Width */
         .tomitech-bottom-nav {
             position: fixed !important;
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
             z-index: 1000 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
         }
         
         /* Loading animation */
@@ -371,13 +410,14 @@
         /* Chat Message Styles - Professional Consultant Design */
         .chat-message {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
             align-items: flex-start;
             padding: 0;
             animation: messageSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             width: 100%;
+            box-sizing: border-box;
         }
         
         @keyframes messageSlideIn {
@@ -401,6 +441,8 @@
             max-width: none;
             display: flex;
             flex-direction: column;
+            padding: 14px 16px;
+            box-sizing: border-box;
         }
 
         .chat-message.user .message-bubble,
@@ -690,12 +732,14 @@
         /* Message Content - Professional Typography */
         .message-content {
             font-size: 0.9375rem;
-            line-height: 1.6;
+            line-height: 1.7;
             word-wrap: break-word;
             overflow-wrap: break-word;
             letter-spacing: 0.01em;
             position: relative;
             z-index: 1;
+            margin: 0;
+            padding: 0;
         }
         
         .chat-message.user .message-content {
@@ -966,7 +1010,7 @@
         #user-data-summary {
             background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
             border-radius: 16px;
-            padding: 16px;
+            padding: 18px;
             margin: 16px 0;
             box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15),
                         0 2px 4px rgba(76, 175, 80, 0.1);
@@ -1063,8 +1107,8 @@
         .activity-summary {
             background: #e8f5e9;
             border-radius: 18px;
-            padding: 16px;
-            margin: 12px 0;
+            padding: 18px;
+            margin: 16px 0;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(76, 175, 80, 0.2);
             position: relative;
@@ -1072,6 +1116,7 @@
             max-width: none;
             margin-left: 0;
             margin-right: 0;
+            box-sizing: border-box;
         }
         
         .activity-summary:before {
@@ -1147,22 +1192,24 @@
         /* Tablet (max-width: 1024px) */
         @media (max-width: 1024px) {
             #chat-messages {
-                padding: 12px 0;
+                padding: 12px var(--spacing-md);
                 padding-bottom: 220px;
             }
             
             .chat-message {
                 padding: 0;
                 margin-bottom: 16px;
+                gap: 10px;
             }
             
             .chat-message .message-bubble {
                 max-width: none;
                 width: 100%;
+                padding: 12px 14px;
             }
             
             .chat-input-container {
-                padding: 12px;
+                padding: 12px var(--spacing-md);
             }
             
             .chat-input-main-wrapper {
@@ -1195,7 +1242,7 @@
             }
             
             #chat-messages {
-                padding: 10px 0;
+                padding: 10px var(--spacing-sm);
                 padding-bottom: 240px;
             }
             
@@ -1230,7 +1277,7 @@
             .chat-message .message-bubble {
                 max-width: none;
                 width: 100%;
-                padding: 10px 14px;
+                padding: 12px 14px;
             }
             
             .message-content {
@@ -1245,7 +1292,7 @@
             
             .chat-input-container {
                 bottom: 60px;
-                padding: 10px;
+                padding: 10px var(--spacing-sm);
             }
             
             .chat-input-main-wrapper {
@@ -1300,8 +1347,8 @@
             }
             
             .logo-icon {
-                width: 32px !important;
-                height: 32px !important;
+                width: 28px !important;
+                height: 28px !important;
             }
             
             .logo-title {
@@ -1314,7 +1361,7 @@
             }
             
             #chat-messages {
-                padding: 8px 0;
+                padding: 8px var(--spacing-xs);
                 padding-bottom: 260px;
             }
             
@@ -1350,7 +1397,7 @@
             .chat-message .message-bubble {
                 max-width: none;
                 width: 100%;
-                padding: 8px 12px;
+                padding: 10px 12px;
                 border-radius: 16px;
             }
             
@@ -1386,7 +1433,7 @@
             
             .chat-input-container {
                 bottom: 60px;
-                padding: 8px;
+                padding: 8px var(--spacing-xs);
             }
             
             .chat-input-main-wrapper {
@@ -1438,16 +1485,26 @@
             }
         }
         
-        /* Desktop Large (min-width: 1440px) */
+        /* Desktop Large (min-width: 1440px) - Full Width */
         @media (min-width: 1440px) {
             #app-container {
-                max-width: 1400px;
-                margin: 0 auto;
+                max-width: 100%;
+                margin: 0;
+            }
+            
+            #chat-messages {
+                padding: var(--spacing-lg) var(--spacing-xl);
             }
             
             .chat-message .message-bubble {
                 max-width: none;
                 width: 100%;
+                padding: 16px 20px;
+            }
+            
+            .message-content {
+                font-size: 1rem;
+                line-height: 1.75;
             }
         }
         
@@ -2125,10 +2182,6 @@
             <i class="fas fa-chart-line"></i>
             <span>Monitoring</span>
         </a>
-        <a href="forum.html" class="tomitech-nav-item">
-            <i class="fas fa-chart-bar"></i>
-            <span>Reports</span>
-        </a>
         <a href="profil.html" class="tomitech-nav-item">
             <i class="fas fa-user"></i>
             <span>Profil</span>
@@ -2285,23 +2338,150 @@
     }
     
     // Checks for data passed from other pages via sessionStorage and notifies the user.
-    function checkLatestDataInput() {
+    async function checkLatestDataInput() {
         try {
             const latestDataStr = sessionStorage.getItem('latestDataInput');
             if (latestDataStr) {
                 const dataInput = JSON.parse(latestDataStr);
-                if ((new Date() - new Date(dataInput.timestamp)) / (1000 * 60) < 5) {
-                    const aiMessage = `🎉 Saya lihat Anda baru saja menginput data. Saya sudah membacanya! Klik "Analisis Greenhouse" untuk mendapatkan kesimpulan lengkap.`;
-                    setTimeout(() => addMessageToChat(aiMessage, 'ai'), 1000);
+                const timeDiff = (new Date() - new Date(dataInput.timestamp)) / (1000 * 60);
+                
+                // Check if data is less than 5 minutes old
+                if (timeDiff < 5) {
+                    console.log('📥 New data input detected:', dataInput);
+                    
+                    // Format data untuk ditampilkan
+                    let dataSummary = '';
+                    let recommendationPrompt = '';
+                    
+                    if (dataInput.type === 'sensor') {
+                        const d = dataInput.data;
+                        dataSummary = `📊 **Data Sensor Baru:**
+- **Suhu:** ${d.temperature}°C
+- **Kelembaban:** ${d.humidity}%
+- **Level Cahaya:** ${d.lightLevel} lux
+- **Kelembaban Tanah:** ${d.soilMoisture}%
+${d.notes ? `- **Catatan:** ${d.notes}` : ''}`;
+                        
+                        recommendationPrompt = `Berdasarkan data sensor yang baru saja diinput:
+- Suhu: ${d.temperature}°C
+- Kelembaban: ${d.humidity}%
+- Level Cahaya: ${d.lightLevel} lux
+- Kelembaban Tanah: ${d.soilMoisture}%
+
+Berikan analisis singkat kondisi mikroklimat dan rekomendasi perbaikan jika diperlukan.`;
+                        
+                    } else if (dataInput.type === 'plant') {
+                        const d = dataInput.data;
+                        dataSummary = `🌱 **Data Tanaman Baru:**
+- **Jenis:** ${d.plantType === 'sayur' ? 'Sayur' : 'Buah'}
+- **Nama Tanaman:** ${d.plantName}
+- **Tanggal Tanam:** ${new Date(d.plantingDate).toLocaleDateString('id-ID')}
+${d.plantingLocation ? `- **Lokasi:** ${d.plantingLocation}` : ''}
+- **Status Kesehatan:** ${d.healthStatus}
+- **Tahap Pertumbuhan:** ${d.growthStage}
+${d.wateredAt7AM ? '- ✅ **Sudah disiram pagi ini**' : ''}
+${d.notes ? `- **Catatan:** ${d.notes}` : ''}`;
+                        
+                        recommendationPrompt = `Berdasarkan data tanaman yang baru saja diinput:
+- Jenis: ${d.plantType === 'sayur' ? 'Sayur' : 'Buah'}
+- Nama: ${d.plantName}
+- Tanggal Tanam: ${new Date(d.plantingDate).toLocaleDateString('id-ID')}
+- Status Kesehatan: ${d.healthStatus}
+- Tahap Pertumbuhan: ${d.growthStage}
+${d.wateredAt7AM ? '- Sudah disiram pagi ini' : '- Belum disiram pagi ini'}
+
+Berikan rekomendasi perawatan spesifik untuk tanaman ini berdasarkan tahap pertumbuhan dan status kesehatannya.`;
+                        
+                    } else if (dataInput.type === 'aggregate') {
+                        const d = dataInput.data;
+                        dataSummary = `🌾 **Data Agregat Siklus Tanam Baru:**
+- **Rata-rata Suhu Harian:** ${d.avgDailyTemp}°C
+- **Total Paparan Cahaya:** ${d.totalLightExposure} lux-hours
+- **Total Air Irigasi:** ${d.totalWaterIrrigation} liter
+- **Durasi Siklus:** ${d.cycleDuration} hari
+- **Durasi Kelembaban > 90%:** ${d.highHumidityDuration} jam
+${d.harvestYield ? `- **Hasil Panen:** ${d.harvestYield} kg` : ''}
+${d.notes ? `- **Catatan:** ${d.notes}` : ''}`;
+                        
+                        recommendationPrompt = `Berdasarkan data agregat siklus tanam yang baru saja diinput:
+- Rata-rata Suhu Harian: ${d.avgDailyTemp}°C
+- Total Paparan Cahaya: ${d.totalLightExposure} lux-hours
+- Total Air Irigasi: ${d.totalWaterIrrigation} liter
+- Durasi Siklus: ${d.cycleDuration} hari
+- Durasi Kelembaban > 90%: ${d.highHumidityDuration} jam
+${d.harvestYield ? `- Hasil Panen: ${d.harvestYield} kg` : ''}
+
+Berikan analisis performa siklus tanam ini dan rekomendasi optimasi untuk siklus berikutnya.`;
+                    }
+                    
+                    // Tampilkan data yang baru diinput sebagai message bubble user
+                    setTimeout(() => {
+                        addMessageToChat(dataSummary, 'user');
+                    }, 1000);
+            
+                    // Tampilkan message AI yang memproses
+            setTimeout(() => {
+                        addMessageToChat('Sedang menganalisis data dan menyiapkan rekomendasi...', 'ai', true);
+            }, 2000);
+                    
+                    // Minta rekomendasi dari AI
+                    setTimeout(async () => {
+                        try {
+                            const { getChatResponse } = await import('../../assets/js/core/gemini-service.js');
+                            const recommendation = await getChatResponse(recommendationPrompt, []);
+                            
+                            // Update message AI dengan rekomendasi
+                            const aiMessages = document.querySelectorAll('.chat-message:not(.user)');
+                            if (aiMessages.length > 0) {
+                                const lastAiMessage = aiMessages[aiMessages.length - 1];
+                                const messageId = lastAiMessage.id;
+                                const messageContent = lastAiMessage.querySelector('.message-content');
+                                
+                                if (messageId && messageContent && messageContent.textContent.includes('Sedang menganalisis')) {
+                                    // Update existing message - format markdown to HTML
+                                    const recommendationText = recommendation || 'Maaf, saya tidak dapat memberikan rekomendasi saat ini.';
+                                    // Simple markdown to HTML conversion
+                                    let formattedText = recommendationText
+                                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                                        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                                        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                                        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                                        .replace(/\n/g, '<br>');
+                                    messageContent.innerHTML = formattedText;
+                                } else {
+                                    // Jika tidak ditemukan, tambahkan message baru
+                                    addMessageToChat(recommendation || 'Maaf, saya tidak dapat memberikan rekomendasi saat ini.', 'ai');
+                                }
+                            } else {
+                                addMessageToChat(recommendation || 'Maaf, saya tidak dapat memberikan rekomendasi saat ini.', 'ai');
+            }
+        } catch (error) {
+                            console.error('Error getting AI recommendation:', error);
+                            const aiMessages = document.querySelectorAll('.chat-message:not(.user)');
+                            if (aiMessages.length > 0) {
+                                const lastAiMessage = aiMessages[aiMessages.length - 1];
+                                const messageId = lastAiMessage.id;
+                                const messageContent = lastAiMessage.querySelector('.message-content');
+                
+                                if (messageId && messageContent && messageContent.textContent.includes('Sedang menganalisis')) {
+                                    messageContent.innerHTML = 'Maaf, terjadi kesalahan saat memproses rekomendasi. Silakan coba lagi nanti.';
+                                } else {
+                                    addMessageToChat('Maaf, terjadi kesalahan saat memproses rekomendasi. Silakan coba lagi nanti.', 'ai');
+                                }
+                            }
+                        }
+                    }, 3000);
+                    
                     setTimeout(loadUserDataSummary, 1500);
                     sessionStorage.removeItem('latestDataInput');
-                }
+                                    }
             }
         } catch (error) {
             console.error('Error checking latest data input:', error);
+            }
         }
-    }
-
+        
     // --- Initialization ---
 
     // Manages user session and redirects if not logged in.
@@ -2312,9 +2492,9 @@
         } else {
             console.log('⚠️ No user logged in, redirecting...');
             window.location.href = '../../login.html';
-        }
+                    }
     });
-    
+        
     // Sets up the page once the DOM is loaded.
     document.addEventListener('DOMContentLoaded', () => {
         console.log('🚀 Initializing chat page...');

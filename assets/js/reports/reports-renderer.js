@@ -56,9 +56,20 @@ function createReportCard(report, index) {
   const card = document.createElement('div');
   card.className = 'report-card';
   card.style.animationDelay = `${index * 0.05}s`;
+  card.style.cursor = 'pointer'; // Indikator bahwa card bisa diklik
   card.dataset.reportId = report.id;
   card.dataset.reportType = report.type;
   card.dataset.category = report.category;
+  
+  // Add hover effect
+  card.addEventListener('mouseenter', () => {
+    card.style.transform = 'translateY(-4px)';
+    card.style.boxShadow = 'var(--shadow-md)';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'translateY(0)';
+    card.style.boxShadow = 'var(--shadow-sm)';
+  });
 
   const metrics = report.metrics || {};
   const timeAgo = formatRelativeTime(report.timestamp || report.createdAt);

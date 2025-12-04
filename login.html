@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - TOMITECH</title>
+    <title>Login - AgriHouse</title>
     <meta name="theme-color" content="#2c4d32">
-    <meta name="description" content="TOMITECH - Platform AI untuk Optimasi Greenhouse dan Tanaman">
+    <meta name="description" content="AgriHouse - Platform AI untuk Optimasi Greenhouse dan Tanaman">
     
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="
@@ -31,7 +31,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- TOMITECH Design System -->
+    <!-- AgriHouse Design System -->
     <link rel="stylesheet" href="./assets/css/tomitech-design-system.css">
     
     <style>
@@ -55,32 +55,29 @@
         }
         
         .login-logo-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--tomitech-green-accent), var(--tomitech-green-light));
-            border-radius: var(--radius-lg);
+            width: 150px;
+            height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto var(--spacing-md);
-            box-shadow: var(--shadow-lg);
         }
         
         .login-logo-icon img {
-            width: 60px;
-            height: 60px;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
         
         .login-logo-icon i {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
             color: var(--white);
         }
         
         .login-logo-title {
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
-            font-size: 2rem;
+            font-size: 3rem;
             color: var(--white);
             margin-bottom: var(--spacing-sm);
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -416,6 +413,170 @@
         .form-switch a:hover {
             text-decoration: underline;
         }
+        
+        /* ============================================
+           RESPONSIVE DESIGN - Mobile, Tablet, Desktop
+           ============================================ */
+        
+        /* Tablet (max-width: 1024px) */
+        @media (max-width: 1024px) {
+            .login-container {
+                max-width: 500px;
+            }
+            
+            .login-card {
+                padding: var(--spacing-lg);
+            }
+        }
+        
+        /* Mobile Large (max-width: 768px) */
+        @media (max-width: 768px) {
+            body {
+                padding: var(--spacing-md);
+            }
+            
+            .login-container {
+                max-width: 100%;
+            }
+            
+            .login-logo-icon {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .login-logo-icon img {
+                width: 100%;
+                height: 100%;
+            }
+            
+            .login-logo-icon i {
+                font-size: 3rem;
+            }
+            
+            .login-logo-title {
+                font-size: 2.5rem;
+            }
+            
+            .login-logo-subtitle {
+                font-size: 0.875rem;
+            }
+            
+            .login-card {
+                padding: var(--spacing-md);
+            }
+            
+            .login-welcome-title {
+                font-size: 1.25rem;
+            }
+            
+            .google-login-btn,
+            .email-login-btn {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* Mobile Small (max-width: 480px) */
+        @media (max-width: 480px) {
+            body {
+                padding: var(--spacing-sm);
+            }
+            
+            .login-logo-icon {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .login-logo-icon img {
+                width: 100%;
+                height: 100%;
+            }
+            
+            .login-logo-icon i {
+                font-size: 2.5rem;
+            }
+            
+            .login-logo-title {
+                font-size: 2rem;
+            }
+            
+            .login-logo-subtitle {
+                font-size: 0.8rem;
+            }
+            
+            .login-card {
+                padding: var(--spacing-sm);
+            }
+            
+            .login-welcome-title {
+                font-size: 1.125rem;
+            }
+            
+            .login-welcome-text {
+                font-size: 0.8rem;
+            }
+            
+            .google-login-btn,
+            .email-login-btn {
+                padding: var(--spacing-sm);
+                font-size: 0.875rem;
+            }
+            
+            .toggle-btn {
+                font-size: 0.8rem;
+                padding: var(--spacing-xs) var(--spacing-sm);
+            }
+            
+            .form-group input {
+                padding: var(--spacing-sm);
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* Landscape Mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            body {
+                padding: var(--spacing-sm);
+            }
+            
+            .login-logo {
+                margin-bottom: var(--spacing-md);
+            }
+            
+            .login-logo-icon {
+                width: 80px;
+                height: 80px;
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .login-logo-icon img {
+                width: 100%;
+                height: 100%;
+            }
+            
+            .login-logo-icon i {
+                font-size: 2rem;
+            }
+            
+            .login-logo-title {
+                font-size: 1.75rem;
+                margin-bottom: var(--spacing-xs);
+            }
+            
+            .login-logo-subtitle {
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .google-login-btn,
+            .email-login-btn,
+            .toggle-btn,
+            .password-toggle {
+                min-height: 44px; /* Minimum touch target size */
+            }
+        }
     </style>
 </head>
 <body>
@@ -423,10 +584,10 @@
         <!-- Logo & Title -->
         <div class="login-logo">
             <div class="login-logo-icon">
-                <img src="./assets/icons/tomitech-logo.png" alt="TOMITECH" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <img src="./assets/icons/AgriHouse.png" alt="AgriHouse" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                 <i class="fas fa-leaf" style="display:none;"></i>
             </div>
-            <div class="login-logo-title">TOMITECH</div>
+            <div class="login-logo-title">AgriHouse</div>
             <div class="login-logo-subtitle">Platform AI untuk Optimasi Greenhouse</div>
         </div>
 
@@ -434,7 +595,7 @@
         <div class="login-card">
             <div class="login-welcome">
                 <h1 class="login-welcome-title">Selamat Datang</h1>
-                <p class="login-welcome-text">Masuk untuk mengakses platform TOMITECH</p>
+                <p class="login-welcome-text">Masuk untuk mengakses platform AgriHouse</p>
             </div>
 
             <!-- Error Message -->

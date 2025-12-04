@@ -73,7 +73,7 @@ function buildContextForAI(plants, dailyLog, sensorData) {
         day: 'numeric' 
     });
     
-    let context = `Anda adalah AI Assistant untuk TOMITECH Greenhouse Monitoring System.\n\n`;
+    let context = `Anda adalah AI Assistant untuk AgriHouse Greenhouse Monitoring System.\n\n`;
     context += `Tanggal: ${dateStr}\n\n`;
     
     // Plants information

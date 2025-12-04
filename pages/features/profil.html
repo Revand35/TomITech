@@ -380,6 +380,128 @@
         .btn-danger:hover {
             background: #c62828;
         }
+        
+        /* ============================================
+           RESPONSIVE DESIGN - Mobile, Tablet, Desktop
+           ============================================ */
+        
+        /* Tablet (max-width: 1024px) */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: var(--spacing-md);
+            }
+            
+            .modal-content {
+                max-width: 90%;
+            }
+        }
+        
+        /* Mobile Large (max-width: 768px) */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: var(--spacing-sm);
+            }
+            
+            .profile-card {
+                padding: var(--spacing-md);
+            }
+            
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .profile-name {
+                font-size: 1.25rem;
+            }
+            
+            .profile-email {
+                font-size: 0.875rem;
+            }
+            
+            .modal-content {
+                max-width: 95%;
+                padding: var(--spacing-md);
+                margin: var(--spacing-md);
+            }
+            
+            .modal-title {
+                font-size: 1.125rem;
+            }
+            
+            .form-group {
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .form-group label {
+                font-size: 0.9rem;
+            }
+            
+            .form-group input {
+                padding: var(--spacing-sm);
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* Mobile Small (max-width: 480px) */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: var(--spacing-xs);
+            }
+            
+            .profile-card {
+                padding: var(--spacing-sm);
+            }
+            
+            .profile-avatar {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .profile-name {
+                font-size: 1.125rem;
+            }
+            
+            .profile-email {
+                font-size: 0.8rem;
+            }
+            
+            .modal-content {
+                max-width: 98%;
+                padding: var(--spacing-sm);
+                margin: var(--spacing-sm);
+            }
+            
+            .modal-title {
+                font-size: 1rem;
+            }
+            
+            .form-group label {
+                font-size: 0.875rem;
+            }
+            
+            .form-group input {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                font-size: 0.875rem;
+            }
+            
+            .btn-primary,
+            .btn-secondary,
+            .btn-danger {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                font-size: 0.875rem;
+            }
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .btn-primary,
+            .btn-secondary,
+            .btn-danger,
+            .modal-close {
+                min-height: 44px; /* Minimum touch target size */
+            }
+        }
     </style>
 </head>
 <body>
@@ -388,7 +510,7 @@
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo-icon">
-                    <img src="../../assets/icons/tomitech-logo.png" alt="TOMITECH" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <img src="../../assets/icons/AgriHouse.png" alt="AgriHouse" style="width: 32px; height: 32px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <i class="fas fa-user" style="display:none; color: white; font-size: 1.5rem;"></i>
                 </div>
                 <div class="logo-text">
@@ -716,10 +838,6 @@
         <a href="monitoring.html" class="tomitech-nav-item">
             <i class="fas fa-chart-line"></i>
             <span>Monitoring</span>
-        </a>
-        <a href="forum.html" class="tomitech-nav-item">
-            <i class="fas fa-chart-bar"></i>
-            <span>Reports</span>
         </a>
         <a href="profil.html" class="tomitech-nav-item active">
             <i class="fas fa-user"></i>

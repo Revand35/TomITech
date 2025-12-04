@@ -3,6 +3,7 @@ import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import { firebaseConfig } from "./config.js";
 
 // ✅ Inisialisasi Firebase - Check jika sudah ada app dengan nama DEFAULT
@@ -33,7 +34,9 @@ try {
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
+// Firebase Realtime Database - untuk data sensor real-time dari ESP32
+const realtimeDb = getDatabase(app);
 
 // ✅ Ekspor
-export { app, auth, db, storage };
+export { app, auth, db, storage, realtimeDb };
 

@@ -40,12 +40,12 @@ export async function getChatHistoryFromFirestore(limitCount = 50) {
     let q;
     try {
       q = query(
-        collection(db, CHAT_HISTORY_COLLECTION),
-        where('userId', '==', user.uid),
+      collection(db, CHAT_HISTORY_COLLECTION),
+      where('userId', '==', user.uid),
         orderBy('createdAt', 'asc'),
-        limit(limitCount)
-      );
-      const snapshot = await getDocs(q);
+      limit(limitCount)
+    );
+    const snapshot = await getDocs(q);
       const chats = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
       console.log('✅ Loaded chat history (limited):', chats.length, 'chats');
       return chats;

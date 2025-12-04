@@ -9,7 +9,11 @@ import {
   getDocs,
   Timestamp,
   doc,
-  getDoc
+  getDoc,
+  onSnapshot,
+  setDoc,
+  addDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /**
@@ -106,18 +110,18 @@ async function getAggregateReports(userId) {
       reports.push({
         id: docSnap.id,
         type: 'aggregate',
-        category: 'Tanaman',
+        category: data.category || 'Tanaman',
         greenhouseId: data.greenhouseId,
         greenhouseName: greenhouseName,
-        title: greenhouseName,
-        subtitle: 'Laporan Data Agregat Greenhouse',
+        title: data.title || greenhouseName,
+        subtitle: data.isManual ? 'Laporan Manual' : 'Laporan Data Agregat Greenhouse',
         timestamp: data.timestamp,
         createdAt: data.createdAt || data.timestamp,
         metrics: {
           totalPlants: data.totalPlants || 0,
           activePlants: data.activePlants || 0,
-          economicValue: calculateEconomicValue(data),
-          ecoScore: calculateEcoScore(data)
+          economicValue: data.economicValue ? formatEconomicValue(data.economicValue) : calculateEconomicValue(data),
+          ecoScore: data.ecoScore || calculateEcoScore(data)
         },
         icon: 'industry',
         iconColor: 'green'
@@ -217,17 +221,17 @@ async function getSummaryReports(userId) {
       reports.push({
         id: docSnap.id,
         type: 'summary',
-        category: 'Analisis',
+        category: data.category || 'Analisis',
         greenhouseId: data.greenhouseId,
         greenhouseName: greenhouseName,
-        title: greenhouseName,
-        subtitle: 'Kesimpulan Analisis AI',
+        title: data.title || greenhouseName,
+        subtitle: data.isManual ? 'Laporan Manual' : 'Kesimpulan Analisis AI',
         timestamp: data.date,
         createdAt: data.createdAt || data.date,
         metrics: {
           summary: data.summary || '',
           recommendations: data.recommendations || [],
-          ecoScore: 85 // Default
+          ecoScore: data.ecoScore || 85
         },
         icon: 'chart-line',
         iconColor: 'blue'
@@ -290,19 +294,31 @@ async function getSummaryReports(userId) {
 }
 
 /**
+ * Format nilai ekonomi
+ */
+function formatEconomicValue(value) {
+  if (value >= 1000000) {
+    return `Rp ${(value / 1000000).toFixed(1)}M`;
+  } else if (value >= 1000) {
+    return `Rp ${(value / 1000).toFixed(0)}K`;
+  }
+  return `Rp ${value}`;
+}
+
+/**
  * Hitung nilai ekonomi dari data agregat
  */
 function calculateEconomicValue(data) {
+  // Jika sudah ada economicValue, gunakan itu
+  if (data.economicValue) {
+    return formatEconomicValue(data.economicValue);
+  }
+  
   // Estimasi sederhana: Rp 10,000 per tanaman aktif
   const activePlants = data.activePlants || 0;
   const estimatedValue = activePlants * 10000;
   
-  if (estimatedValue >= 1000000) {
-    return `Rp ${(estimatedValue / 1000000).toFixed(1)}M`;
-  } else if (estimatedValue >= 1000) {
-    return `Rp ${(estimatedValue / 1000).toFixed(0)}K`;
-  }
-  return `Rp ${estimatedValue}`;
+  return formatEconomicValue(estimatedValue);
 }
 
 /**
@@ -397,5 +413,343 @@ export function searchReports(reports, keyword) {
            subtitle.includes(searchTerm) || 
            greenhouseName.includes(searchTerm);
   });
+}
+
+/**
+ * Setup real-time listener untuk reports
+ * @param {Function} callback - Function yang dipanggil saat data berubah
+ * @returns {Function} Unsubscribe function
+ */
+export function setupRealtimeReportsListener(userId, callback) {
+  if (!userId) {
+    console.warn('⚠️ No user ID provided for real-time listener');
+    return () => {}; // Return empty unsubscribe function
+  }
+
+  console.log('📡 Setting up real-time reports listener for user:', userId);
+
+  let unsubscribeFunctions = [];
+
+  // Listener untuk aggregate_data
+  try {
+    const aggregateQuery = query(
+      collection(db, 'aggregate_data'),
+      where('userId', '==', userId),
+      orderBy('timestamp', 'desc'),
+      limit(20)
+    );
+
+    const unsubscribeAggregate = onSnapshot(
+      aggregateQuery,
+      (snapshot) => {
+        console.log('📊 Real-time update: aggregate_data changed', snapshot.size, 'docs');
+        // Trigger callback untuk reload reports
+        if (callback) callback();
+      },
+      (error) => {
+        console.error('❌ Error in aggregate_data listener:', error);
+        // Fallback: try without orderBy
+        if (error.code === 'failed-precondition') {
+          console.warn('⚠️ Index missing, using fallback query');
+          const fallbackQuery = query(
+            collection(db, 'aggregate_data'),
+            where('userId', '==', userId)
+          );
+          onSnapshot(fallbackQuery, () => {
+            if (callback) callback();
+          });
+        }
+      }
+    );
+    unsubscribeFunctions.push(unsubscribeAggregate);
+  } catch (error) {
+    console.warn('⚠️ Could not setup aggregate_data listener:', error);
+  }
+
+  // Listener untuk ai_summaries
+  try {
+    const summaryQuery = query(
+      collection(db, 'ai_summaries'),
+      where('userId', '==', userId),
+      orderBy('date', 'desc'),
+      limit(20)
+    );
+
+    const unsubscribeSummary = onSnapshot(
+      summaryQuery,
+      (snapshot) => {
+        console.log('📊 Real-time update: ai_summaries changed', snapshot.size, 'docs');
+        // Trigger callback untuk reload reports
+        if (callback) callback();
+      },
+      (error) => {
+        console.error('❌ Error in ai_summaries listener:', error);
+        // Fallback: try without orderBy
+        if (error.code === 'failed-precondition') {
+          console.warn('⚠️ Index missing, using fallback query');
+          const fallbackQuery = query(
+            collection(db, 'ai_summaries'),
+            where('userId', '==', userId)
+          );
+          onSnapshot(fallbackQuery, () => {
+            if (callback) callback();
+          });
+        }
+      }
+    );
+    unsubscribeFunctions.push(unsubscribeSummary);
+  } catch (error) {
+    console.warn('⚠️ Could not setup ai_summaries listener:', error);
+  }
+
+  // Return unsubscribe function
+  return () => {
+    console.log('🔌 Unsubscribing from real-time reports listeners');
+    unsubscribeFunctions.forEach(unsub => {
+      try {
+        unsub();
+      } catch (err) {
+        console.warn('⚠️ Error unsubscribing:', err);
+      }
+    });
+  };
+}
+
+/**
+ * Simpan user preferences ke Firestore
+ */
+export async function saveUserPreferences(preferences) {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      console.warn('⚠️ No user logged in, saving to localStorage instead');
+      localStorage.setItem('reports_preferences', JSON.stringify(preferences));
+      return;
+    }
+
+    const userPrefsRef = doc(db, 'user_preferences', user.uid);
+    await setDoc(userPrefsRef, {
+      reports: preferences,
+      updatedAt: Timestamp.now()
+    }, { merge: true });
+
+    console.log('✅ User preferences saved to Firestore');
+  } catch (error) {
+    console.error('❌ Error saving user preferences:', error);
+    // Fallback to localStorage
+    localStorage.setItem('reports_preferences', JSON.stringify(preferences));
+  }
+}
+
+/**
+ * Load user preferences dari Firestore atau localStorage
+ */
+export async function loadUserPreferences() {
+  try {
+    const user = auth.currentUser;
+    
+    // Try Firestore first
+    if (user) {
+      try {
+        const userPrefsRef = doc(db, 'user_preferences', user.uid);
+        const userPrefsSnap = await getDoc(userPrefsRef);
+        
+        if (userPrefsSnap.exists()) {
+          const data = userPrefsSnap.data();
+          if (data.reports) {
+            console.log('✅ Loaded user preferences from Firestore');
+            return data.reports;
+          }
+        }
+      } catch (error) {
+        console.warn('⚠️ Could not load from Firestore, trying localStorage:', error);
+      }
+    }
+
+    // Fallback to localStorage
+    const localPrefs = localStorage.getItem('reports_preferences');
+    if (localPrefs) {
+      try {
+        const parsed = JSON.parse(localPrefs);
+        console.log('✅ Loaded user preferences from localStorage');
+        return parsed;
+      } catch (error) {
+        console.warn('⚠️ Error parsing localStorage preferences:', error);
+      }
+    }
+
+    // Return default preferences
+    return {
+      category: 'Semua',
+      sortBy: 'date',
+      sortOrder: 'desc',
+      searchTerm: ''
+    };
+  } catch (error) {
+    console.error('❌ Error loading user preferences:', error);
+    return {
+      category: 'Semua',
+      sortBy: 'date',
+      sortOrder: 'desc',
+      searchTerm: ''
+    };
+  }
+}
+
+/**
+ * Track report view untuk analytics
+ */
+export async function trackReportView(reportId, reportType) {
+  try {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const viewData = {
+      userId: user.uid,
+      reportId: reportId,
+      reportType: reportType,
+      viewedAt: Timestamp.now(),
+      userAgent: navigator.userAgent,
+      platform: navigator.platform
+    };
+
+    // Save to Firestore (collection: report_views)
+    const viewRef = doc(collection(db, 'report_views'));
+    await setDoc(viewRef, viewData);
+
+    console.log('✅ Report view tracked');
+  } catch (error) {
+    console.warn('⚠️ Error tracking report view:', error);
+    // Non-blocking error
+  }
+}
+
+/**
+ * Create new report (manual report creation)
+ * @param {Object} reportData - Data report yang akan dibuat
+ * @returns {Promise<string>} - Report ID jika berhasil
+ */
+export async function createReport(reportData) {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error('User harus login untuk membuat report');
+    }
+
+    // Validate required fields
+    if (!reportData.title || !reportData.category) {
+      throw new Error('Judul dan Kategori wajib diisi');
+    }
+
+    // Determine report type based on category
+    const isSummaryType = reportData.category === 'Analisis' || 
+                         (reportData.summary && reportData.summary.trim() !== '');
+
+    // Prepare data based on type
+    let firestoreData;
+
+    if (isSummaryType) {
+      // Save as AI Summary type
+      firestoreData = {
+        userId: user.uid,
+        greenhouseName: reportData.greenhouseName || 'Greenhouse',
+        summary: reportData.summary || '',
+        recommendations: reportData.recommendations || [],
+        date: Timestamp.now(),
+        createdAt: serverTimestamp(),
+        // Custom fields
+        title: reportData.title,
+        category: reportData.category,
+        isManual: true // Flag untuk manual report
+      };
+      
+      const docRef = await addDoc(collection(db, 'ai_summaries'), firestoreData);
+      console.log('✅ Report created as AI Summary:', docRef.id);
+      return docRef.id;
+    } else {
+      // Save as Aggregate Data type
+      firestoreData = {
+        userId: user.uid,
+        greenhouseName: reportData.greenhouseName || 'Greenhouse',
+        totalPlants: reportData.totalPlants || 0,
+        activePlants: reportData.activePlants || 0,
+        timestamp: Timestamp.now(),
+        createdAt: serverTimestamp(),
+        // Custom fields
+        title: reportData.title,
+        category: reportData.category,
+        economicValue: reportData.economicValue || 0,
+        ecoScore: reportData.ecoScore || 0,
+        isManual: true // Flag untuk manual report
+      };
+      
+      const docRef = await addDoc(collection(db, 'aggregate_data'), firestoreData);
+      console.log('✅ Report created as Aggregate Data:', docRef.id);
+      return docRef.id;
+    }
+  } catch (error) {
+    console.error('❌ Error creating report:', error);
+    throw error;
+  }
+}
+
+/**
+ * Cache reports ke localStorage untuk offline support
+ */
+export function cacheReportsToLocalStorage(reports) {
+  try {
+    const cacheData = {
+      reports: reports,
+      cachedAt: new Date().toISOString(),
+      version: '1.0'
+    };
+    localStorage.setItem('reports_cache', JSON.stringify(cacheData));
+    console.log('✅ Reports cached to localStorage');
+  } catch (error) {
+    console.warn('⚠️ Error caching reports:', error);
+    // Handle quota exceeded error
+    if (error.name === 'QuotaExceededError') {
+      console.warn('⚠️ localStorage quota exceeded, clearing old cache');
+      try {
+        localStorage.removeItem('reports_cache');
+        localStorage.setItem('reports_cache', JSON.stringify({
+          reports: reports.slice(0, 10), // Cache only first 10
+          cachedAt: new Date().toISOString(),
+          version: '1.0'
+        }));
+      } catch (e) {
+        console.error('❌ Could not cache reports:', e);
+      }
+    }
+  }
+}
+
+/**
+ * Load cached reports dari localStorage
+ */
+export function loadCachedReports() {
+  try {
+    const cached = localStorage.getItem('reports_cache');
+    if (!cached) return null;
+
+    const cacheData = JSON.parse(cached);
+    const cachedAt = new Date(cacheData.cachedAt);
+    const now = new Date();
+    const diffMs = now - cachedAt;
+    const diffHours = diffMs / (1000 * 60 * 60);
+
+    // Cache valid untuk 1 jam
+    if (diffHours > 1) {
+      console.log('⚠️ Cache expired, clearing');
+      localStorage.removeItem('reports_cache');
+      return null;
+    }
+
+    console.log('✅ Loaded cached reports from localStorage');
+    return cacheData.reports || null;
+  } catch (error) {
+    console.warn('⚠️ Error loading cached reports:', error);
+    return null;
+  }
 }
 

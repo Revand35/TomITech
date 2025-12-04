@@ -1,4 +1,4 @@
-// config.js - Firebase Configuration untuk TOMITECH Greenhouse Monitoring
+// config.js - Firebase Configuration untuk AgriHouse Greenhouse Monitoring
 // ====================================================================
 // INSTRUKSI: Ganti nilai-nilai di bawah ini dengan data dari Firebase Console
 // ====================================================================
@@ -17,7 +17,7 @@ export const firebaseConfig = {
 // Dapatkan dari: https://makersuite.google.com/app/apikey
 export const geminiApiKey = "YOUR_GEMINI_API_KEY_HERE";
 
-// App Configuration untuk TOMITECH
+// App Configuration untuk AgriHouse
 export const appConfig = {
     maxRetries: 3,
     retryDelay: 1000,

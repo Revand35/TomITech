@@ -1,4 +1,5 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
     
@@ -10,6 +11,15 @@ service cloud.firestore {
     // Helper function untuk cek user adalah pemilik data
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Tambahan: helper validasi koordinat
+    function isValidLatitude(lat) {
+      return lat is number && lat >= -90 && lat <= 90;
+    }
+    
+    function isValidLongitude(lng) {
+      return lng is number && lng >= -180 && lng <= 180;
     }
     
     // Users collection - hanya bisa read/write data sendiri
@@ -28,8 +38,29 @@ service cloud.firestore {
     // Greenhouses collection - user bisa membuat greenhouse sendiri
     match /greenhouses/{greenhouseId} {
       allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
-      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Tambahan: validasi field name + latitude/longitude saat create
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.name is string
+        && (
+          request.resource.data.latitude == null
+          || isValidLatitude(request.resource.data.latitude)
+        )
+        && (
+          request.resource.data.longitude == null
+          || isValidLongitude(request.resource.data.longitude)
+        );
+      // Tambahan: validasi koordinat juga saat update/delete (pemilik saja)
+      allow update, delete: if isAuthenticated()
+        && resource.data.userId == request.auth.uid
+        && (
+          request.resource.data.latitude == null
+          || isValidLatitude(request.resource.data.latitude)
+        )
+        && (
+          request.resource.data.longitude == null
+          || isValidLongitude(request.resource.data.longitude)
+        );
     }
     
     // Plants collection - data tanaman di greenhouse
@@ -142,6 +173,18 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
       allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+    
+    // User preferences - preferensi user untuk reports (filter, sort, search)
+    match /user_preferences/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Report views - analytics tracking untuk report views
+    match /report_views/{viewId} {
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow read: if isAuthenticated();
+      allow update, delete: if false;
     }
     
     // Default: deny semua akses lainnya

@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - TOMITECH</title>
+    <title>Dashboard - AgriHouse</title>
     <meta name="theme-color" content="#2c4d32">
-    <meta name="description" content="TOMITECH - Platform AI untuk Optimasi Greenhouse dan Tanaman">
+    <meta name="description" content="AgriHouse - Platform AI untuk Optimasi Greenhouse dan Tanaman">
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- TOMITECH Design System -->
+    <!-- AgriHouse Design System -->
     <link rel="stylesheet" href="./assets/css/tomitech-design-system.css">
     
     <style>
@@ -19,6 +19,37 @@
         .main-content {
             padding: var(--spacing-md);
             padding-bottom: 100px;
+        }
+        
+        /* Fix untuk navbar bottom agar tidak ikut scroll */
+        .tomitech-bottom-nav {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 9999 !important;
+            /* Pastikan tidak terpengaruh transform dari parent */
+            transform: none !important;
+            /* Pastikan tidak terpengaruh perspective dari parent */
+            perspective: none !important;
+            /* Force hardware acceleration untuk smooth rendering */
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        
+        /* Pastikan body dan html tidak mempengaruhi fixed positioning */
+        html, body {
+            position: relative;
+            /* Pastikan tidak ada transform yang mempengaruhi fixed */
+            transform: none !important;
+        }
+        
+        /* Pastikan main content tidak overlap dengan navbar */
+        main.main-content {
+            position: relative;
+            /* Padding bottom untuk space navbar */
+            padding-bottom: 100px !important;
         }
         
         .profile-card {
@@ -111,12 +142,12 @@
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo-icon">
-                    <img src="./assets/icons/tomitech-logo.png" alt="TOMITECH" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <img src="./assets/icons/AgriHouse.png" alt="AgriHouse" style="width: 32px; height: 32px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <i class="fas fa-leaf" style="display:none; color: white; font-size: 1.5rem;"></i>
                 </div>
                 <div class="logo-text">
                     <div class="logo-title">
-                        TOMITECH
+                        AgriHouse
                         <span class="page-indicator dashboard">
                             <i class="fas fa-home"></i>
                             Dashboard
@@ -227,13 +258,6 @@
                 <div class="action-title">Monitoring</div>
                 <div class="action-subtitle">Real-time Sensor</div>
             </a>
-            <a href="pages/features/forum.html" class="action-card purple modern-card">
-                <div class="action-icon">
-                    <i class="fas fa-chart-bar"></i>
-                </div>
-                <div class="action-title">Reports</div>
-                <div class="action-subtitle">Analisis Data</div>
-            </a>
             <a href="pages/features/profil.html" class="action-card orange modern-card">
                 <div class="action-icon">
                     <i class="fas fa-user"></i>
@@ -247,7 +271,6 @@
         <div class="recent-activities">
             <div class="recent-activities-header">
                 <h3 class="recent-activities-title">Aktivitas Terbaru</h3>
-                <a href="pages/features/forum.html" class="recent-activities-link">Lihat Semua</a>
             </div>
             
             <!-- Activity Card 1 -->
@@ -298,10 +321,6 @@
         <a href="pages/features/monitoring.html" class="tomitech-nav-item">
             <i class="fas fa-chart-line"></i>
             <span>Monitoring</span>
-        </a>
-        <a href="pages/features/forum.html" class="tomitech-nav-item">
-            <i class="fas fa-chart-bar"></i>
-            <span>Reports</span>
         </a>
         <a href="pages/features/profil.html" class="tomitech-nav-item">
             <i class="fas fa-user"></i>
